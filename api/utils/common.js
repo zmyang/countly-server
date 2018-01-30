@@ -750,6 +750,14 @@ var common = {},
     * @param {object} headers - headers to add to the output
     */
     common.returnMessage = function (params, returnCode, message, heads) {
+        if (params && params.res && !params.blockResponses && params.req.method === "tcp") {
+            if (params.qstring.callback) {
+                params.res.write(params.qstring.callback + '(' + JSON.stringify({result: message}, escape_html_entities) + ')\r\n');
+            } else {
+                params.res.write(JSON.stringify({result: message}, escape_html_entities)+"\r\n");
+            }
+            return;
+        }
         //set provided in configuration headers
         var headers = {'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin':'*'};
         var add_headers = (plugins.getConfig("security").api_additional_headers || "").replace(/\r\n|\r|\n|\/n/g, "\n").split("\n");
@@ -789,6 +797,14 @@ var common = {},
     common.returnOutput = function (params, output, noescape, heads) {
         if(params && params.APICallback && typeof params.APICallback === 'function'){
             return params.APICallback(output);
+        }
+        if (params && params.res && !params.blockResponses && params.req.method === "tcp") {
+            if (params.qstring.callback) {
+                params.res.write(params.qstring.callback + '(' + JSON.stringify(output, escape) + ')\r\n');
+            } else {
+                params.res.write(JSON.stringify(output, escape)+"\r\n");
+            }
+            return;
         }
         //set provided in configuration headers
         var headers = {'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin':'*'};
