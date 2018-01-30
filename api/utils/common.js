@@ -750,11 +750,13 @@ var common = {},
     * @param {object} headers - headers to add to the output
     */
     common.returnMessage = function (params, returnCode, message, heads) {
-        if (params && params.res && !params.blockResponses && params.req.method === "tcp") {
-            if (params.qstring.callback) {
-                params.res.write(params.qstring.callback + '(' + JSON.stringify({result: message}, escape_html_entities) + ')\r\n');
-            } else {
-                params.res.write(JSON.stringify({result: message}, escape_html_entities)+"\r\n");
+        if (params && params.res && params.req.method === "tcp") {
+            if(!params.blockResponses && params.res.readyState === "open"){
+                if (params.qstring.callback) {
+                    params.res.write(params.qstring.callback + '(' + JSON.stringify({result: message}, escape_html_entities) + ')\r\n');
+                } else {
+                    params.res.write(JSON.stringify({result: message}, escape_html_entities)+"\r\n");
+                }
             }
             return;
         }
@@ -798,11 +800,13 @@ var common = {},
         if(params && params.APICallback && typeof params.APICallback === 'function'){
             return params.APICallback(output);
         }
-        if (params && params.res && !params.blockResponses && params.req.method === "tcp") {
-            if (params.qstring.callback) {
-                params.res.write(params.qstring.callback + '(' + JSON.stringify(output, escape) + ')\r\n');
-            } else {
-                params.res.write(JSON.stringify(output, escape)+"\r\n");
+        if (params && params.res && params.req.method === "tcp") {
+            if(!params.blockResponses && params.res.readyState === "open"){
+                if (params.qstring.callback) {
+                    params.res.write(params.qstring.callback + '(' + JSON.stringify(output, escape) + ')\r\n');
+                } else {
+                    params.res.write(JSON.stringify(output, escape)+"\r\n");
+                }
             }
             return;
         }
