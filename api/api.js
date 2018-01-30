@@ -570,7 +570,7 @@ if (cluster.isMaster) {
                         var tmpParams = {
                             'app_id':'',
                             'app_cc':'',
-                            'ip_address':requests[i].ip_address || common.getIpAddress(req),
+                            'ip_address':requests[i].ip_address || common.getIpAddress(params.req),
                             'user':{
                                 'country':requests[i].country_code || 'Unknown',
                                 'city':requests[i].city || 'Unknown'
@@ -711,7 +711,7 @@ if (cluster.isMaster) {
                 }
                 case '/i':
                 {
-                    params.ip_address =  params.qstring.ip_address || common.getIpAddress(req);
+                    params.ip_address =  params.qstring.ip_address || common.getIpAddress(params.req);
                     params.user = {};
     
                     if (!params.qstring.app_key || !params.qstring.device_id) {
@@ -1259,7 +1259,7 @@ if (cluster.isMaster) {
                                 'href':urlParts.href,
                                 'qstring':queryString,
                                 'res':socket,
-                                'req':{method:"tcp", body:data.body, url:data.url}
+                                'req':{method:"tcp", body:data.body, url:data.url, headers:{}, socket:socket}
                             };
                             
                             //remove countly path
