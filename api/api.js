@@ -542,7 +542,7 @@ if (cluster.isMaster) {
                         try {
                             requests = JSON.parse(requests);
                         } catch (SyntaxError) {
-                            console.log('Parse bulk JSON failed', requests, req.url, req.body);
+                            console.log('Parse bulk JSON failed', requests, params.req.url, params.req.body);
                             requests = null;
                         }
                     }
@@ -613,7 +613,7 @@ if (cluster.isMaster) {
                         try {
                             params.qstring.args = JSON.parse(params.qstring.args);
                         } catch (SyntaxError) {
-                            console.log('Parse ' + apiPath + ' JSON failed', req.url, req.body);
+                            console.log('Parse ' + apiPath + ' JSON failed', params.req.url, params.req.body);
                         }
                     }
     
@@ -641,7 +641,7 @@ if (cluster.isMaster) {
                         try {
                             params.qstring.args = JSON.parse(params.qstring.args);
                         } catch (SyntaxError) {
-                            console.log('Parse ' + apiPath + ' JSON failed', req.url, req.body);
+                            console.log('Parse ' + apiPath + ' JSON failed', params.req.url, params.req.body);
                         }
                     }
     
@@ -726,7 +726,7 @@ if (cluster.isMaster) {
                         try {
                             params.qstring.events = JSON.parse(params.qstring.events);
                         } catch (SyntaxError) {
-                            console.log('Parse events JSON failed', params.qstring.events, req.url, req.body);
+                            console.log('Parse events JSON failed', params.qstring.events, params.req.url, params.req.body);
                         }
                     }
                     
@@ -1054,7 +1054,7 @@ if (cluster.isMaster) {
                                 try {
                                     params.qstring.events = JSON.parse(params.qstring.events);
                                 } catch (SyntaxError) {
-                                    console.log('Parse events array failed', params.qstring.events, req.url, req.body);
+                                    console.log('Parse events array failed', params.qstring.events, params.req.url, params.req.body);
                                 }
     
                                 validateUserForDataReadAPI(params, countlyApi.data.fetch.fetchMergedEventData);
