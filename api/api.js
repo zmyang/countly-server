@@ -1210,72 +1210,74 @@ if (cluster.isMaster) {
 
     }).listen(common.config.api.port, common.config.api.host || '').timeout = common.config.api.timeout || 120000;
     
-    net.createServer(function(socket) {
-        socket.on('data', function (data) {
-            if(typeof data.toString !== "undefined"){
-                data = data.toString("utf8");
-            }
-            data = data.trim();
-            try{
-                data = JSON.parse(data);
-            }
-            catch(ex){
-                console.log("Cannot parse data from TCP", data);
-                data = null;
-            }
-            if(data){
-                plugins.loadConfigs(common.db, function(){
-                    var urlParts = url.parse(data.url, true),
-                        queryString = urlParts.query,
-                        paths = urlParts.pathname.split("/"),
-                        apiPath = "",
-                        /**
-                        * Main request processing object containing all informashed shared through all the parts of the same request
-                        * @typedef params
-                        * @type {object}
-                        * @property {string} href - full URL href
-                        * @property {res} res - nodejs response object
-                        * @property {req} req - nodejs request object
-                        * @property {object} qstring - all the passed fields either through query string in GET requests or body and query string for POST requests
-                        * @property {string} apiPath - two top level url path, for example /i/analytics
-                        * @property {string} fullPath - full url path, for example /i/analytics/dashboards
-                        * @property {object} files - object with uploaded files, available in POST requests which upload files
-                        * @property {string} cancelRequest - Used for skipping SDK requests, if contains true, then request should be ignored and not processed. Can be set at any time by any plugin, but API only checks for it in beggining after / and /sdk events, so that is when plugins should set it if needed. Should contain reason for request cancelation
-                        * @property {boolean} bulk - True if this SDK request is processed from the bulk method
-                        * @property {array} promises - Array of the promises by different events. When all promises are fulfilled, request counts as processed
-                        * @property {string} ip_address - IP address of the device submitted request, exists in all SDK requests
-                        * @property {object} user - Data with some user info, like country geolocation, etc from the request, exists in all SDK requests
-                        * @property {object} app_user - Document from the app_users collection for current user, exists in all SDK requests after validation
-                        * @property {object} app_user_id - ID of app_users document for the user, exists in all SDK requests after validation
-                        * @property {object} app - Document for the app sending request, exists in all SDK requests after validation and after validateUserForDataReadAPI validation
-                        * @property {ObjectID} app_id - ObjectID of the app document, available after validation
-                        * @property {string} app_cc - Selected app country, available after validation
-                        * @property {string} appTimezone - Selected app timezone, available after validation
-                        * @property {object} member - All data about dashboard user sending the request, exists on all requests containing api_key, after validation through validation methods
-                        * @property {timeObject} time - Time object for the request
-                        */
-                        params = {
-                            'href':urlParts.href,
-                            'qstring':queryString,
-                            'res':socket,
-                            'req':{method:"tcp", body:data.body, url:data.url}
-                        };
-                        
-                        //remove countly path
-                        if(common.config.path == "/"+paths[1]){
-                            paths.splice(1, 1);
-                        }
-                        
-                        if(params.req.body){
-                            for(var i in params.req.body){
-                                params.qstring[i] = params.req.body[i];
+    if(common.config.tcp && common.config.tcp.enabled){
+        net.createServer(function(socket) {
+            socket.on('data', function (data) {
+                if(typeof data.toString !== "undefined"){
+                    data = data.toString("utf8");
+                }
+                data = data.trim();
+                try{
+                    data = JSON.parse(data);
+                }
+                catch(ex){
+                    console.log("Cannot parse data from TCP", data);
+                    data = null;
+                }
+                if(data){
+                    plugins.loadConfigs(common.db, function(){
+                        var urlParts = url.parse(data.url, true),
+                            queryString = urlParts.query,
+                            paths = urlParts.pathname.split("/"),
+                            apiPath = "",
+                            /**
+                            * Main request processing object containing all informashed shared through all the parts of the same request
+                            * @typedef params
+                            * @type {object}
+                            * @property {string} href - full URL href
+                            * @property {res} res - nodejs response object
+                            * @property {req} req - nodejs request object
+                            * @property {object} qstring - all the passed fields either through query string in GET requests or body and query string for POST requests
+                            * @property {string} apiPath - two top level url path, for example /i/analytics
+                            * @property {string} fullPath - full url path, for example /i/analytics/dashboards
+                            * @property {object} files - object with uploaded files, available in POST requests which upload files
+                            * @property {string} cancelRequest - Used for skipping SDK requests, if contains true, then request should be ignored and not processed. Can be set at any time by any plugin, but API only checks for it in beggining after / and /sdk events, so that is when plugins should set it if needed. Should contain reason for request cancelation
+                            * @property {boolean} bulk - True if this SDK request is processed from the bulk method
+                            * @property {array} promises - Array of the promises by different events. When all promises are fulfilled, request counts as processed
+                            * @property {string} ip_address - IP address of the device submitted request, exists in all SDK requests
+                            * @property {object} user - Data with some user info, like country geolocation, etc from the request, exists in all SDK requests
+                            * @property {object} app_user - Document from the app_users collection for current user, exists in all SDK requests after validation
+                            * @property {object} app_user_id - ID of app_users document for the user, exists in all SDK requests after validation
+                            * @property {object} app - Document for the app sending request, exists in all SDK requests after validation and after validateUserForDataReadAPI validation
+                            * @property {ObjectID} app_id - ObjectID of the app document, available after validation
+                            * @property {string} app_cc - Selected app country, available after validation
+                            * @property {string} appTimezone - Selected app timezone, available after validation
+                            * @property {object} member - All data about dashboard user sending the request, exists on all requests containing api_key, after validation through validation methods
+                            * @property {timeObject} time - Time object for the request
+                            */
+                            params = {
+                                'href':urlParts.href,
+                                'qstring':queryString,
+                                'res':socket,
+                                'req':{method:"tcp", body:data.body, url:data.url}
+                            };
+                            
+                            //remove countly path
+                            if(common.config.path == "/"+paths[1]){
+                                paths.splice(1, 1);
                             }
-                        }
-                        processRequest(params, apiPath, paths, urlParts);
-                }, true);
-            }
-        });
-    }).listen(3005, common.config.api.host || '').timeout = common.config.api.timeout || 120000;
+                            
+                            if(params.req.body){
+                                for(var i in params.req.body){
+                                    params.qstring[i] = params.req.body[i];
+                                }
+                            }
+                            processRequest(params, apiPath, paths, urlParts);
+                    }, true);
+                }
+            });
+        }).listen(common.config.tcp.port, common.config.tcp.host || '').timeout = common.config.tcp.timeout || 120000;
+    }
 
     plugins.loadConfigs(common.db);
 }
