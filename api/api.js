@@ -439,7 +439,7 @@ if (cluster.isMaster) {
                     function processRequestData(){
                         plugins.dispatch("/i", {params:params, app:app});
                         
-                        if (params.qstring.events) {
+                        if (params.qstring.events && Array.isArray(params.qstring.events) && params.qstring.events.length) {
                             if(params.promises)
                                 params.promises.push(countlyApi.data.events.processEvents(params));
                             else
@@ -725,7 +725,7 @@ if (cluster.isMaster) {
                         params.app_user_id = common.crypto.createHash('sha1').update(params.qstring.app_key + params.qstring.device_id + "").digest('hex');
                     }
     
-                    if (params.qstring.events) {
+                    if (params.qstring.events && typeof params.qstring.events === "string") {
                         try {
                             params.qstring.events = JSON.parse(params.qstring.events);
                         } catch (SyntaxError) {
