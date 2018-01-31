@@ -509,7 +509,11 @@ if (cluster.isMaster) {
     var validateUserForGlobalAdmin = rights.validateGlobalAdmin;
     var validateUserForMgmtReadAPI = rights.validateUser;
     
-    function processRequest(params, apiPath, paths, urlParts){
+    function processRequest(params){
+        //remove countly path
+        if(common.config.path == "/"+params.paths[1]){
+            params.paths.splice(1, 1);
+        }
         if (params.qstring.app_id && params.qstring.app_id.length != 24) {
             common.returnMessage(params, 400, 'Invalid parameter "app_id"');
             return false;
@@ -520,19 +524,18 @@ if (cluster.isMaster) {
             return false;
         }
     
-        for (var i = 1; i < paths.length; i++) {
+        for (var i = 1; i < params.paths.length; i++) {
             if (i > 2) {
                 break;
             }
     
-            apiPath += "/" + paths[i];
+            params.apiPath += "/" + params.paths[i];
         }
-        params.apiPath = apiPath;
-        params.fullPath = paths.join("/");
-        plugins.dispatch("/", {params:params, apiPath:apiPath, validateAppForWriteAPI:validateAppForWriteAPI, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin, paths:paths, urlParts:urlParts});
+        params.fullPath = params.paths.join("/");
+        plugins.dispatch("/", {params:params, apiPath:params.apiPath, validateAppForWriteAPI:validateAppForWriteAPI, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin, paths:params.paths, urlParts:params.urlParts});
     
         if(!params.cancelRequest){
-            switch (apiPath) {
+            switch (params.apiPath) {
                 case '/i/bulk':
                 {               
                     var requests = params.qstring.requests,
@@ -613,11 +616,11 @@ if (cluster.isMaster) {
                         try {
                             params.qstring.args = JSON.parse(params.qstring.args);
                         } catch (SyntaxError) {
-                            console.log('Parse ' + apiPath + ' JSON failed', params.req.url, params.req.body);
+                            console.log('Parse ' + params.apiPath + ' JSON failed', params.req.url, params.req.body);
                         }
                     }
     
-                    switch (paths[3]) {
+                    switch (params.paths[3]) {
                         case 'create':
                             validateUserForWriteAPI(countlyApi.mgmt.users.createUser, params);
                             break;
@@ -628,7 +631,7 @@ if (cluster.isMaster) {
                             validateUserForWriteAPI(countlyApi.mgmt.users.deleteUser, params);
                             break;
                         default:
-                            if(!plugins.dispatch(apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
+                            if(!plugins.dispatch(params.apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:params.paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
                                 common.returnMessage(params, 400, 'Invalid path, must be one of /create, /update or /delete');
                             break;
                     }
@@ -641,11 +644,11 @@ if (cluster.isMaster) {
                         try {
                             params.qstring.args = JSON.parse(params.qstring.args);
                         } catch (SyntaxError) {
-                            console.log('Parse ' + apiPath + ' JSON failed', params.req.url, params.req.body);
+                            console.log('Parse ' + params.apiPath + ' JSON failed', params.req.url, params.req.body);
                         }
                     }
     
-                    switch (paths[3]) {
+                    switch (params.paths[3]) {
                         case 'create':
                             validateUserForWriteAPI(function(params){
                                 if (!(params.member.global_admin)) {
@@ -665,7 +668,7 @@ if (cluster.isMaster) {
                             validateUserForWriteAPI(countlyApi.mgmt.apps.resetApp, params);
                             break;
                         default:
-                            if(!plugins.dispatch(apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
+                            if(!plugins.dispatch(params.apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:params.paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
                                 common.returnMessage(params, 400, 'Invalid path, must be one of /create, /update, /delete or /reset');
                             break;
                     }
@@ -679,7 +682,7 @@ if (cluster.isMaster) {
                         return false;
                     }
     
-                    switch (paths[3]) {
+                    switch (params.paths[3]) {
                         case 'update':
                             validateUserForWriteAPI(function(){
                                 taskmanager.rerunTask({db:common.db, id:params.qstring.task_id}, function(err, res){
@@ -702,7 +705,7 @@ if (cluster.isMaster) {
                             }, params);
                             break;
                         default:
-                            if(!plugins.dispatch(apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
+                            if(!plugins.dispatch(params.apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:params.paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
                                 common.returnMessage(params, 400, 'Invalid path');
                             break;
                     }
@@ -751,7 +754,7 @@ if (cluster.isMaster) {
                 }
                 case '/o/users':
                 {
-                    switch (paths[3]) {
+                    switch (params.paths[3]) {
                         case 'all':
                             validateUserForMgmtReadAPI(countlyApi.mgmt.users.getAllUsers, params);
                             break;
@@ -762,7 +765,7 @@ if (cluster.isMaster) {
                             validateUserForMgmtReadAPI(countlyApi.mgmt.users.getUserById, params);
                             break;
                         default:
-                            if(!plugins.dispatch(apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
+                            if(!plugins.dispatch(params.apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:params.paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
                                 common.returnMessage(params, 400, 'Invalid path, must be one of /all or /me');
                             break;
                     }
@@ -771,7 +774,7 @@ if (cluster.isMaster) {
                 }
                 case '/o/apps':
                 {
-                    switch (paths[3]) {
+                    switch (params.paths[3]) {
                         case 'all':
                             validateUserForMgmtReadAPI(countlyApi.mgmt.apps.getAllApps, params);
                             break;
@@ -782,7 +785,7 @@ if (cluster.isMaster) {
                             validateUserForDataReadAPI(params, countlyApi.mgmt.apps.getAppsDetails);
                             break;
                         default:
-                            if(!plugins.dispatch(apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
+                            if(!plugins.dispatch(params.apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:params.paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
                                 common.returnMessage(params, 400, 'Invalid path, must be one of /all , /mine or /details');
                             break;
                     }
@@ -791,7 +794,7 @@ if (cluster.isMaster) {
                 }
                 case '/o/tasks':
                 {
-                    switch (paths[3]) {
+                    switch (params.paths[3]) {
                         case 'all':
                             validateUserForMgmtReadAPI(function(){
                                 if(typeof params.qstring.query === "string"){
@@ -839,7 +842,7 @@ if (cluster.isMaster) {
                             }, params);
                             break;
                         default:
-                            if(!plugins.dispatch(apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
+                            if(!plugins.dispatch(params.apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:params.paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
                                 common.returnMessage(params, 400, 'Invalid path');
                             break;
                     }
@@ -853,7 +856,7 @@ if (cluster.isMaster) {
                         return false;
                     }
     
-                    switch (paths[3]) {
+                    switch (params.paths[3]) {
                         case 'version':
                             validateUserForMgmtReadAPI(function(){
                                 common.returnOutput(params, {"version":versionInfo.version});
@@ -865,7 +868,7 @@ if (cluster.isMaster) {
                             }, params);
                             break;
                         default:
-                            if(!plugins.dispatch(apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
+                            if(!plugins.dispatch(params.apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:params.paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
                                 common.returnMessage(params, 400, 'Invalid path');
                             break;
                     }
@@ -887,7 +890,7 @@ if (cluster.isMaster) {
                             return value;
                     }
     
-                    switch (paths[3]) {
+                    switch (params.paths[3]) {
                         case 'db':
                             validateUserForMgmtReadAPI(function(){
                                 if (!params.qstring.collection) {
@@ -975,7 +978,7 @@ if (cluster.isMaster) {
                             }, params);
                             break;
                         default:
-                            if(!plugins.dispatch(apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
+                            if(!plugins.dispatch(params.apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:params.paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
                                 common.returnMessage(params, 400, 'Invalid path');
                             break;
                     }
@@ -1069,7 +1072,7 @@ if (cluster.isMaster) {
                             validateUserForDataReadAPI(params, countlyApi.data.fetch.fetchAllApps);
                             break;
                         default:
-                            if(!plugins.dispatch(apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
+                            if(!plugins.dispatch(params.apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
                                 common.returnMessage(params, 400, 'Invalid method');
                             break;
                     }
@@ -1083,7 +1086,7 @@ if (cluster.isMaster) {
                         return false;
                     }
     
-                    switch (paths[3]) {
+                    switch (params.paths[3]) {
                         case 'dashboard':
                             validateUserForDataReadAPI(params, countlyApi.data.fetch.fetchDashboard);
                             break;
@@ -1112,7 +1115,7 @@ if (cluster.isMaster) {
                             validateUserForDataReadAPI(params, countlyApi.data.fetch.fetchEvents);
                             break;
                         default:
-                            if(!plugins.dispatch(apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
+                            if(!plugins.dispatch(params.apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, paths:params.paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin}))
                                 common.returnMessage(params, 400, 'Invalid path, must be one of /dashboard or /countries');
                             break;
                     }
@@ -1120,8 +1123,8 @@ if (cluster.isMaster) {
                     break;
                 }
                 default:
-                    if(!plugins.dispatch(apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, validateUserForWriteAPI:validateUserForWriteAPI, paths:paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin})){
-                        if(!plugins.dispatch(params.fullPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, validateUserForWriteAPI:validateUserForWriteAPI, paths:paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin})){
+                    if(!plugins.dispatch(params.apiPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, validateUserForWriteAPI:validateUserForWriteAPI, paths:params.paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin})){
+                        if(!plugins.dispatch(params.fullPath, {params:params, validateUserForDataReadAPI:validateUserForDataReadAPI, validateUserForMgmtReadAPI:validateUserForMgmtReadAPI, validateUserForWriteAPI:validateUserForWriteAPI, paths:params.paths, validateUserForDataWriteAPI:validateUserForDataWriteAPI, validateUserForGlobalAdmin:validateUserForGlobalAdmin})){
                             common.returnMessage(params, 400, 'Invalid path');
                         }
                     }
@@ -1170,13 +1173,11 @@ if (cluster.isMaster) {
                     'href':urlParts.href,
                     'qstring':queryString,
                     'res':res,
-                    'req':req
+                    'req':req,
+                    'apiPath':apiPath,
+                    'paths':paths,
+                    'urlParts':urlParts
                 };
-                
-                //remove countly path
-                if(common.config.path == "/"+paths[1]){
-                    paths.splice(1, 1);
-                }
                 
             if(req.method.toLowerCase() == 'post'){
                 var form = new formidable.IncomingForm();
@@ -1192,7 +1193,7 @@ if (cluster.isMaster) {
                         params.qstring[i] = fields[i];
                     }
                     if(!params.apiPath)
-                        processRequest(params, apiPath, paths, urlParts);
+                        processRequest(params);
                 });
             }
             else if (req.method === 'OPTIONS') {
@@ -1205,76 +1206,48 @@ if (cluster.isMaster) {
             }
             else
                 //attempt process GET request
-                processRequest(params, apiPath, paths, urlParts);
+                processRequest(params);
         }, true);
 
     }).listen(common.config.api.port, common.config.api.host || '').timeout = common.config.api.timeout || 120000;
     
     if(common.config.tcp && common.config.tcp.enabled){
         net.createServer(function(socket) {
-            socket.on('data', function (data) {
-                if(typeof data.toString !== "undefined"){
-                    data = data.toString("utf8");
-                }
-                data = data.trim();
-                try{
-                    data = JSON.parse(data);
-                }
-                catch(ex){
-                    console.log("Cannot parse data from TCP", data);
-                    data = null;
-                }
+            var JSONStream = require('JSONStream');
+            var params = {
+                'res':socket,
+                'req':{method:"tcp", headers:{}, socket:socket, connection:{}},
+                'qstring':{}
+            }
+            socket.pipe(JSONStream.parse()).on('data', function (data) {
                 if(data){
                     plugins.loadConfigs(common.db, function(){
                         var urlParts = url.parse(data.url, true),
                             queryString = urlParts.query,
                             paths = urlParts.pathname.split("/"),
-                            apiPath = "",
-                            /**
-                            * Main request processing object containing all informashed shared through all the parts of the same request
-                            * @typedef params
-                            * @type {object}
-                            * @property {string} href - full URL href
-                            * @property {res} res - nodejs response object
-                            * @property {req} req - nodejs request object
-                            * @property {object} qstring - all the passed fields either through query string in GET requests or body and query string for POST requests
-                            * @property {string} apiPath - two top level url path, for example /i/analytics
-                            * @property {string} fullPath - full url path, for example /i/analytics/dashboards
-                            * @property {object} files - object with uploaded files, available in POST requests which upload files
-                            * @property {string} cancelRequest - Used for skipping SDK requests, if contains true, then request should be ignored and not processed. Can be set at any time by any plugin, but API only checks for it in beggining after / and /sdk events, so that is when plugins should set it if needed. Should contain reason for request cancelation
-                            * @property {boolean} bulk - True if this SDK request is processed from the bulk method
-                            * @property {array} promises - Array of the promises by different events. When all promises are fulfilled, request counts as processed
-                            * @property {string} ip_address - IP address of the device submitted request, exists in all SDK requests
-                            * @property {object} user - Data with some user info, like country geolocation, etc from the request, exists in all SDK requests
-                            * @property {object} app_user - Document from the app_users collection for current user, exists in all SDK requests after validation
-                            * @property {object} app_user_id - ID of app_users document for the user, exists in all SDK requests after validation
-                            * @property {object} app - Document for the app sending request, exists in all SDK requests after validation and after validateUserForDataReadAPI validation
-                            * @property {ObjectID} app_id - ObjectID of the app document, available after validation
-                            * @property {string} app_cc - Selected app country, available after validation
-                            * @property {string} appTimezone - Selected app timezone, available after validation
-                            * @property {object} member - All data about dashboard user sending the request, exists on all requests containing api_key, after validation through validation methods
-                            * @property {timeObject} time - Time object for the request
-                            */
-                            params = {
-                                'href':urlParts.href,
-                                'qstring':queryString,
-                                'res':socket,
-                                'req':{method:"tcp", body:data.body, url:data.url, headers:{}, socket:socket}
-                            };
+                            apiPath = "";
                             
-                            //remove countly path
-                            if(common.config.path == "/"+paths[1]){
-                                paths.splice(1, 1);
+                        params.href = urlParts.href;
+                        params.qstring = queryString;
+                        params.req.body = data.body;
+                        params.req.url = data.url;
+                        params.apiPath = apiPath;
+                        params.paths = paths;
+                        params.urlParts = urlParts;
+                        
+                        if(params.req.body){
+                            for(var i in params.req.body){
+                                params.qstring[i] = params.req.body[i];
                             }
-                            
-                            if(params.req.body){
-                                for(var i in params.req.body){
-                                    params.qstring[i] = params.req.body[i];
-                                }
-                            }
-                            processRequest(params, apiPath, paths, urlParts);
+                        }
+                        processRequest(params);
                     }, true);
                 }
+                else{
+                    common.returnMessage(params, 400, 'Data cannot be parsed');
+                }
+            }).on("error", function(){
+                common.returnMessage(params, 400, 'Data cannot be parsed');
             });
         }).listen(common.config.tcp.port, common.config.tcp.host || '').timeout = common.config.tcp.timeout || 120000;
     }
