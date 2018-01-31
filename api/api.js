@@ -1226,14 +1226,16 @@ if (cluster.isMaster) {
                             queryString = urlParts.query,
                             paths = urlParts.pathname.split("/"),
                             apiPath = "";
-                            
-                        params.href = urlParts.href;
-                        params.qstring = queryString;
-                        params.req.body = data.body;
-                        params.req.url = data.url;
-                        params.apiPath = apiPath;
-                        params.paths = paths;
-                        params.urlParts = urlParts;
+                            params = {
+                                'href':urlParts.href,
+                                'qstring':queryString,
+                                'res':socket,
+                                'req':{method:"tcp", headers:{}, socket:socket, connection:{}, url:data.url, body:data.body},
+                                'qstring':{},
+                                'apiPath':apiPath,
+                                'paths':paths,
+                                'urlParts':urlParts
+                            };
                         
                         if(params.req.body){
                             for(var i in params.req.body){
@@ -1246,10 +1248,17 @@ if (cluster.isMaster) {
                 else{
                     common.returnMessage(params, 400, 'Data cannot be parsed');
                 }
-            }).on("error", function(){
+            }).on("error", function(err){
+                console.log("TCP parse error", err);
                 common.returnMessage(params, 400, 'Data cannot be parsed');
             });
-        }).listen(common.config.tcp.port, common.config.tcp.host || '').timeout = common.config.tcp.timeout || 120000;
+            socket.on("error", function(err){
+                console.log("TCP connection error", err);
+            });
+            socket.on("close", function(err){
+                console.log("TCP connection closed with error", err);
+            });
+        }).listen(common.config.tcp.port, common.config.tcp.host || '');
     }
 
     plugins.loadConfigs(common.db);
