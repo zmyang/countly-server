@@ -1053,7 +1053,7 @@ if (cluster.isMaster) {
                             }
                             break;
                         case 'events':
-                            if (params.qstring.events) {
+                            if (params.qstring.events && typeof params.qstring.events === "string") {
                                 try {
                                     params.qstring.events = JSON.parse(params.qstring.events);
                                 } catch (SyntaxError) {
