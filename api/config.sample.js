@@ -89,16 +89,11 @@ var countlyConfig = {
     * @type {object} 
     * @property {number} [port=3005] - tcp port number to use, default 3005
     * @property {string} [host=localhost] - host to which to bind connection
-    * @property {number} [max_sockets=1024] - maximal amount of sockets to open simultaneously
-    * @property {number} workers - amount of parallel countly processes to run, defaults to cpu/core amount
-    * @property {number} [timeout=120000] - nodejs server request timeout, need to also increase nginx timeout too for longer requests
     * @property {boolean} enabled - should create tcp server together with http server, or not
     */
     tcp: {
         port: 3005,
         host: "localhost",
-        max_sockets: 1024,
-        timeout: 120000,
         enabled: true
     },
     /**
