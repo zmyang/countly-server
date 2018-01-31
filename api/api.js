@@ -1231,7 +1231,6 @@ if (cluster.isMaster) {
                                 'qstring':queryString,
                                 'res':socket,
                                 'req':{method:"tcp", headers:{}, socket:socket, connection:{}, url:data.url, body:data.body},
-                                'qstring':{},
                                 'apiPath':apiPath,
                                 'paths':paths,
                                 'urlParts':urlParts
