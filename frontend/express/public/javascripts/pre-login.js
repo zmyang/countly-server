@@ -27,7 +27,7 @@ function showMessage(key) {
 */
 function addLocalization(name, path, callback){
     var langs = jQuery.i18n.map;
-    var lang = store.get("countly_lang") || "en";
+    var lang = store.get("countly_lang") || "zh";
     jQuery.i18n.properties({
 		name:name, 
 		path:[path],
@@ -62,7 +62,7 @@ function addLocalization(name, path, callback){
 
 $(document).ready(function() {
 
-	var lang = "en";
+	var lang = "zh";
 	if (store.get("countly_lang")) {
 		lang = store.get("countly_lang");
 		$("#active-lang").text(lang.toUpperCase());

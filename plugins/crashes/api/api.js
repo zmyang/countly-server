@@ -662,7 +662,7 @@ plugins.setConfigs("crashes", {
                 }
                 else{
                     //var columns = ["nonfatal", "session", "reports", "users", "os", "name", "lastTs", "latest_version", "is_resolved"];
-                    var columns = ["", "name", "os", "reports", "users", "lastTs", "latest_version"];
+                    var columns = ["", "name", "os", "reports", "users", "lastTs", "startTs", "latest_version"];
                     var filter = {};
                     if(params.qstring.query && params.qstring.query != ""){
                         try{
@@ -716,7 +716,7 @@ plugins.setConfigs("crashes", {
                         filter["_id"] = {$ne:"meta"};
                     common.db.collection('app_crashgroups' + params.app_id).count({},function(err, total) {
                         total--;
-                        var cursor = common.db.collection('app_crashgroups' + params.app_id).find(filter,{uid:1, is_new:1, is_renewed:1, is_hidden:1, os:1, not_os_specific:1, name:1, error:1, users:1, lastTs:1, reports:1, latest_version:1, is_resolved:1, resolved_version:1, nonfatal:1, session:1, is_resolving: 1});
+                        var cursor = common.db.collection('app_crashgroups' + params.app_id).find(filter,{uid:1, is_new:1, is_renewed:1, is_hidden:1, os:1, not_os_specific:1, name:1, error:1, users:1, lastTs:1, startTs:1, reports:1, latest_version:1, is_resolved:1, resolved_version:1, nonfatal:1, session:1, is_resolving: 1});
                         cursor.count(function (err, count) {
                             if(params.qstring.iDisplayStart && params.qstring.iDisplayStart != 0)
                                 cursor.skip(parseInt(params.qstring.iDisplayStart));
