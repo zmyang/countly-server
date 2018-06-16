@@ -64,7 +64,7 @@ var plugin = {},
     
     plugins.register("/o", function(ob){
 		var params = ob.params;
-        console.log("params="+params);
+        console.log("params="+JSON.stringify(params));
         var validateUserForDataReadAPI = ob.validateUserForDataReadAPI;
 		if (params.qstring.method == "network") {
 			validateUserForDataReadAPI(params, function(){
