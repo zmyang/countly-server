@@ -1,6 +1,6 @@
 (function () {
-    window.countlyViews = window.countlyViews || {};
-    CountlyHelpers.createMetricModel(window.countlyViews, {name: "views"}, jQuery);
+    window.countlyNetwork = window.countlyNetwork || {};
+    CountlyHelpers.createMetricModel(window.countlyNetwork, {name: "network"}, jQuery);
     //Private Properties
     var _periodObj = {},
         _actionData = {},
@@ -9,11 +9,11 @@
         _segment = null,
         _segments = [],
         _domains = [],
-        _name = "views",
+        _name = "network",
         _period = null;
 
     //Public Methods
-    countlyViews.initialize = function () {
+    countlyNetwork.initialize = function () {
         if (_initialized &&  _period == countlyCommon.getPeriodForAjax() && _activeAppKey == countlyCommon.ACTIVE_APP_KEY) {
             return this.refresh();
         }
@@ -31,7 +31,7 @@
                     data:{
                         "api_key":countlyGlobal.member.api_key,
                         "app_id":countlyCommon.ACTIVE_APP_ID,
-                        "method":"get_view_segments",
+                        "method":"get_network_segments",
                         "period":_period
                     },
                     dataType:"jsonp",
@@ -57,8 +57,7 @@
                     },
                     dataType:"jsonp",
                     success:function (json) {
-                        console.log("viewjson==="+json);
-			countlyViews.setDb(json);
+                        countlyNetwork.setDb(json);
                     }
                 })
             ).then(function(){
@@ -70,7 +69,7 @@
         }
     };
 
-    countlyViews.refresh = function () {
+    countlyNetwork.refresh = function () {
         _periodObj = countlyCommon.periodObj;
 
         if (!countlyCommon.DEBUG) {
@@ -90,7 +89,7 @@
                     data:{
                         "api_key":countlyGlobal.member.api_key,
                         "app_id":countlyCommon.ACTIVE_APP_ID,
-                        "method":"get_view_segments",
+                        "method":"get_network_segments",
                         "period":_period,
                         "display_loader": false
                     },
@@ -117,7 +116,7 @@
                     },
                     dataType:"jsonp",
                     success:function (json) {
-                        countlyViews.extendDb(json);
+                        countlyNetwork.extendDb(json);
                     }
                 })
             ).then(function(){
@@ -130,29 +129,29 @@
         }
     };
 
-    countlyViews._reset = countlyViews.reset;
-    countlyViews.reset = function () {
+    countlyNetwork._reset = countlyNetwork.reset;
+    countlyNetwork.reset = function () {
         _actionData = {};
         _segment = null;
         _initialized = false;
         _segments = [];
         _domains = [];
-        countlyViews._reset();
+        countlyNetwork._reset();
     };
     
-    countlyViews.setSegment = function(segment){
+    countlyNetwork.setSegment = function(segment){
         _segment = countlyCommon.decode(segment);
     };
     
-    countlyViews.getSegments = function(){
+    countlyNetwork.getSegments = function(){
         return _segments;
     };
     
-    countlyViews.getDomains = function(){
+    countlyNetwork.getDomains = function(){
         return _domains;
     };
     
-    countlyViews.loadActionsData = function (view) {
+    countlyNetwork.loadActionsData = function (view) {
         _period = countlyCommon.getPeriodForAjax();
 
         return $.when(
@@ -162,7 +161,7 @@
                 data:{
                     "api_key":countlyGlobal.member.api_key,
                     "app_id":countlyCommon.ACTIVE_APP_ID,
-                    "method":"get_view_segments",
+                    "method":"get_network_segments",
                     "period":_period
                 },
                 dataType:"jsonp",
@@ -195,7 +194,7 @@
         });
     };
     
-    countlyViews.testUrl = function(url, callback){
+    countlyNetwork.testUrl = function(url, callback){
         $.ajax({
             type:"GET",
             url:countlyCommon.API_PARTS.data.r+"/urltest",
@@ -210,7 +209,7 @@
         });
     };
     
-    countlyViews.getToken = function(callback){
+    countlyNetwork.getToken = function(callback){
         $.ajax({
             type:"GET",
             url:countlyCommon.API_PARTS.data.r+"/token",
@@ -230,11 +229,11 @@
         });
     };
     
-    countlyViews.getActionsData = function (view) {
+    countlyNetwork.getActionsData = function (view) {
         return _actionData;
     };
     
-    countlyViews.getChartData = function(path, metric, name){
+    countlyNetwork.getChartData = function(path, metric, name){
         var chartData = [
                 { data:[], label:name, color:'#DDDDDD', mode:"ghost" },
                 { data:[], label:name, color:'#333933' }
@@ -250,12 +249,12 @@
                 { name:metric}
             ];
 
-        return countlyCommon.extractChartData(countlyViews.getDb(), countlyViews.clearObject, chartData, dataProps, countlyCommon.encode(path));
+        return countlyCommon.extractChartData(countlyNetwork.getDb(), countlyNetwork.clearObject, chartData, dataProps, countlyCommon.encode(path));
     };
 
-    countlyViews.getData = function (clean) {
-
-        var chartData = countlyCommon.extractTwoLevelData(countlyViews.getDb(), countlyViews.getMeta(), countlyViews.clearObject, [
+    countlyNetwork.getData = function (clean) {
+	console.log("DB==="+JSON.stringify(countlyNetwork.getDb()));
+        var chartData = countlyCommon.extractTwoLevelData(countlyNetwork.getDb(), countlyNetwork.getMeta(), countlyNetwork.clearObject, [
             {
                 name:_name,
                 func:function (rangeArr, dataObj) {
@@ -276,7 +275,7 @@
         return chartData;
     };
     
-    countlyViews.clearObject = function (obj) {
+    countlyNetwork.clearObject = function (obj) {
         if (obj) {
             if (!obj["u"]) obj["u"] = 0;
             if (!obj["t"]) obj["t"] = 0;
@@ -292,13 +291,13 @@
         return obj;
     };
     
-    countlyViews.getViewFrequencyData = function () {
-        var _Db = countlyViews.getDb();
-        countlyViews.setDb(countlySession.getDb());
+    countlyNetwork.getViewFrequencyData = function () {
+        var _Db = countlyNetwork.getDb();
+        countlyNetwork.setDb(countlySession.getDb());
         
-        var data = countlyViews.getRangeData("vc", "v-ranges", countlyViews.explainFrequencyRange);
+        var data = countlyNetwork.getRangeData("vc", "v-ranges", countlyNetwork.explainFrequencyRange);
         
-        countlyViews.setDb(_Db);
+        countlyNetwork.setDb(_Db);
         
         return data;
     };
@@ -317,11 +316,11 @@
         ];
     };
     
-    countlyViews.explainFrequencyRange = function (index) {
+    countlyNetwork.explainFrequencyRange = function (index) {
         return getRange()[index];
     };
 
-    countlyViews.getFrequencyIndex = function (value) {
+    countlyNetwork.getFrequencyIndex = function (value) {
         return getRange().indexOf(value);
     };
 

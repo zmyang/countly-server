@@ -9,7 +9,7 @@ var plugin = {},
     fetch = require('../../../api/parts/data/fetch.js');
 
 (function (plugin) {
-    plugins.setConfigs("views", {
+    plugins.setConfigs("network", {
         view_limit: 1000,
         view_name_limit: 100
     });
@@ -65,7 +65,7 @@ var plugin = {},
     plugins.register("/o", function(ob){
 		var params = ob.params;
 		var validateUserForDataReadAPI = ob.validateUserForDataReadAPI;
-		if (params.qstring.method == "views") {
+		if (params.qstring.method == "network") {
 			validateUserForDataReadAPI(params, function(){
                 fetch.getTimeObjForEvents("app_viewdata"+params.app_id, params, {unique: "u", levels:{daily:["u","t","s","b","e","d","n"], monthly:["u","t","s","b","e","d","n"]}}, function(data){
                     common.returnOutput(params, data);
@@ -73,7 +73,7 @@ var plugin = {},
             });
 			return true;
 		}
-        else if (params.qstring.method == "get_view_segments") {
+        else if (params.qstring.method == "get_network_segments") {
 			validateUserForDataReadAPI(params, function(){
                 var res = {segments:[], domains:[]};
                 common.db.collection("app_viewdata"+params.app_id).findOne({'_id': "meta"}, function(err, res1){

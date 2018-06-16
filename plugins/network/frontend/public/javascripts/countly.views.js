@@ -1,36 +1,36 @@
-window.ViewsView = countlyView.extend({
+window.NetworkView = countlyView.extend({
     selectedMetric:"u",
     selectedView:null,
     selectedViews:[],
 	selectedApps: {all:true},
 	selectedCount: 0,
-    ids:{},
+   ids:{},
     lastId:0,
     token: false,
-    useView: null,
+   useView: null,
     beforeRender: function() {
 			var self = this;
-			return $.when($.get(countlyGlobal["path"]+'/views/templates/views.html', function(src){
+			return $.when($.get(countlyGlobal["path"]+'/network/templates/network.html', function(src){
 				self.template = Handlebars.compile(src);
-			}), countlyViews.initialize()).then(function () {});
+			}), countlyNetwork.initialize()).then(function () {});
     },
     getProperties: function(metric){
         return {
-            "u":jQuery.i18n.map["common.table.total-users"],
-            "n":jQuery.i18n.map["common.table.new-users"],
-            "t":jQuery.i18n.map["views.total-visits"],
-            "d":jQuery.i18n.map["views.duration"],
-            "s":jQuery.i18n.map["views.starts"],
-            "e":jQuery.i18n.map["views.exits"],
-            "b":jQuery.i18n.map["views.bounces"] 
+ 	    "u":jQuery.i18n.map["network.http.request-cnts"],
+            "n":jQuery.i18n.map["network.http.response-time"],
+            "t":jQuery.i18n.map["network.http.error-cnts"]
+ //           "d":jQuery.i18n.map["views.duration"],
+ //           "s":jQuery.i18n.map["views.starts"],
+ //           "e":jQuery.i18n.map["views.exits"],
+ //           "b":jQuery.i18n.map["views.bounces"] 
         }
     },
     renderCommon:function (isRefresh) {
         var self = this;
-        var data = countlyViews.getData();
+        var data = countlyNetwork.getData();
         var props = this.getProperties();
         var usage = [];
-        
+	console.log(JSON.stringify(data));
         for(var i in props){
             usage.push({
                     "title":props[i],
@@ -38,16 +38,16 @@ window.ViewsView = countlyView.extend({
                 });
         }
         
-        var domains = countlyViews.getDomains();
+        var domains = countlyNetwork.getDomains();
         for(var i = 0; i < domains.length; i++){
             domains[i] = countlyCommon.decode(domains[i]);
         }
 
         this.templateData = {
-            "page-title":jQuery.i18n.map["views.title"],
+            "page-title":jQuery.i18n.map["network.title"],
             "font-logo-class":"fa-eye",
-            "active-segmentation": jQuery.i18n.map["views.all-segments"],
-            "segmentations": countlyViews.getSegments(),
+            "active-segmentation": jQuery.i18n.map["network.all-segments"],
+            "segmentations": countlyNetwork.getSegments(),
             "usage":usage,
             "domains":domains
         };
@@ -56,24 +56,24 @@ window.ViewsView = countlyView.extend({
             $(this.el).html(this.template(this.templateData));
             
             var columns = [
-                { "mData": function(row, type){if(type == "display"){ return row.views+"<div class='color'></div>";} else return row.views;}, sType:"string", "sTitle": jQuery.i18n.map["views.table.view"] , "sClass": "break", "sWidth": "30%"},
-                { "mData": "u", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["common.table.total-users"] },
-                { "mData": "n", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["common.table.new-users"] },
-                { "mData": "t", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["views.total-visits"] },
-                { "mData": function(row, type){
-                    var time = (row.d == 0 || row.t == 0) ? 0 : row.d/row.t;
-                    if(type === "display") return countlyCommon.timeString(time/60);
-                    else return time}, sType:"numeric", "sTitle": jQuery.i18n.map["views.avg-duration"] },
-                { "mData": "s", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["views.starts"] },
-                { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["views.exits"] },
-                { "mData": "b", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["views.bounces"] }
+                { "mData": function(row, type){if(type == "display"){ return row.views+"<div class='color'></div>";} else return row.views;}, sType:"string", "sTitle": jQuery.i18n.map["network.table.url"] , "sClass": "break", "sWidth": "30%"},
+                { "mData": "u", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.request-cnts"] },
+                { "mData": "n", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.response-time"] },
+                { "mData": "t", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.error-cnts"] }
+ //              { "mData": function(row, type){
+ //                   var time = (row.d == 0 || row.t == 0) ? 0 : row.d/row.t;
+ //                   if(type === "display") return countlyCommon.timeString(time/60);
+ //                   else return time}, sType:"numeric", "sTitle": jQuery.i18n.map["views.avg-duration"] },
+ //               { "mData": "s", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["views.starts"] },
+ //               { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["views.exits"] },
+ //               { "mData": "b", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["views.bounces"] }
             ];
             
             if(typeof addDrill != "undefined"){
                 $(".widget-header .left .title").after(addDrill("sg.name", null, "[CLY]_view"));
                 if(countlyGlobal["apps"][countlyCommon.ACTIVE_APP_ID].type == "web" && domains.length){
                     columns.push({ "mData": function(row, type){
-                        var url = "#/analytics/views/action-map/";
+                        var url = "#/analytics/network/action-map/";
                         if(countlyGlobal['apps'][countlyCommon.ACTIVE_APP_ID]["app_domain"] && countlyGlobal['apps'][countlyCommon.ACTIVE_APP_ID]["app_domain"].length > 0){
                             url = countlyGlobal['apps'][countlyCommon.ACTIVE_APP_ID]["app_domain"];
                             if(url.indexOf("http") !== 0)
@@ -82,8 +82,8 @@ window.ViewsView = countlyView.extend({
                                 url = url.substr(0, url.length - 1);
                         }
 
-                        return '<a href='+url+row.views+' class="table-link green" data-localize="views.table.view" style="margin:0px; padding:2px;">'+jQuery.i18n.map["views.table.view"]+'</a>';
-                        }, sType:"string", "sTitle": jQuery.i18n.map["views.action-map"], "sClass":"shrink center", bSortable: false });
+                        return '<a href='+url+row.views+' class="table-link green" data-localize="views.table.view" style="margin:0px; padding:2px;">'+jQuery.i18n.map["network.table.view"]+'</a>';
+                        }, sType:"string", "sTitle": jQuery.i18n.map["network.action-map"], "sClass":"shrink center", bSortable: false });
                 }
             }
 
@@ -106,7 +106,7 @@ window.ViewsView = countlyView.extend({
 
             $(".d-table").stickyTableHeaders();
             this.dtable.fnSort( [ [1,'desc'] ] );
-            $(".dataTable-bottom").append("<div class='dataTables_info' style='float: right;'>"+jQuery.i18n.map["views.maximum-items"]+" ("+countlyCommon.GRAPH_COLORS.length+")</div>")
+            $(".dataTable-bottom").append("<div class='dataTables_info' style='float: right;'>"+jQuery.i18n.map["network.maximum-items"]+" ("+countlyCommon.GRAPH_COLORS.length+")</div>")
             
             $('.views-table tbody').on("click", "tr", function (event){
                 var row = $(this);
@@ -142,7 +142,7 @@ window.ViewsView = countlyView.extend({
                 var followLink = false;
                 var url = event.target.href;
 
-                if(url.indexOf("#/analytics/views/action-map/") < 0){
+                if(url.indexOf("#/analytics/network/action-map/") < 0){
                     followLink = true;
                 }
 
@@ -170,7 +170,7 @@ window.ViewsView = countlyView.extend({
                         newWindow = window.open("");
                     }
 
-                    countlyViews.getToken(function(token){
+                    countlyNetwork.getToken(function(token){
                         self.useView = event.target.hash;
                         self.token = token;
 
@@ -195,7 +195,7 @@ window.ViewsView = countlyView.extend({
                     url = url.substr(0, url.length - 1);
                 }
                 if(self.token !== false){
-                    var path = self.useView.replace("#/analytics/views/action-map/", "");
+                    var path = self.useView.replace("#/analytics/network/action-map/", "");
                     window.open(url+path, "cly:" + JSON.stringify({"token":self.token,"purpose":"heatmap",period:countlyCommon.getPeriodForAjax(),showHeatMap: true}));
                 }
                 $('.widget-content > .cly-button-menu-trigger').removeClass("active");
@@ -215,8 +215,8 @@ window.ViewsView = countlyView.extend({
             });
             
             $(".segmentation-option").on("click", function () {
-                countlyViews.reset();
-				countlyViews.setSegment($(this).data("value"));
+                countlyNetwork.reset();
+				countlyNetwork.setSegment($(this).data("value"));
                 self.refresh();
 			});
     
@@ -261,7 +261,7 @@ window.ViewsView = countlyView.extend({
         var dp = [];
         for(var i = 0;  i < this.selectedViews.length; i++){
             var color = countlyCommon.GRAPH_COLORS[i];
-            var data = countlyViews.getChartData(this.selectedViews[i], this.selectedMetric, props[this.selectedMetric]).chartDP;
+            var data = countlyNetwork.getChartData(this.selectedViews[i], this.selectedMetric, props[this.selectedMetric]).chartDP;
             data[1].color = color;
             $("#"+this.ids[this.selectedViews[i]]+" .color").css("background-color", color);
             if(this.selectedViews.length == 1){
@@ -275,7 +275,7 @@ window.ViewsView = countlyView.extend({
     },
     refresh:function () {
         var self = this;
-        $.when(countlyViews.refresh()).then(function () {
+        $.when(countlyNetwork.refresh()).then(function () {
             if (app.activeView != self) {
                 return false;
             }
@@ -285,19 +285,19 @@ window.ViewsView = countlyView.extend({
         
             $(self.el).find(".dashboard-summary").replaceWith(newPage.find(".dashboard-summary"));
 
-            var data = countlyViews.getData();
+            var data = countlyNetwork.getData();
             CountlyHelpers.refreshTable(self.dtable, data.chartData);
             self.drawGraph();
         });
     }
 });
 
-window.ViewFrequencyView = countlyView.extend({
+window.NetworkFrequencyView = countlyView.extend({
     beforeRender: function() {
         return $.when(countlySession.initialize()).then(function () {});
     },
     renderCommon:function (isRefresh) {
-        var durationData = countlyViews.getViewFrequencyData();
+        var durationData = countlyNetwork.getViewFrequencyData();
 
         this.templateData = {
             "page-title":jQuery.i18n.map["views.view-frequency"],
@@ -329,7 +329,7 @@ window.ViewFrequencyView = countlyView.extend({
                 return false;
             }
 
-            var durationData = countlyViews.getViewFrequencyData();
+            var durationData = countlyNetwork.getViewFrequencyData();
             countlyCommon.drawGraph(durationData.chartDP, "#dashboard-graph", "bar");
             CountlyHelpers.refreshTable(self.dtable, durationData.chartData);
         });
@@ -347,7 +347,7 @@ window.ActionMapView = countlyView.extend({
         var self = this;
         return $.when($.get(countlyGlobal["path"]+'/views/templates/actionmap.html', function(src){
 			self.template = Handlebars.compile(src);
-		}), countlyViews.loadActionsData(this.view)).then(function () {});
+		}), countlyNetwork.loadActionsData(this.view)).then(function () {});
     },
     getData: function(data){
         var heat = [];
@@ -398,11 +398,11 @@ window.ActionMapView = countlyView.extend({
     },
     loadIframe: function(){
         var self = this;
-        var segments = countlyViews.getActionsData().domains;
+        var segments = countlyNetwork.getActionsData().domains;
         var url = "http://"+segments[self.curSegment]+self.view;
         if($("#view_loaded_url").val().length == 0)
             $("#view_loaded_url").val(url);
-        countlyViews.testUrl(url, function(result){
+        countlyNetwork.testUrl(url, function(result){
             if(result){
                 $("#view-map iframe").attr("src", url);
                 $("#view_loaded_url").val(url);
@@ -420,15 +420,15 @@ window.ActionMapView = countlyView.extend({
         });
     },
     renderCommon:function (isRefresh) {
-        var data = countlyViews.getActionsData();
-        this.actionType = data.types[0] || jQuery.i18n.map["views.select-action-type"];
-        var segments = countlyViews.getSegments();
+        var data = countlyNetwork.getActionsData();
+        this.actionType = data.types[0] || jQuery.i18n.map["network.select-action-type"];
+        var segments = countlyNetwork.getSegments();
         var self = this;
         this.templateData = {
-            "page-title":jQuery.i18n.map["views.action-map"],
+            "page-title":jQuery.i18n.map["network.action-map"],
             "font-logo-class":"fa-eye",
             "first-type":this.actionType,
-            "active-segmentation": jQuery.i18n.map["views.all-segments"],
+            "active-segmentation": jQuery.i18n.map["network.all-segments"],
             "segmentations": segments,
             "resolutions": this.getResolutions(),
             "data":data
@@ -491,8 +491,8 @@ window.ActionMapView = countlyView.extend({
 			});
             
             $("#view-segments .segmentation-option").on("click", function () {
-                countlyViews.reset();
-				countlyViews.setSegment($(this).data("value"));
+                countlyNetwork.reset();
+				countlyNetwork.setSegment($(this).data("value"));
                 self.refresh();
 			});
         }
@@ -503,12 +503,12 @@ window.ActionMapView = countlyView.extend({
     },
     refresh:function () {
         var self = this;
-        $.when(countlyViews.loadActionsData(this.view)).then(function () {
+        $.when(countlyNetwork.loadActionsData(this.view)).then(function () {
             if (app.activeView != self) {
                 return false;
             }
             self.renderCommon(true);
-            var data = countlyViews.getActionsData();
+            var data = countlyNetwork.getActionsData();
             if(self.map){
                 self.map.clear();
                 self.map.data(self.getData(data.data));
@@ -519,19 +519,19 @@ window.ActionMapView = countlyView.extend({
     }
 });
 //register views
-app.viewsView = new ViewsView();
-app.viewFrequencyView = new ViewFrequencyView();
+app.networkView = new NetworkView();
+app.networkFrequencyView = new NetworkFrequencyView();
 app.actionMapView = new ActionMapView();
 
-app.route("/analytics/views", 'views', function () {
-	this.renderWhenReady(this.viewsView);
+app.route("/analytics/network", 'network', function () {
+	this.renderWhenReady(this.networkView);
 });
 
-app.route("/analytics/view-frequency", 'views', function () {
-	this.renderWhenReady(this.viewFrequencyView);
+app.route("/analytics/view-frequency", 'network', function () {
+	this.renderWhenReady(this.networkFrequencyView);
 });
 
-app.route("/analytics/views/action-map/*view", 'views', function (view) {
+app.route("/analytics/network/action-map/*view", 'network', function (view) {
     this.actionMapView.view = view;
 	this.renderWhenReady(this.actionMapView);
 });
@@ -540,7 +540,7 @@ app.addPageScript("/drill#", function(){
     var drillClone;
     var self = app.drillView;
     if(countlyGlobal["record_views"]){
-        $("#drill-types").append('<div id="drill-type-views" class="item">'+jQuery.i18n.map["views.title"]+'</div>');
+        $("#drill-types").append('<div id="drill-type-views" class="item">'+jQuery.i18n.map["network.title"]+'</div>');
         $("#drill-type-views").on("click", function() {
             if ($(this).hasClass("active")) {
                 return true;
@@ -584,24 +584,24 @@ app.addPageScript("/drill#", function(){
 
 $( document ).ready(function() {
     if(!production){
-        CountlyHelpers.loadJS("views/javascripts/simpleheat.js");
+        CountlyHelpers.loadJS("network/javascripts/simpleheat.js");
     }
     jQuery.fn.dataTableExt.oSort['view-frequency-asc']  = function(x, y) {
-        x = countlyViews.getFrequencyIndex(x);
-        y = countlyViews.getFrequencyIndex(y);
+        x = countlyNetwork.getFrequencyIndex(x);
+        y = countlyNetwork.getFrequencyIndex(y);
 
         return ((x < y) ? -1 : ((x > y) ?  1 : 0));
     };
 
     jQuery.fn.dataTableExt.oSort['view-frequency-desc']  = function(x, y) {
-        x = countlyViews.getFrequencyIndex(x);
-        y = countlyViews.getFrequencyIndex(y);
+        x = countlyNetwork.getFrequencyIndex(x);
+        y = countlyNetwork.getFrequencyIndex(y);
 
         return ((x < y) ?  1 : ((x > y) ? -1 : 0));
     };
-	var menu = '<a href="#/analytics/views" class="item">'+
+	var menu = '<a href="#/analytics/network" class="item">'+
 		'<div class="logo-icon fa fa-eye"></div>'+
-		'<div class="text" data-localize="views.title"></div>'+
+		'<div class="text" data-localize="network.title"></div>'+
 	'</a>';
 	$('#web-type #analytics-submenu').append(menu);
 	$('#mobile-type #analytics-submenu').append(menu);

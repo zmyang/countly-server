@@ -182,6 +182,18 @@ window.CrashesView = countlyView.extend({
                 },
                 {
                     "mData": function(row, type) {
+                        if (type == "display") {
+                            return countlyCommon.formatTimeAgo(row.startTs);
+                        } else {
+                            return row.lastTs;
+                        }
+                    },
+                    "sType": "format-ago",
+                    "sTitle": jQuery.i18n.map["crashes.start_time"],
+                    "sWidth": "150px"
+                },
+                {
+                    "mData": function(row, type) {
                         return row.latest_version.replace(/:/g, '.');
                     },
                     "sType": "string",
