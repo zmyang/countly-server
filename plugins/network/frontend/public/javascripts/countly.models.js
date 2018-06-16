@@ -1,0 +1,327 @@
+(function () {
+    window.countlyNetwork = window.countlyNetwork || {};
+    CountlyHelpers.createMetricModel(window.countlyNetwork, {name: "network"}, jQuery);
+    //Private Properties
+    var _periodObj = {},
+        _actionData = {},
+        _activeAppKey = 0,
+        _initialized = false,
+        _segment = null,
+        _segments = [],
+        _domains = [],
+        _name = "network",
+        _period = null;
+
+    //Public Methods
+    countlyNetwork.initialize = function () {
+        if (_initialized &&  _period == countlyCommon.getPeriodForAjax() && _activeAppKey == countlyCommon.ACTIVE_APP_KEY) {
+            return this.refresh();
+        }
+
+        _period = countlyCommon.getPeriodForAjax();
+
+        if (!countlyCommon.DEBUG) {
+            _activeAppKey = countlyCommon.ACTIVE_APP_KEY;
+            _initialized = true;
+
+            return $.when(
+                $.ajax({
+                    type:"GET",
+                    url:countlyCommon.API_PARTS.data.r,
+                    data:{
+                        "api_key":countlyGlobal.member.api_key,
+                        "app_id":countlyCommon.ACTIVE_APP_ID,
+                        "method":"get_network_segments",
+                        "period":_period
+                    },
+                    dataType:"jsonp",
+                    success:function (json) {
+                        if(json && json.segments){
+                            for(var i = 0; i < json.segments.length; i++){
+                                json.segments[i] = countlyCommon.decode(json.segments[i]);
+                            }
+                            _segments = json.segments;
+                            _domains = json.domains;
+                        }
+                    }
+                }),
+                $.ajax({
+                    type:"GET",
+                    url:countlyCommon.API_PARTS.data.r,
+                    data:{
+                        "api_key":countlyGlobal.member.api_key,
+                        "app_id":countlyCommon.ACTIVE_APP_ID,
+                        "method":_name,
+                        "segmentation": _segment,
+                        "period":_period
+                    },
+                    dataType:"jsonp",
+                    success:function (json) {
+                        countlyNetwork.setDb(json);
+                    }
+                })
+            ).then(function(){
+                return true;
+            });
+        } else {
+            _Db = {"2012":{}};
+            return true;
+        }
+    };
+
+    countlyNetwork.refresh = function () {
+        _periodObj = countlyCommon.periodObj;
+
+        if (!countlyCommon.DEBUG) {
+
+            if (_activeAppKey != countlyCommon.ACTIVE_APP_KEY) {
+                _activeAppKey = countlyCommon.ACTIVE_APP_KEY;
+                return this.initialize();
+            }
+            
+            if(!_initialized)
+                return this.initialize();
+
+            return $.when(
+                $.ajax({
+                    type:"GET",
+                    url:countlyCommon.API_PARTS.data.r,
+                    data:{
+                        "api_key":countlyGlobal.member.api_key,
+                        "app_id":countlyCommon.ACTIVE_APP_ID,
+                        "method":"get_network_segments",
+                        "period":_period,
+                        "display_loader": false
+                    },
+                    dataType:"jsonp",
+                    success:function (json) {
+                        if(json && json.segments){
+                            for(var i = 0; i < json.segments.length; i++){
+                                json.segments[i] = countlyCommon.decode(json.segments[i]);
+                            }
+                            _segments = json.segments;
+                            _domains = json.domains;
+                        }
+                    }
+                }),
+                $.ajax({
+                    type:"GET",
+                    url:countlyCommon.API_PARTS.data.r,
+                    data:{
+                        "api_key":countlyGlobal.member.api_key,
+                        "app_id":countlyCommon.ACTIVE_APP_ID,
+                        "method":_name,
+                        "segmentation": _segment,
+                        "action":"refresh"
+                    },
+                    dataType:"jsonp",
+                    success:function (json) {
+                        countlyNetwork.extendDb(json);
+                    }
+                })
+            ).then(function(){
+                return true;
+            });
+        } else {
+            _Db = {"2012":{}};
+
+            return true;
+        }
+    };
+
+    countlyNetwork._reset = countlyNetwork.reset;
+    countlyNetwork.reset = function () {
+        _actionData = {};
+        _segment = null;
+        _initialized = false;
+        _segments = [];
+        _domains = [];
+        countlyNetwork._reset();
+    };
+    
+    countlyNetwork.setSegment = function(segment){
+        _segment = countlyCommon.decode(segment);
+    };
+    
+    countlyNetwork.getSegments = function(){
+        return _segments;
+    };
+    
+    countlyNetwork.getDomains = function(){
+        return _domains;
+    };
+    
+    countlyNetwork.loadActionsData = function (view) {
+        _period = countlyCommon.getPeriodForAjax();
+
+        return $.when(
+            $.ajax({
+                type:"GET",
+                url:countlyCommon.API_PARTS.data.r,
+                data:{
+                    "api_key":countlyGlobal.member.api_key,
+                    "app_id":countlyCommon.ACTIVE_APP_ID,
+                    "method":"get_network_segments",
+                    "period":_period
+                },
+                dataType:"jsonp",
+                success:function (json) {
+                    if(json && json.segments){
+                        for(var i = 0; i < json.segments.length; i++){
+                            json.segments[i] = countlyCommon.decode(json.segments[i]);
+                        }
+                        _segments = json.segments;
+                    }
+                }
+            }),
+            $.ajax({
+                type:"GET",
+                url:countlyCommon.API_PARTS.data.r+"/actions",
+                data:{
+                    "api_key":countlyGlobal.member.api_key,
+                    "app_id":countlyCommon.ACTIVE_APP_ID,
+                    "view":view,
+                    "segment": _segment,
+                    "period":_period
+                },
+                dataType:"json",
+                success:function (json) {
+                    _actionData = json;
+                }
+            })
+        ).then(function(){
+            return true;
+        });
+    };
+    
+    countlyNetwork.testUrl = function(url, callback){
+        $.ajax({
+            type:"GET",
+            url:countlyCommon.API_PARTS.data.r+"/urltest",
+            data:{
+                "url":url
+            },
+            dataType:"json",
+            success:function (json) {
+                if(callback)
+                    callback(json.result);
+            }
+        });
+    };
+    
+    countlyNetwork.getToken = function(callback){
+        $.ajax({
+            type:"GET",
+            url:countlyCommon.API_PARTS.data.r+"/token",
+            data:{
+                "api_key":countlyGlobal.member.api_key,
+                "app_id":countlyCommon.ACTIVE_APP_ID
+            },
+            dataType:"json",
+            success:function (json) {
+                if(callback)
+                    callback(json.result);
+            },
+            error: function(){
+                if(callback)
+                    callback(false);
+            }
+        });
+    };
+    
+    countlyNetwork.getActionsData = function (view) {
+        return _actionData;
+    };
+    
+    countlyNetwork.getChartData = function(path, metric, name){
+        var chartData = [
+                { data:[], label:name, color:'#DDDDDD', mode:"ghost" },
+                { data:[], label:name, color:'#333933' }
+            ],
+            dataProps = [
+                {
+                    name:"p"+metric,
+                    func:function (dataObj) {
+                        return dataObj[metric]
+                    },
+                    period:"previous"
+                },
+                { name:metric}
+            ];
+
+        return countlyCommon.extractChartData(countlyNetwork.getDb(), countlyNetwork.clearObject, chartData, dataProps, countlyCommon.encode(path));
+    };
+
+    countlyNetwork.getData = function (clean) {
+	console.log("DB==="+JSON.stringify(countlyNetwork.getDb()));
+        var chartData = countlyCommon.extractTwoLevelData(countlyNetwork.getDb(), countlyNetwork.getMeta(), countlyNetwork.clearObject, [
+            {
+                name:_name,
+                func:function (rangeArr, dataObj) {
+                    return countlyCommon.decode(rangeArr);
+                }
+            },
+            { "name":"u" },
+            { "name":"t" },
+            { "name":"s" },
+            { "name":"b" },
+            { "name":"e" },
+            { "name":"d" },
+            { "name":"n" }
+        ]);
+
+        chartData.chartData = countlyCommon.mergeMetricsByName(chartData.chartData, _name);
+
+        return chartData;
+    };
+    
+    countlyNetwork.clearObject = function (obj) {
+        if (obj) {
+            if (!obj["u"]) obj["u"] = 0;
+            if (!obj["t"]) obj["t"] = 0;
+            if (!obj["n"]) obj["n"] = 0;
+            if (!obj["s"]) obj["s"] = 0;
+            if (!obj["e"]) obj["e"] = 0;
+            if (!obj["b"]) obj["b"] = 0;
+            if (!obj["d"]) obj["d"] = 0;
+        }
+        else {
+            obj = {"u":0, "t":0, "n":0, "s":0, "e":0, "b":0, "d":0};
+        }
+        return obj;
+    };
+    
+    countlyNetwork.getViewFrequencyData = function () {
+        var _Db = countlyNetwork.getDb();
+        countlyNetwork.setDb(countlySession.getDb());
+        
+        var data = countlyNetwork.getRangeData("vc", "v-ranges", countlyNetwork.explainFrequencyRange);
+        
+        countlyNetwork.setDb(_Db);
+        
+        return data;
+    };
+    
+    var getRange = function(){
+        var visits = jQuery.i18n.map["views.visits"].toLowerCase();
+        return [
+            "1 - 2 " + visits,
+            "3 - 5 " + visits,
+            "6 - 10 " + visits,
+            "11 - 15 " + visits,
+            "16 - 30 " + visits,
+            "31 - 50 " + visits,
+            "51 - 100 " + visits,
+            "> 100 " + visits
+        ];
+    };
+    
+    countlyNetwork.explainFrequencyRange = function (index) {
+        return getRange()[index];
+    };
+
+    countlyNetwork.getFrequencyIndex = function (value) {
+        return getRange().indexOf(value);
+    };
+
+})();
