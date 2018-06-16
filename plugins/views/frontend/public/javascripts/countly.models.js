@@ -57,7 +57,8 @@
                     },
                     dataType:"jsonp",
                     success:function (json) {
-                        countlyViews.setDb(json);
+                        console.log("viewjson==="+json);
+			countlyViews.setDb(json);
                     }
                 })
             ).then(function(){
