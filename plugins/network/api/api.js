@@ -64,7 +64,8 @@ var plugin = {},
     
     plugins.register("/o", function(ob){
 		var params = ob.params;
-		var validateUserForDataReadAPI = ob.validateUserForDataReadAPI;
+        console.log("params="+params);
+        var validateUserForDataReadAPI = ob.validateUserForDataReadAPI;
 		if (params.qstring.method == "network") {
 			validateUserForDataReadAPI(params, function(){
                 fetch.getTimeObjForEvents("app_viewdata"+params.app_id, params, {unique: "u", levels:{daily:["u","t","s","b","e","d","n"], monthly:["u","t","s","b","e","d","n"]}}, function(data){

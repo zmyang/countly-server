@@ -30,7 +30,6 @@ window.NetworkView = countlyView.extend({
         var data = countlyNetwork.getData();
         var props = this.getProperties();
         var usage = [];
-	console.log(JSON.stringify(data));
         for(var i in props){
             usage.push({
                     "title":props[i],
