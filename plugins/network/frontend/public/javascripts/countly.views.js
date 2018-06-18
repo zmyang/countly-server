@@ -55,17 +55,17 @@ window.NetworkView = countlyView.extend({
             $(this.el).html(this.template(this.templateData));
             
             var columns = [
-                { "mData": function(row, type){if(type == "display"){ return row.views+"<div class='color'></div>";} else return row.views;}, sType:"string", "sTitle": jQuery.i18n.map["network.table.url"] , "sClass": "break", "sWidth": "30%"},
+                { "mData": function(row, type){if(type == "display"){ return row.network+"<div class='color'></div>";} else return row.network;}, sType:"string", "sTitle": jQuery.i18n.map["network.table.url"] , "sClass": "break", "sWidth": "30%"},
                 { "mData": "u", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.request-cnts"] },
                 { "mData": "n", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.response-time"] },
                 { "mData": "t", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.error-cnts"] }
  //              { "mData": function(row, type){
  //                   var time = (row.d == 0 || row.t == 0) ? 0 : row.d/row.t;
  //                   if(type === "display") return countlyCommon.timeString(time/60);
- //                   else return time}, sType:"numeric", "sTitle": jQuery.i18n.map["views.avg-duration"] },
- //               { "mData": "s", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["views.starts"] },
- //               { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["views.exits"] },
- //               { "mData": "b", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["views.bounces"] }
+ //                   else return time}, sType:"numeric", "sTitle": jQuery.i18n.map["network.avg-duration"] },
+ //               { "mData": "s", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.starts"] },
+ //               { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.exits"] },
+ //               { "mData": "b", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.bounces"] }
             ];
             
             if(typeof addDrill != "undefined"){
@@ -81,7 +81,7 @@ window.NetworkView = countlyView.extend({
                                 url = url.substr(0, url.length - 1);
                         }
 
-                        return '<a href='+url+row.views+' class="table-link green" data-localize="views.table.view" style="margin:0px; padding:2px;">'+jQuery.i18n.map["network.table.view"]+'</a>';
+                        return '<a href='+url+row.network+' class="table-link green" data-localize="network.table.view" style="margin:0px; padding:2px;">'+jQuery.i18n.map["network.table.view"]+'</a>';
                         }, sType:"string", "sTitle": jQuery.i18n.map["network.action-map"], "sClass":"shrink center", bSortable: false });
                 }
             }
@@ -90,15 +90,15 @@ window.NetworkView = countlyView.extend({
                 "aaData": data.chartData,
                 "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
                     if(!self.selectedView){
-                        self.selectedView = aData.views;
+                        self.selectedView = aData.network;
                         self.selectedViews.push(self.selectedView);
                     }
                     
-                    if(!self.ids[aData.views]){
-                        self.ids[aData.views] = "view_"+self.lastId;
+                    if(!self.ids[aData.network]){
+                        self.ids[aData.network] = "view_"+self.lastId;
                         self.lastId++;
                     }
-                    $(nRow).attr("id", self.ids[aData.views]);
+                    $(nRow).attr("id", self.ids[aData.network]);
                 },
                 "aoColumns": columns
             }));
@@ -299,7 +299,7 @@ window.NetworkFrequencyView = countlyView.extend({
         var durationData = countlyNetwork.getViewFrequencyData();
 
         this.templateData = {
-            "page-title":jQuery.i18n.map["views.view-frequency"],
+            "page-title":jQuery.i18n.map["network.view-frequency"],
             "font-logo-class":"fa-eye"
         };
 
@@ -311,7 +311,7 @@ window.NetworkFrequencyView = countlyView.extend({
             this.dtable = $('.d-table').dataTable($.extend({}, $.fn.dataTable.defaults, {
                 "aaData": durationData.chartData,
                 "aoColumns": [
-                    { "mData": "vc", sType:"view-frequency", "sTitle": jQuery.i18n.map["views.view-frequency"] },
+                    { "mData": "vc", sType:"view-frequency", "sTitle": jQuery.i18n.map["network.view-frequency"] },
                     { "mData": "t", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["common.number-of-sessions"] },
                     { "mData": "percent", "sType":"percent", "sTitle": jQuery.i18n.map["common.percent"] }
                 ]
@@ -344,7 +344,7 @@ window.ActionMapView = countlyView.extend({
     baseBlur: 1.6,
     beforeRender: function() {
         var self = this;
-        return $.when($.get(countlyGlobal["path"]+'/views/templates/actionmap.html', function(src){
+        return $.when($.get(countlyGlobal["path"]+'/network/templates/actionmap.html', function(src){
 			self.template = Handlebars.compile(src);
 		}), countlyNetwork.loadActionsData(this.view)).then(function () {});
     },
@@ -413,7 +413,7 @@ window.ActionMapView = countlyView.extend({
                 }
                 else{
                     $("#view_loaded_url").show();
-                    CountlyHelpers.alert(jQuery.i18n.map["views.cannot-load"], "red");
+                    CountlyHelpers.alert(jQuery.i18n.map["network.cannot-load"], "red");
                 }
             }
         });
@@ -614,7 +614,7 @@ $( document ).ready(function() {
     
     //check if configuration view exists
     if(app.configurationsView){
-        app.configurationsView.registerLabel("views", "views.title");
-        app.configurationsView.registerLabel("views.view_limit", "views.view-limit");
+        app.configurationsView.registerLabel("network", "network.title");
+        app.configurationsView.registerLabel("network.view_limit", "network.view-limit");
     }
 });
