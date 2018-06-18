@@ -16,10 +16,10 @@ window.NetworkView = countlyView.extend({
     },
     getProperties: function(metric){
         return {
- 	    "u":jQuery.i18n.map["network.http.request-cnts"],
+ 	    "u":jQuery.i18n.map["network.http.error-cnts"],
          "d":jQuery.i18n.map["network.http.response-time"],
             // "n":jQuery.i18n.map["network.http.response-time"],
-            "t":jQuery.i18n.map["network.http.error-cnts"],
+            "t":jQuery.i18n.map["network.http.request-cnts"],
         //    "s":jQuery.i18n.map["views.starts"],
         //    "e":jQuery.i18n.map["views.exits"],
         //    "b":jQuery.i18n.map["views.bounces"] 
@@ -56,9 +56,9 @@ window.NetworkView = countlyView.extend({
             
             var columns = [
                 { "mData": function(row, type){if(type == "display"){ return row.network+"<div class='color'></div>";} else return row.network;}, sType:"string", "sTitle": jQuery.i18n.map["network.table.url"] , "sClass": "break", "sWidth": "30%"},
-                { "mData": "u", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.request-cnts"] },
+                { "mData": "u", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.error-cnts"] },
                 { "mData": "n", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.response-time"] },
-                { "mData": "t", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.error-cnts"] },
+                { "mData": "t", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.request-cnts"] },
               { "mData": function(row, type){
                    var time = (row.d == 0 || row.t == 0) ? 0 : row.d/row.t;
                    if(type === "display") return countlyCommon.timeString(time/60);
