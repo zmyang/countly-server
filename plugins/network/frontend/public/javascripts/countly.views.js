@@ -18,11 +18,11 @@ window.NetworkView = countlyView.extend({
         return {
  	    "u":jQuery.i18n.map["network.http.request-cnts"],
             "n":jQuery.i18n.map["network.http.response-time"],
-            "t":jQuery.i18n.map["network.http.error-cnts"]
- //           "d":jQuery.i18n.map["views.duration"],
- //           "s":jQuery.i18n.map["views.starts"],
- //           "e":jQuery.i18n.map["views.exits"],
- //           "b":jQuery.i18n.map["views.bounces"] 
+            "t":jQuery.i18n.map["network.http.error-cnts"],
+           "d":jQuery.i18n.map["views.duration"],
+           "s":jQuery.i18n.map["views.starts"],
+           "e":jQuery.i18n.map["views.exits"],
+           "b":jQuery.i18n.map["views.bounces"] 
         }
     },
     renderCommon:function (isRefresh) {
