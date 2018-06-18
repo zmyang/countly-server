@@ -62,10 +62,10 @@ window.NetworkView = countlyView.extend({
               { "mData": function(row, type){
                    var time = (row.d == 0 || row.t == 0) ? 0 : row.d/row.t;
                    if(type === "display") return countlyCommon.timeString(time/60);
-                   else return time}, sType:"numeric", "sTitle": jQuery.i18n.map["network.avg-duration"] },
-               { "mData": "s", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.starts"] },
-               { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.exits"] },
-               { "mData": "b", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.bounces"] }
+                   else return time}, sType:"numeric", "sTitle": jQuery.i18n.map["network.avg-duration"] }
+            //    { "mData": "s", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.starts"] },
+            //    { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.exits"] },
+            //    { "mData": "b", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.bounces"] }
             ];
             
             if(typeof addDrill != "undefined"){
