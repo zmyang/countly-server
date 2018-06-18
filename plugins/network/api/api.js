@@ -11,7 +11,7 @@ var plugin = {},
 (function (plugin) {
     plugins.setConfigs("network", {
         view_limit: 1000,
-        view_name_limit: 100
+        view_name_limit: 500
     });
     
     plugins.internalDrillEvents.push("[CLY]_view");
@@ -417,15 +417,15 @@ var plugin = {},
         return new Promise(function(resolve, reject){
             var params = ob.params;
             if (params.qstring.events && params.qstring.events.length && Array.isArray(params.qstring.events)) {
-                if(!params.views){
-                    params.views = [];
+                if(!params.network){
+                    params.network = [];
                 }
                 params.qstring.events = params.qstring.events.filter(function(currEvent){
                     if (currEvent.key == "[CLY]_network"){
                         if(currEvent.segmentation && currEvent.segmentation.name){      
                             //truncate view name if needed
-                            if(currEvent.segmentation.name.length > plugins.getConfig("views").view_name_limit){
-                                currEvent.segmentation.name = currEvent.segmentation.name.slice(0,plugins.getConfig("views").view_name_limit);
+                            if(currEvent.segmentation.name.length > plugins.getConfig("network").view_name_limit){
+                                currEvent.segmentation.name = currEvent.segmentation.name.slice(0,plugins.getConfig("network").view_name_limit);
                             }
                             currEvent.dur = Math.round(currEvent.dur || currEvent.segmentation.dur || 0);
                             //bug from SDK possibly reporting timestamp instead of duration
@@ -434,7 +434,7 @@ var plugin = {},
                             
                             processView(params, currEvent);
                             if(currEvent.segmentation.visit){
-                                params.views.push(currEvent);
+                                params.network.push(currEvent);
                                 var events = [currEvent];
                                 plugins.dispatch("/plugins/drill", {params:params, dbAppUser:params.app_user, events:events});
                             }
@@ -476,7 +476,7 @@ var plugin = {},
 	}
     
     function recordMetrics(params, currEvent, user, view){
-        var tmpMetric = { name: "_view", set: "views", short_code: "v" },
+        var tmpMetric = { name: "_view", set: "network", short_code: "v" },
         tmpTimeObjZero = {},
         tmpTimeObjMonth = {},
         tmpSet = {},
@@ -494,9 +494,9 @@ var plugin = {},
                 
         common.db.collection("app_networkdata"+params.app_id).findOne({'_id': tmpZeroId}, {meta_v2:1}, function(err, res){
             //checking if view should be ignored because of limit
-            if(!err && res && res.meta_v2 && res.meta_v2.views &&
-                typeof res.meta_v2.views[escapedMetricVal] === "undefined" &&
-                Object.keys(res.meta_v2.views).length >= plugins.getConfig("views").view_limit){
+            if(!err && res && res.meta_v2 && res.meta_v2.network &&
+                typeof res.meta_v2.network[escapedMetricVal] === "undefined" &&
+                Object.keys(res.meta_v2.network).length >= plugins.getConfig("network").view_limit){
                 return;
             }
             if(currEvent.segmentation.visit){
