@@ -253,7 +253,7 @@
     };
 
     countlyNetwork.getData = function (clean) {
-	console.log("DB==="+JSON.stringify(countlyNetwork.getDb()));
+	
         var chartData = countlyCommon.extractTwoLevelData(countlyNetwork.getDb(), countlyNetwork.getMeta(), countlyNetwork.clearObject, [
             {
                 name:_name,

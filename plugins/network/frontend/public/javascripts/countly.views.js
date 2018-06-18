@@ -69,7 +69,7 @@ window.NetworkView = countlyView.extend({
             ];
             
             if(typeof addDrill != "undefined"){
-                $(".widget-header .left .title").after(addDrill("sg.name", null, "[CLY]_view"));
+                $(".widget-header .left .title").after(addDrill("sg.name", null, "[CLY]_network"));
                 if(countlyGlobal["apps"][countlyCommon.ACTIVE_APP_ID].type == "web" && domains.length){
                     columns.push({ "mData": function(row, type){
                         var url = "#/analytics/network/action-map/";

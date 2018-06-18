@@ -38,7 +38,7 @@ var plugin = {},
 		var oldUid = ob.oldUser.uid;
 		var newUid = ob.newUser.uid;
         if(oldUid != newUid){
-            common.db.collection("app_views" +  appId).update({uid:oldUid}, {'$set': {uid:newUid}}, {multi:true} ,function(err, res){});
+            common.db.collection("app_network" +  appId).update({uid:oldUid}, {'$set': {uid:newUid}}, {multi:true} ,function(err, res){});
         }
 	});
     
@@ -48,7 +48,7 @@ var plugin = {},
             var uids = ob.uids;
             if(!ob.export_commands["views"])
                 ob.export_commands["views"] = [];
-            ob.export_commands["views"].push('mongoexport ' + ob.dbstr + ' --collection app_views'+ob.app_id+' -q \'{uid:{$in: ["'+uids.join('","')+'"]}}\' --out '+ ob.export_folder+'/app_views'+ob.app_id+'.json');
+            ob.export_commands["views"].push('mongoexport ' + ob.dbstr + ' --collection app_network'+ob.app_id+' -q \'{uid:{$in: ["'+uids.join('","')+'"]}}\' --out '+ ob.export_folder+'/app_network'+ob.app_id+'.json');
             resolve();            
         });
 	});
@@ -57,7 +57,7 @@ var plugin = {},
 		var appId = ob.app_id;
 		var uids = ob.uids;
         if(uids && uids.length){
-            common.db.collection("app_views" +  appId).remove({uid:{$in:uids}}, function(err) {});
+            common.db.collection("app_network" +  appId).remove({uid:{$in:uids}}, function(err) {});
         }
 	});*/
     
@@ -421,7 +421,7 @@ var plugin = {},
                     params.views = [];
                 }
                 params.qstring.events = params.qstring.events.filter(function(currEvent){
-                    if (currEvent.key == "[CLY]_view"){
+                    if (currEvent.key == "[CLY]_network"){
                         if(currEvent.segmentation && currEvent.segmentation.name){      
                             //truncate view name if needed
                             if(currEvent.segmentation.name.length > plugins.getConfig("views").view_name_limit){
@@ -466,7 +466,7 @@ var plugin = {},
         if(currEvent.segmentation.visit){
             var lastView = {};
             lastView[escapedMetricVal] = params.time.timestamp;           
-            common.db.collection('app_views' + params.app_id).findAndModify({'_id': params.app_user_id },{}, {$max:lastView},{upsert:true, new:false}, function (err, view){
+            common.db.collection('app_network' + params.app_id).findAndModify({'_id': params.app_user_id },{}, {$max:lastView},{upsert:true, new:false}, function (err, view){
                 recordMetrics(params, currEvent, params.app_user, view && view.ok ? view.value : null);
             });
         }
@@ -492,7 +492,7 @@ var plugin = {},
             tmpZeroId = "no-segment_" + dateIds.zero + "_" + postfix,
             tmpMonthId = "no-segment_" + dateIds.month + "_" + postfix;
                 
-        common.db.collection("app_viewdata"+params.app_id).findOne({'_id': tmpZeroId}, {meta_v2:1}, function(err, res){
+        common.db.collection("app_networkdata"+params.app_id).findOne({'_id': tmpZeroId}, {meta_v2:1}, function(err, res){
             //checking if view should be ignored because of limit
             if(!err && res && res.meta_v2 && res.meta_v2.views &&
                 typeof res.meta_v2.views[escapedMetricVal] === "undefined" &&
@@ -564,7 +564,7 @@ var plugin = {},
                 currEvent.segmentation.segment = common.db.encode(currEvent.segmentation.segment+"");
                 var update = {$set:{}};
                 update["$set"]["segments."+currEvent.segmentation.segment] =  true;
-                common.db.collection("app_viewdata"+params.app_id).update({'_id': "meta_v2"}, update, {'upsert': true}, function(err, res){});
+                common.db.collection("app_networkdata"+params.app_id).update({'_id': "meta_v2"}, update, {'upsert': true}, function(err, res){});
             }
             
             if (Object.keys(tmpTimeObjZero).length || Object.keys(tmpSet).length) {
@@ -573,9 +573,9 @@ var plugin = {},
                 var update = {$set: tmpSet};
                 if(Object.keys(tmpTimeObjZero).length)
                     update["$inc"] = tmpTimeObjZero;
-                common.db.collection("app_viewdata"+params.app_id).update({'_id': tmpZeroId}, update, {'upsert': true}, function(){});
+                common.db.collection("app_networkdata"+params.app_id).update({'_id': tmpZeroId}, update, {'upsert': true}, function(){});
                 if(typeof currEvent.segmentation.segment != "undefined"){
-                    common.db.collection("app_viewdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.zero + "_" + postfix}, update, {'upsert': true}, function(){});
+                    common.db.collection("app_networkdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.zero + "_" + postfix}, update, {'upsert': true}, function(){});
                 }
             }
             
@@ -583,9 +583,9 @@ var plugin = {},
                 var update = {$set: {m: dateIds.month, a: params.app_id + ""}};
                 if(Object.keys(tmpTimeObjMonth).length)
                     update["$inc"] = tmpTimeObjMonth;
-                common.db.collection("app_viewdata"+params.app_id).update({'_id': tmpMonthId}, update, {'upsert': true}, function(){});
+                common.db.collection("app_networkdata"+params.app_id).update({'_id': tmpMonthId}, update, {'upsert': true}, function(){});
                 if(typeof currEvent.segmentation.segment != "undefined"){
-                    common.db.collection("app_viewdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.month + "_" + postfix}, update, {'upsert': true}, function(){});
+                    common.db.collection("app_networkdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.month + "_" + postfix}, update, {'upsert': true}, function(){});
                 }
             }
         });
@@ -594,14 +594,14 @@ var plugin = {},
     plugins.register("/i/apps/create", function(ob){
 		var params = ob.params;
 		var appId = ob.appId;
-        common.db.collection("app_viewdata" + appId).insert({_id:"meta_v2"},function(){});
-        common.db.collection('app_views' + appId).ensureIndex({"uid":1},function(){});
+        common.db.collection("app_networkdata" + appId).insert({_id:"meta_v2"},function(){});
+        common.db.collection('app_network' + appId).ensureIndex({"uid":1},function(){});
 	});
 	
 	plugins.register("/i/apps/delete", function(ob){
 		var appId = ob.appId;
-		common.db.collection('app_viewdata' + appId).drop(function() {});
-		common.db.collection('app_views' + appId).drop(function() {});
+		common.db.collection('app_networkdata' + appId).drop(function() {});
+		common.db.collection('app_network' + appId).drop(function() {});
         if(common.drillDb){
             common.drillDb.collection("drill_events" + crypto.createHash('sha1').update("[CLY]_action" + appId).digest('hex')).drop(function() {});
             common.drillDb.collection("drill_events" + crypto.createHash('sha1').update("[CLY]_view" + appId).digest('hex')).drop(function() {});
@@ -610,15 +610,15 @@ var plugin = {},
     
     plugins.register("/i/apps/clear_all", function(ob){
 		var appId = ob.appId;
-        common.db.collection('app_viewdata' + appId).drop(function() {
-            common.db.collection("app_viewdata" + appId).insert({_id:"meta_v2"},function(){});
+        common.db.collection('app_networkdata' + appId).drop(function() {
+            common.db.collection("app_networkdata" + appId).insert({_id:"meta_v2"},function(){});
         });
-		common.db.collection('app_views' + appId).drop(function() {
-            common.db.collection('app_views' + appId).ensureIndex({"uid":1},function(){});
+		common.db.collection('app_network' + appId).drop(function() {
+            common.db.collection('app_network' + appId).ensureIndex({"uid":1},function(){});
         });
         if(common.drillDb){
             common.drillDb.collection("drill_events" + crypto.createHash('sha1').update("[CLY]_action" + appId).digest('hex')).drop(function() {});
-            common.drillDb.collection("drill_events" + crypto.createHash('sha1').update("[CLY]_view" + appId).digest('hex')).drop(function() {});
+            common.drillDb.collection("drill_events" + crypto.createHash('sha1').update("[CLY]_network" + appId).digest('hex')).drop(function() {});
         }
 	});
     
@@ -626,7 +626,7 @@ var plugin = {},
 		var appId = ob.appId;
         var ids = ob.ids;
         var dates = ob.dates;
-        common.db.collection('app_viewdata' + appId).findOne({_id:"meta_v2"}, function(err, doc){
+        common.db.collection('app_networkdata' + appId).findOne({_id:"meta_v2"}, function(err, doc){
             if(!err && doc && doc.segments){
                 var segments = Object.keys(doc.segments);
                 segments.push("no-segment");
@@ -636,7 +636,7 @@ var plugin = {},
                         docs.push(segments[j]+"_"+dates[k]);
                     }
                 }
-                common.db.collection('app_viewdata' + appId).remove({'_id': {$nin:docs}},function(){});
+                common.db.collection('app_networkdata' + appId).remove({'_id': {$nin:docs}},function(){});
             }
         });
         if(common.drillDb){
@@ -647,11 +647,11 @@ var plugin = {},
 	
 	plugins.register("/i/apps/reset", function(ob){
 		var appId = ob.appId;
-        common.db.collection('app_viewdata' + appId).drop(function() {
-            common.db.collection("app_viewdata" + appId).insert({_id:"meta_v2"},function(){});
+        common.db.collection('app_networkdata' + appId).drop(function() {
+            common.db.collection("app_networkdata" + appId).insert({_id:"meta_v2"},function(){});
         });
-		common.db.collection('app_views' + appId).drop(function() {
-            common.db.collection('app_views' + appId).ensureIndex({"uid":1},function(){});
+		common.db.collection('app_network' + appId).drop(function() {
+            common.db.collection('app_network' + appId).ensureIndex({"uid":1},function(){});
         });
         if(common.drillDb){
             common.drillDb.collection("drill_events" + crypto.createHash('sha1').update("[CLY]_action" + appId).digest('hex')).drop(function() {});
