@@ -67,7 +67,7 @@ var plugin = {},
         var validateUserForDataReadAPI = ob.validateUserForDataReadAPI;
 		if (params.qstring.method == "network") {
 			validateUserForDataReadAPI(params, function(){
-                fetch.getTimeObjForEvents("app_viewdata"+params.app_id, params, {unique: "u", levels:{daily:["u","t","s","b","e","d","n"], monthly:["u","t","s","b","e","d","n"]}}, function(data){
+                fetch.getTimeObjForEvents("app_networkdata"+params.app_id, params, {unique: "u", levels:{daily:["u","t","s","b","e","d","n"], monthly:["u","t","s","b","e","d","n"]}}, function(data){
                     common.returnOutput(params, data);
                 });
             });
@@ -76,10 +76,10 @@ var plugin = {},
         else if (params.qstring.method == "get_network_segments") {
 			validateUserForDataReadAPI(params, function(){
                 var res = {segments:[], domains:[]};
-                common.db.collection("app_viewdata"+params.app_id).findOne({'_id': "meta"}, function(err, res1){
+                common.db.collection("app_networkdata"+params.app_id).findOne({'_id': "meta"}, function(err, res1){
                     if(res1 && res1.segments)
                         res.segments = res1.segments;
-                    common.db.collection("app_viewdata"+params.app_id).findOne({'_id': "meta_v2"}, function(err, res2){
+                    common.db.collection("app_networkdata"+params.app_id).findOne({'_id': "meta_v2"}, function(err, res2){
                         if(res2 && res2.segments)
                             common.arrayAddUniq(res.segments,Object.keys(res.segments));
                         if(common.drillDb){
