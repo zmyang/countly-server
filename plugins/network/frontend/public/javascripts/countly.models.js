@@ -303,7 +303,7 @@
     };
     
     var getRange = function(){
-        var visits = jQuery.i18n.map["views.visits"].toLowerCase();
+        var visits = jQuery.i18n.map["network.visits"].toLowerCase();
         return [
             "1 - 2 " + visits,
             "3 - 5 " + visits,
