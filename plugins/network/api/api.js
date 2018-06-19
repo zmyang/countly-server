@@ -499,48 +499,52 @@ var plugin = {},
                 Object.keys(res.meta_v2.network).length >= plugins.getConfig("network").view_limit){
                 return;
             }
+            //如果visit有值，说明访问了此接口
             if(currEvent.segmentation.visit){
+                //访问总数要更新
                 monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['total']);
+                //如果之前没有访问过，说明是新增
                 if (view && !view[escapedMetricVal]) {
                     monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['new']);
                 }
                 /**
                  * 计算unique次数
                  */
-                if (view && view[escapedMetricVal]) {
-                    var lastViewTimestamp = view[escapedMetricVal],
-                        currDate = common.getDate(params.time.timestamp, params.appTimezone),
-                        lastViewDate = common.getDate(lastViewTimestamp, params.appTimezone),
-                        secInMin = (60 * (currDate.getMinutes())) + currDate.getSeconds(),
-                        secInHour = (60 * 60 * (currDate.getHours())) + secInMin,
-                        secInMonth = (60 * 60 * 24 * (currDate.getDate() - 1)) + secInHour,
-                        secInYear = (60 * 60 * 24 * (common.getDOY(params.time.timestamp, params.appTimezone) - 1)) + secInHour;
-                        
-                    if (lastViewTimestamp < (params.time.timestamp - secInMin)) {
-                        tmpTimeObjMonth['d.' + params.time.day + '.' + params.time.hour + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                    }
-            
-                    if (lastViewTimestamp < (params.time.timestamp - secInHour)) {
-                        tmpTimeObjMonth['d.' + params.time.day + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                    }
-            
-                    if (lastViewDate.getFullYear() == params.time.yearly &&
-                        Math.ceil(common.moment(lastViewDate).tz(params.appTimezone).format("DDD") / 7) < params.time.weekly) {
-                        tmpTimeObjZero["d.w" + params.time.weekly + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                    }
-            
-                    if (lastViewTimestamp < (params.time.timestamp - secInMonth)) {
-                        tmpTimeObjZero['d.' + params.time.month + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                    }
-            
-                    if (lastViewTimestamp < (params.time.timestamp - secInYear)) {
-                        tmpTimeObjZero['d.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                    }
-                }
-                else{
-                    common.fillTimeObjectZero(params, tmpTimeObjZero, escapedMetricVal + '.' + common.dbMap['unique']);
-                    common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['unique'], 1, true);
-                }
+                //如果以前有访问过
+                // if (view && view[escapedMetricVal]) {
+                //     var lastViewTimestamp = view[escapedMetricVal],
+                //         currDate = common.getDate(params.time.timestamp, params.appTimezone),
+                //         lastViewDate = common.getDate(lastViewTimestamp, params.appTimezone),
+                //         secInMin = (60 * (currDate.getMinutes())) + currDate.getSeconds(),
+                //         secInHour = (60 * 60 * (currDate.getHours())) + secInMin,
+                //         secInMonth = (60 * 60 * 24 * (currDate.getDate() - 1)) + secInHour,
+                //         secInYear = (60 * 60 * 24 * (common.getDOY(params.time.timestamp, params.appTimezone) - 1)) + secInHour;
+                //     //当前小时的unique次数
+                //     if (lastViewTimestamp < (params.time.timestamp - secInMin)) {
+                //         tmpTimeObjMonth['d.' + params.time.day + '.' + params.time.hour + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                //     }
+                //     //当前天的unique次数
+                //     if (lastViewTimestamp < (params.time.timestamp - secInHour)) {
+                //         tmpTimeObjMonth['d.' + params.time.day + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                //     }
+                //     //当前周的unique次数
+                //     if (lastViewDate.getFullYear() == params.time.yearly &&
+                //         Math.ceil(common.moment(lastViewDate).tz(params.appTimezone).format("DDD") / 7) < params.time.weekly) {
+                //         tmpTimeObjZero["d.w" + params.time.weekly + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                //     }
+                //     //当前月
+                //     if (lastViewTimestamp < (params.time.timestamp - secInMonth)) {
+                //         tmpTimeObjZero['d.' + params.time.month + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                //     }
+                //     //当前年
+                //     if (lastViewTimestamp < (params.time.timestamp - secInYear)) {
+                //         tmpTimeObjZero['d.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                //     }
+                // }
+                // else{//以前没有访问过
+                //     common.fillTimeObjectZero(params, tmpTimeObjZero, escapedMetricVal + '.' + common.dbMap['unique']);
+                //     common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['unique'], 1, true);
+                // }
             }
             
             if(currEvent.segmentation.start){
@@ -548,7 +552,7 @@ var plugin = {},
             }
             
             if(currEvent.segmentation.error){
-                monthObjUpdate.push(escapedMetricVal + '.e');
+                monthObjUpdate.push(escapedMetricVal + '.u');
             }
             
             
