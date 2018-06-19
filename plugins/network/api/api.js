@@ -504,6 +504,9 @@ var plugin = {},
                 if (view && !view[escapedMetricVal]) {
                     monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['new']);
                 }
+                /**
+                 * 计算unique次数
+                 */
                 if (view && view[escapedMetricVal]) {
                     var lastViewTimestamp = view[escapedMetricVal],
                         currDate = common.getDate(params.time.timestamp, params.appTimezone),
@@ -544,7 +547,7 @@ var plugin = {},
                 monthObjUpdate.push(escapedMetricVal + '.s');
             }
             
-            if(currEvent.segmentation.exit){
+            if(currEvent.segmentation.error){
                 monthObjUpdate.push(escapedMetricVal + '.e');
             }
             
