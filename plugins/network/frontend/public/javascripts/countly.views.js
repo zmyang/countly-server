@@ -18,7 +18,7 @@ window.NetworkView = countlyView.extend({
         return {
             "t":jQuery.i18n.map["network.http.request-cnts"],
             "d":jQuery.i18n.map["network.http.response-time"],
-            "u":jQuery.i18n.map["network.http.error-cnts"],
+            "e":jQuery.i18n.map["network.http.error-cnts"],
             // "n":jQuery.i18n.map["network.http.response-time"],
         //    "s":jQuery.i18n.map["views.starts"],
         //    "e":jQuery.i18n.map["views.exits"],
@@ -62,7 +62,7 @@ window.NetworkView = countlyView.extend({
                     var time = (row.d == 0 || row.t == 0) ? 0 : row.d/row.t;
                     if(type === "display") return countlyCommon.timeString(time/1000);
                     else return time}, sType:"numeric", "sTitle": jQuery.i18n.map["network.avg-duration"] },
-                    { "mData": "u", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.error-cnts"] }
+                    { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.error-cnts"] }
             //    { "mData": "s", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.starts"] },
             //    { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.exits"] },
             //    { "mData": "b", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.bounces"] }
@@ -112,7 +112,7 @@ window.NetworkView = countlyView.extend({
                 
                 self.selectedView = row.find("td").first().text();
 
-                var persistentSettings = countlyCommon.getPersistentSettings()["pageViewsItems_" + countlyCommon.ACTIVE_APP_ID] || [];
+                var persistentSettings = countlyCommon.getPersistentSettings()["pageNetworkItems_" + countlyCommon.ACTIVE_APP_ID] || [];
 
                 if(_.contains(self.selectedViews, self.selectedView)){
                     var index = self.selectedViews.indexOf(self.selectedView);
@@ -126,7 +126,7 @@ window.NetworkView = countlyView.extend({
                 }
                 
                 var persistData = {};
-                persistData["pageViewsItems_" + countlyCommon.ACTIVE_APP_ID] = persistentSettings;
+                persistData["pageNetworkItems_" + countlyCommon.ACTIVE_APP_ID] = persistentSettings;
                 countlyCommon.setPersistentSettings(persistData);
 
                 if(self.selectedViews.length == 0)
