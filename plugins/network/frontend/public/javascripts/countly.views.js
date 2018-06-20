@@ -108,6 +108,7 @@ window.NetworkView = countlyView.extend({
             }));
             $('.link-class').on("click", function (event){
                 event.stopPropagation();
+                event.preventDefault();
                 var id = $(this).attr("id");
                 if(id){
                     var link = "#/crashes/" + id ;
