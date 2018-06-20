@@ -101,7 +101,8 @@ window.NetworkView = countlyView.extend({
                         self.ids[aData.network] = "view_"+self.lastId;
                         self.lastId++;
                     }
-                    $(nRow).attr("id", self.ids[aData.network]);
+                    // $(nRow).attr("id", self.ids[aData.network]);
+                    $(nRow).attr("id", aData.network);
                 },
                 "aoColumns": columns
             }));
