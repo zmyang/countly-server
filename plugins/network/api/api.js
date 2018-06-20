@@ -64,7 +64,7 @@ var plugin = {},
     
     plugins.register("/o", function(ob){
 		var params = ob.params;
-        var validateUserForDataReadAPI = ob.validateUserForDataReadAPI;
+        var     validateUserForDataReadAPI = ob.validateUserForDataReadAPI;
 		if (params.qstring.method == "network") {
 			validateUserForDataReadAPI(params, function(){
                 fetch.getTimeObjForEvents("app_networkdata"+params.app_id, params, {unique: "u", levels:{daily:["u","t","s","b","e","d","n"], monthly:["u","t","s","b","e","d","n"]}}, function(data){
@@ -73,43 +73,7 @@ var plugin = {},
             });
 			return true;
 		}
-        else if (params.qstring.method == "get_network_segments") {
-			validateUserForDataReadAPI(params, function(){
-                var res = {segments:[], domains:[]};
-                common.db.collection("app_networkdata"+params.app_id).findOne({'_id': "meta"}, function(err, res1){
-                    if(res1 && res1.segments)
-                        res.segments = res1.segments;
-                    common.db.collection("app_networkdata"+params.app_id).findOne({'_id': "meta_v2"}, function(err, res2){
-                        if(res2 && res2.segments)
-                            common.arrayAddUniq(res.segments,Object.keys(res.segments));
-                        if(common.drillDb){
-                            var collectionName = "drill_events" + crypto.createHash('sha1').update("[CLY]_action" + params.qstring.app_id).digest('hex');
-                            common.drillDb.collection(collectionName).findOne( {"_id": "meta_v2"},{_id:0, "sg.domain":1} ,function(err,meta){
-                                if(meta && meta.sg && meta.sg.domain.values)
-                                    res.domains = Object.keys(meta.sg.domain.values);
-                                common.drillDb.collection(collectionName).findOne( {"_id": "meta"},{_id:0, "sg.domain":1} ,function(err,meta2){
-                                    if(meta2 && meta2.sg && meta2.sg.domain)
-                                        common.arrayAddUniq(res.domains, meta2.sg.domain.values);
-                                    var eventHash = crypto.createHash('sha1').update("[CLY]_action" + params.qstring.app_id).digest('hex');
-                                    var collectionName = "drill_meta" + params.qstring.app_id;
-                                    common.drillDb.collection(collectionName).findOne( {"_id": "meta_"+eventHash},{_id:0, "sg.domain":1} ,function(err,meta){
-                                        if(meta && meta.sg && meta.sg.domain.values){
-                                            common.arrayAddUniq(res.domains, Object.keys(meta.sg.domain.values));
-                                        }
-                                        common.returnOutput(params,res);   
-                                    });
-                                });
-                                    
-                            });
-                        }
-                        else{
-                            common.returnOutput(params,res);
-                        }
-                    });
-                });
-            });
-			return true;
-		}
+        
 		return false;
 	});
     
@@ -433,16 +397,7 @@ var plugin = {},
                                 currEvent.dur = 0;
                             
                             processView(params, currEvent);
-                            if(currEvent.segmentation.visit){
-                                params.network.push(currEvent);
-                                var events = [currEvent];
-                                plugins.dispatch("/plugins/drill", {params:params, dbAppUser:params.app_user, events:events});
-                            }
-                            else{
-                                if(currEvent.dur){
-                                    plugins.dispatch("/view/duration", {params:params, duration:currEvent.dur});
-                                }
-                            }
+                           
                         }
                         return false;
                     }
@@ -454,25 +409,26 @@ var plugin = {},
     });
     
     function processView(params, currEvent){
-        var escapedMetricVal = common.db.encode(currEvent.segmentation.name+"");
+        // var escapedMetricVal = common.db.encode(currEvent.segmentation.name+"");
             
-        var update = {$set:{lv:currEvent.segmentation.name}};
+        // var update = {$set:{lv:currEvent.segmentation.name}};
         
-        if(currEvent.segmentation.visit){
-            update["$inc"] = {vc:1};
-            update["$max"] = {lvt:params.time.timestamp};
-        }
-        common.updateAppUser(params, update);
-        if(currEvent.segmentation.visit){
-            var lastView = {};
-            lastView[escapedMetricVal] = params.time.timestamp;           
-            common.db.collection('app_network' + params.app_id).findAndModify({'_id': params.app_user_id },{}, {$max:lastView},{upsert:true, new:false}, function (err, view){
-                recordMetrics(params, currEvent, params.app_user, view && view.ok ? view.value : null);
-            });
-        }
-        else{
-            recordMetrics(params, currEvent, params.app_user);
-        }
+        // if(currEvent.segmentation.visit){
+        //     update["$inc"] = {vc:1};
+        //     update["$max"] = {lvt:params.time.timestamp};
+        // }
+        // common.updateAppUser(params, update);
+        // if(currEvent.segmentation.visit){
+        //     var lastView = {};
+        //     lastView[escapedMetricVal] = params.time.timestamp;           
+        //     common.db.collection('app_network' + params.app_id).findAndModify({'_id': params.app_user_id },{}, {$max:lastView},{upsert:true, new:false}, function (err, view){
+        //         recordMetrics(params, currEvent, params.app_user, view && view.ok ? view.value : null);
+        //     });
+        // }
+        // else{
+        //     recordMetrics(params, currEvent, params.app_user);
+        // }
+        recordMetrics(params, currEvent, params.app_user);
 	}
     
     function recordMetrics(params, currEvent, user, view){
@@ -489,76 +445,21 @@ var plugin = {},
         tmpSet["meta_v2." + tmpMetric.set + "." + escapedMetricVal] = true;
         
         var dateIds = common.getDateIds(params),
-            tmpZeroId = "no-segment_" + dateIds.zero + "_" + postfix,
-            tmpMonthId = "no-segment_" + dateIds.month + "_" + postfix;
-                
+            tmpZeroId = dateIds.zero + "_" + postfix,
+            tmpMonthId = dateIds.month + "_" + postfix;
+        
+
+        
+        
         common.db.collection("app_networkdata"+params.app_id).findOne({'_id': tmpZeroId}, {meta_v2:1}, function(err, res){
-            //checking if view should be ignored because of limit
-            if(!err && res && res.meta_v2 && res.meta_v2.network &&
-                typeof res.meta_v2.network[escapedMetricVal] === "undefined" &&
-                Object.keys(res.meta_v2.network).length >= plugins.getConfig("network").view_limit){
-                return;
-            }
+           
             //如果visit有值，说明访问了此接口
-            if(currEvent.segmentation.visit){
+            if(currEvent.visit){
                 //访问总数要更新
                 monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['total']);
-                //如果之前没有访问过，说明是新增
-                if (view && !view[escapedMetricVal]) {
-                    monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['new']);
-                }
-                /**
-                 * 计算unique次数
-                 */
-                //如果以前有访问过
-                // if (view && view[escapedMetricVal]) {
-                //     var lastViewTimestamp = view[escapedMetricVal],
-                //         currDate = common.getDate(params.time.timestamp, params.appTimezone),
-                //         lastViewDate = common.getDate(lastViewTimestamp, params.appTimezone),
-                //         secInMin = (60 * (currDate.getMinutes())) + currDate.getSeconds(),
-                //         secInHour = (60 * 60 * (currDate.getHours())) + secInMin,
-                //         secInMonth = (60 * 60 * 24 * (currDate.getDate() - 1)) + secInHour,
-                //         secInYear = (60 * 60 * 24 * (common.getDOY(params.time.timestamp, params.appTimezone) - 1)) + secInHour;
-                //     //当前小时的unique次数
-                //     if (lastViewTimestamp < (params.time.timestamp - secInMin)) {
-                //         tmpTimeObjMonth['d.' + params.time.day + '.' + params.time.hour + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                //     }
-                //     //当前天的unique次数
-                //     if (lastViewTimestamp < (params.time.timestamp - secInHour)) {
-                //         tmpTimeObjMonth['d.' + params.time.day + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                //     }
-                //     //当前周的unique次数
-                //     if (lastViewDate.getFullYear() == params.time.yearly &&
-                //         Math.ceil(common.moment(lastViewDate).tz(params.appTimezone).format("DDD") / 7) < params.time.weekly) {
-                //         tmpTimeObjZero["d.w" + params.time.weekly + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                //     }
-                //     //当前月
-                //     if (lastViewTimestamp < (params.time.timestamp - secInMonth)) {
-                //         tmpTimeObjZero['d.' + params.time.month + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                //     }
-                //     //当前年
-                //     if (lastViewTimestamp < (params.time.timestamp - secInYear)) {
-                //         tmpTimeObjZero['d.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                //     }
-                // }
-                // else{//以前没有访问过
-                //     common.fillTimeObjectZero(params, tmpTimeObjZero, escapedMetricVal + '.' + common.dbMap['unique']);
-                //     common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['unique'], 1, true);
-                // }
             }
             
-            if(currEvent.segmentation.start){
-                monthObjUpdate.push(escapedMetricVal + '.s');
-            }
-            
-            if(currEvent.segmentation.error){
-                monthObjUpdate.push(escapedMetricVal + '.u');
-            }
-            
-            
-            if(currEvent.segmentation.bounce){
-                monthObjUpdate.push(escapedMetricVal + '.b');
-            }
+         
             
             common.fillTimeObjectZero(params, tmpTimeObjZero, zeroObjUpdate);
             common.fillTimeObjectMonth(params, tmpTimeObjMonth, monthObjUpdate, 1, true);
@@ -567,12 +468,12 @@ var plugin = {},
                 var dur = parseInt(currEvent.dur);
                 common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['duration'], dur, true);
             }
-            if(typeof currEvent.segmentation.segment != "undefined"){
-                currEvent.segmentation.segment = common.db.encode(currEvent.segmentation.segment+"");
-                var update = {$set:{}};
-                update["$set"]["segments."+currEvent.segmentation.segment] =  true;
-                common.db.collection("app_networkdata"+params.app_id).update({'_id': "meta_v2"}, update, {'upsert': true}, function(err, res){});
-            }
+            // if(typeof currEvent.segmentation.segment != "undefined"){
+            //     currEvent.segmentation.segment = common.db.encode(currEvent.segmentation.segment+"");
+            //     var update = {$set:{}};
+            //     update["$set"]["segments."+currEvent.segmentation.segment] =  true;
+            //     common.db.collection("app_networkdata"+params.app_id).update({'_id': "meta_v2"}, update, {'upsert': true}, function(err, res){});
+            // }
             
             if (Object.keys(tmpTimeObjZero).length || Object.keys(tmpSet).length) {
                 tmpSet.m = dateIds.zero;
@@ -581,9 +482,9 @@ var plugin = {},
                 if(Object.keys(tmpTimeObjZero).length)
                     update["$inc"] = tmpTimeObjZero;
                 common.db.collection("app_networkdata"+params.app_id).update({'_id': tmpZeroId}, update, {'upsert': true}, function(){});
-                if(typeof currEvent.segmentation.segment != "undefined"){
-                    common.db.collection("app_networkdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.zero + "_" + postfix}, update, {'upsert': true}, function(){});
-                }
+                
+                // common.db.collection("app_networkdata"+params.app_id).update({'_id': dateIds.zero + "_" + postfix}, update, {'upsert': true}, function(){});
+                
             }
             
             if (Object.keys(tmpTimeObjMonth).length){
@@ -591,9 +492,9 @@ var plugin = {},
                 if(Object.keys(tmpTimeObjMonth).length)
                     update["$inc"] = tmpTimeObjMonth;
                 common.db.collection("app_networkdata"+params.app_id).update({'_id': tmpMonthId}, update, {'upsert': true}, function(){});
-                if(typeof currEvent.segmentation.segment != "undefined"){
-                    common.db.collection("app_networkdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.month + "_" + postfix}, update, {'upsert': true}, function(){});
-                }
+                
+                // common.db.collection("app_networkdata"+params.app_id).update({'_id': dateIds.month + "_" + postfix}, update, {'upsert': true}, function(){});
+                
             }
         });
     }
