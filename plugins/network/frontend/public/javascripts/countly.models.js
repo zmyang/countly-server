@@ -6,7 +6,7 @@
         _actionData = {},
         _activeAppKey = 0,
         _initialized = false,
-        _segment = null,
+        _segment = "Android",
         _segments = [],
         _domains = [],
         _name = "network",
@@ -25,26 +25,7 @@
             _initialized = true;
 
             return $.when(
-                $.ajax({
-                    type:"GET",
-                    url:countlyCommon.API_PARTS.data.r,
-                    data:{
-                        "api_key":countlyGlobal.member.api_key,
-                        "app_id":countlyCommon.ACTIVE_APP_ID,
-                        "method":"get_network_segments",
-                        "period":_period
-                    },
-                    dataType:"jsonp",
-                    success:function (json) {
-                        if(json && json.segments){
-                            for(var i = 0; i < json.segments.length; i++){
-                                json.segments[i] = countlyCommon.decode(json.segments[i]);
-                            }
-                            _segments = json.segments;
-                            _domains = json.domains;
-                        }
-                    }
-                }),
+                
                 $.ajax({
                     type:"GET",
                     url:countlyCommon.API_PARTS.data.r,
