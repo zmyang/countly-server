@@ -105,7 +105,13 @@ window.NetworkView = countlyView.extend({
                 },
                 "aoColumns": columns
             }));
-
+            $('table-link green').on("click", "p", function (){
+                var id = $(this).attr("id");
+                if(id){
+                    var link = "#/crashes/" + id ;
+                    window.open(link, "_self");
+                } 
+            });
             $(".d-table").stickyTableHeaders();
             this.dtable.fnSort( [ [1,'desc'] ] );
             $(".dataTable-bottom").append("<div class='dataTables_info' style='float: right;'>"+jQuery.i18n.map["network.maximum-items"]+" ("+countlyCommon.GRAPH_COLORS.length+")</div>")
