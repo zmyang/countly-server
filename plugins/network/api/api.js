@@ -445,25 +445,25 @@ var plugin = {},
     });
     
     function processView(params, currEvent){
-        // var escapedMetricVal = common.db.encode(currEvent.segmentation.name+"");
+        var escapedMetricVal = common.db.encode(currEvent.segmentation.name+"");
             
-        // var update = {$set:{lv:currEvent.segmentation.name}};
+        var update = {$set:{lv:currEvent.segmentation.name}};
         
-        // if(currEvent.segmentation.visit){
-        //     update["$inc"] = {vc:1};
-        //     update["$max"] = {lvt:params.time.timestamp};
-        // }
-        // common.updateAppUser(params, update);
-        // if(currEvent.segmentation.visit){
-        //     var lastView = {};
-        //     lastView[escapedMetricVal] = params.time.timestamp;           
-        //     common.db.collection('app_network' + params.app_id).findAndModify({'_id': params.app_user_id },{}, {$max:lastView},{upsert:true, new:false}, function (err, view){
-        //         recordMetrics(params, currEvent, params.app_user, view && view.ok ? view.value : null);
-        //     });
-        // }
-        // else{
-        //     recordMetrics(params, currEvent, params.app_user);
-        // }
+        if(currEvent.segmentation.visit){
+            update["$inc"] = {vc:1};
+            update["$max"] = {lvt:params.time.timestamp};
+        }
+        common.updateAppUser(params, update);
+        if(currEvent.segmentation.visit){
+            var lastView = {};
+            lastView[escapedMetricVal] = params.time.timestamp;           
+            common.db.collection('app_network' + params.app_id).findAndModify({'_id': params.app_user_id },{}, {$max:lastView},{upsert:true, new:false}, function (err, view){
+                recordMetrics(params, currEvent, params.app_user, view && view.ok ? view.value : null);
+            });
+        }
+        else{
+            recordMetrics(params, currEvent, params.app_user);
+        }
         recordMetrics(params, currEvent, params.app_user);
 	}
     
