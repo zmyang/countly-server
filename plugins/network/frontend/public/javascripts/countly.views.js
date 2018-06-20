@@ -65,7 +65,7 @@ window.NetworkView = countlyView.extend({
                     //  return countlyCommon.timeString(time/1000);
                     // else return time
                 }, sType:"numeric", "sTitle": jQuery.i18n.map["network.avg-duration"] },
-                    { "mData": "e", sType:"formatted-num", "mRender":function(d) { return "<p class='table-link green link-class'>" +countlyCommon.formatNumber(d)+ "</a>"; }, "sTitle": jQuery.i18n.map["network.http.error-cnts"] }
+                    { "mData": "e", sType:"formatted-num", "mRender":function(d) { return "<p id='"+row.network+"' class='table-link green link-class'>" +countlyCommon.formatNumber(d)+ "</a>"; }, "sTitle": jQuery.i18n.map["network.http.error-cnts"] }
             //    { "mData": "s", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.starts"] },
             //    { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.exits"] },
             //    { "mData": "b", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.bounces"] }
@@ -101,19 +101,19 @@ window.NetworkView = countlyView.extend({
                         self.ids[aData.network] = "view_"+self.lastId;
                         self.lastId++;
                     }
-                    // $(nRow).attr("id", self.ids[aData.network]);
-                    $(nRow).attr("id", aData.network);
+                    $(nRow).attr("id", self.ids[aData.network]);
+                   
                 },
                 "aoColumns": columns
             }));
             $('.link-class').on("click", function (event){
                 event.stopPropagation();
-                event.preventDefault();
                 var id = $(this).attr("id");
                 if(id){
                     var link = "#/crashes/" + id ;
                     window.open(link, "_self");
                 } 
+                event.preventDefault();
             });
             $(".d-table").stickyTableHeaders();
             this.dtable.fnSort( [ [1,'desc'] ] );
