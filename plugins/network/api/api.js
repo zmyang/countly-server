@@ -552,7 +552,7 @@ var plugin = {},
             }
             
             if(currEvent.segmentation.error){
-                monthObjUpdate.push(escapedMetricVal + '.u');
+                monthObjUpdate.push(escapedMetricVal + '.e');
             }
             
             
