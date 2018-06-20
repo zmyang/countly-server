@@ -105,7 +105,8 @@ window.NetworkView = countlyView.extend({
                 },
                 "aoColumns": columns
             }));
-            $('table-link green').on("click", "p", function (){
+            $('table-link green').on("click", function (e){
+                e.preventDefault();
                 var id = $(this).attr("id");
                 if(id){
                     var link = "#/crashes/" + id ;
