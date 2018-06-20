@@ -60,8 +60,11 @@ window.NetworkView = countlyView.extend({
                 { "mData": "d", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.response-time"] },
                 { "mData": function(row, type){
                     var time = (row.d == 0 || row.t == 0) ? 0 : row.d/row.t;
-                    if(type === "display") return countlyCommon.timeString(time/1000);
-                    else return time}, sType:"numeric", "sTitle": jQuery.i18n.map["network.avg-duration"] },
+                    return (time/1000)+"毫秒";
+                     // if(type === "display")
+                    //  return countlyCommon.timeString(time/1000);
+                    // else return time
+                }, sType:"numeric", "sTitle": jQuery.i18n.map["network.avg-duration"] },
                     { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.error-cnts"] }
             //    { "mData": "s", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.starts"] },
             //    { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.exits"] },
