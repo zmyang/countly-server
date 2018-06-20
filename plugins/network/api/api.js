@@ -456,18 +456,21 @@ var plugin = {},
             //如果visit有值，说明访问了此接口
             if(currEvent.visit){
                 //访问总数要更新
+                zeroObjUpdate.push(escapedMetricVal + '.' + common.dbMap['total']);
                 monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['total']);
             }
-            
+            if(currEvent.segmentation.error){
+                zeroObjUpdate.push(escapedMetricVal + '.e');
+                monthObjUpdate.push(escapedMetricVal + '.e');
+            }
          
-            
-            common.fillTimeObjectZero(params, tmpTimeObjZero, zeroObjUpdate);
-            common.fillTimeObjectMonth(params, tmpTimeObjMonth, monthObjUpdate, 1, true);
-            
             if(currEvent.dur){
                 var dur = parseInt(currEvent.dur);
+                common.fillTimeObjectZero(params, tmpTimeObjZero, escapedMetricVal + '.' + common.dbMap['duration'], dur, true);
                 common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['duration'], dur, true);
             }
+            common.fillTimeObjectZero(params, tmpTimeObjZero, zeroObjUpdate);
+            common.fillTimeObjectMonth(params, tmpTimeObjMonth, monthObjUpdate, 1, true);
             // if(typeof currEvent.segmentation.segment != "undefined"){
             //     currEvent.segmentation.segment = common.db.encode(currEvent.segmentation.segment+"");
             //     var update = {$set:{}};
