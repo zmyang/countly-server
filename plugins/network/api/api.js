@@ -64,7 +64,7 @@ var plugin = {},
     
     plugins.register("/o", function(ob){
 		var params = ob.params;
-        var validateUserForDataReadAPI = ob.validateUserForDataReadAPI;
+        var     validateUserForDataReadAPI = ob.validateUserForDataReadAPI;
 		if (params.qstring.method == "network") {
 			validateUserForDataReadAPI(params, function(){
                 fetch.getTimeObjForEvents("app_networkdata"+params.app_id, params, {unique: "u", levels:{daily:["u","t","s","b","e","d","n"], monthly:["u","t","s","b","e","d","n"]}}, function(data){
@@ -72,8 +72,7 @@ var plugin = {},
                 });
             });
 			return true;
-		}
-        else if (params.qstring.method == "get_network_segments") {
+		} else if (params.qstring.method == "get_network_segments") {
 			validateUserForDataReadAPI(params, function(){
                 var res = {segments:[], domains:[]};
                 common.db.collection("app_networkdata"+params.app_id).findOne({'_id': "meta"}, function(err, res1){
@@ -110,6 +109,7 @@ var plugin = {},
             });
 			return true;
 		}
+        
 		return false;
 	});
     
@@ -433,16 +433,7 @@ var plugin = {},
                                 currEvent.dur = 0;
                             
                             processView(params, currEvent);
-                            if(currEvent.segmentation.visit){
-                                params.network.push(currEvent);
-                                var events = [currEvent];
-                                plugins.dispatch("/plugins/drill", {params:params, dbAppUser:params.app_user, events:events});
-                            }
-                            else{
-                                if(currEvent.dur){
-                                    plugins.dispatch("/view/duration", {params:params, duration:currEvent.dur});
-                                }
-                            }
+                           
                         }
                         return false;
                     }
@@ -454,25 +445,26 @@ var plugin = {},
     });
     
     function processView(params, currEvent){
-        var escapedMetricVal = common.db.encode(currEvent.segmentation.name+"");
+        // var escapedMetricVal = common.db.encode(currEvent.segmentation.name+"");
             
-        var update = {$set:{lv:currEvent.segmentation.name}};
+        // var update = {$set:{lv:currEvent.segmentation.name}};
         
-        if(currEvent.segmentation.visit){
-            update["$inc"] = {vc:1};
-            update["$max"] = {lvt:params.time.timestamp};
-        }
-        common.updateAppUser(params, update);
-        if(currEvent.segmentation.visit){
-            var lastView = {};
-            lastView[escapedMetricVal] = params.time.timestamp;           
-            common.db.collection('app_network' + params.app_id).findAndModify({'_id': params.app_user_id },{}, {$max:lastView},{upsert:true, new:false}, function (err, view){
-                recordMetrics(params, currEvent, params.app_user, view && view.ok ? view.value : null);
-            });
-        }
-        else{
-            recordMetrics(params, currEvent, params.app_user);
-        }
+        // if(currEvent.segmentation.visit){
+        //     update["$inc"] = {vc:1};
+        //     update["$max"] = {lvt:params.time.timestamp};
+        // }
+        // common.updateAppUser(params, update);
+        // if(currEvent.segmentation.visit){
+        //     var lastView = {};
+        //     lastView[escapedMetricVal] = params.time.timestamp;           
+        //     common.db.collection('app_network' + params.app_id).findAndModify({'_id': params.app_user_id },{}, {$max:lastView},{upsert:true, new:false}, function (err, view){
+        //         recordMetrics(params, currEvent, params.app_user, view && view.ok ? view.value : null);
+        //     });
+        // }
+        // else{
+        //     recordMetrics(params, currEvent, params.app_user);
+        // }
+        recordMetrics(params, currEvent, params.app_user);
 	}
     
     function recordMetrics(params, currEvent, user, view){
