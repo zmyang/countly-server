@@ -105,7 +105,7 @@ window.NetworkView = countlyView.extend({
                 },
                 "aoColumns": columns
             }));
-            $('.class').on("click", function (event){
+            $('.link-class').on("click", function (event){
                 event.stopPropagation();
                 var id = $(this).attr("id");
                 if(id){
