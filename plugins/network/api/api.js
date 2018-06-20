@@ -481,37 +481,90 @@ var plugin = {},
         tmpSet["meta_v2." + tmpMetric.set + "." + escapedMetricVal] = true;
         
         var dateIds = common.getDateIds(params),
-            tmpZeroId = dateIds.zero + "_" + postfix,
-            tmpMonthId = dateIds.month + "_" + postfix;
-        
-
-        
-        
+            tmpZeroId = "no-segment_" + dateIds.zero + "_" + postfix,
+            tmpMonthId = "no-segment_" + dateIds.month + "_" + postfix;
+                
         common.db.collection("app_networkdata"+params.app_id).findOne({'_id': tmpZeroId}, {meta_v2:1}, function(err, res){
-           
+            //checking if view should be ignored because of limit
+            if(!err && res && res.meta_v2 && res.meta_v2.network &&
+                typeof res.meta_v2.network[escapedMetricVal] === "undefined" &&
+                Object.keys(res.meta_v2.network).length >= plugins.getConfig("network").view_limit){
+                return;
+            }
             //如果visit有值，说明访问了此接口
-            if(currEvent.visit){
+            if(currEvent.segmentation.visit){
                 //访问总数要更新
-                zeroObjUpdate.push(escapedMetricVal + '.' + common.dbMap['total']);
                 monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['total']);
+                //如果之前没有访问过，说明是新增
+                if (view && !view[escapedMetricVal]) {
+                    monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['new']);
+                }
+                /**
+                 * 计算unique次数
+                 */
+                //如果以前有访问过
+                // if (view && view[escapedMetricVal]) {
+                //     var lastViewTimestamp = view[escapedMetricVal],
+                //         currDate = common.getDate(params.time.timestamp, params.appTimezone),
+                //         lastViewDate = common.getDate(lastViewTimestamp, params.appTimezone),
+                //         secInMin = (60 * (currDate.getMinutes())) + currDate.getSeconds(),
+                //         secInHour = (60 * 60 * (currDate.getHours())) + secInMin,
+                //         secInMonth = (60 * 60 * 24 * (currDate.getDate() - 1)) + secInHour,
+                //         secInYear = (60 * 60 * 24 * (common.getDOY(params.time.timestamp, params.appTimezone) - 1)) + secInHour;
+                //     //当前小时的unique次数
+                //     if (lastViewTimestamp < (params.time.timestamp - secInMin)) {
+                //         tmpTimeObjMonth['d.' + params.time.day + '.' + params.time.hour + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                //     }
+                //     //当前天的unique次数
+                //     if (lastViewTimestamp < (params.time.timestamp - secInHour)) {
+                //         tmpTimeObjMonth['d.' + params.time.day + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                //     }
+                //     //当前周的unique次数
+                //     if (lastViewDate.getFullYear() == params.time.yearly &&
+                //         Math.ceil(common.moment(lastViewDate).tz(params.appTimezone).format("DDD") / 7) < params.time.weekly) {
+                //         tmpTimeObjZero["d.w" + params.time.weekly + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                //     }
+                //     //当前月
+                //     if (lastViewTimestamp < (params.time.timestamp - secInMonth)) {
+                //         tmpTimeObjZero['d.' + params.time.month + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                //     }
+                //     //当前年
+                //     if (lastViewTimestamp < (params.time.timestamp - secInYear)) {
+                //         tmpTimeObjZero['d.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                //     }
+                // }
+                // else{//以前没有访问过
+                //     common.fillTimeObjectZero(params, tmpTimeObjZero, escapedMetricVal + '.' + common.dbMap['unique']);
+                //     common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['unique'], 1, true);
+                // }
             }
+            
+            if(currEvent.segmentation.start){
+                monthObjUpdate.push(escapedMetricVal + '.s');
+            }
+            
             if(currEvent.segmentation.error){
-                monthObjUpdate.push(escapedMetricVal + '.e');
+                monthObjUpdate.push(escapedMetricVal + '.u');
             }
-         
-            if(currEvent.dur){
-                var dur = parseInt(currEvent.dur);
-                common.fillTimeObjectZero(params, tmpTimeObjZero, escapedMetricVal + '.' + common.dbMap['duration'], dur, true);
-                common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['duration'], dur, true);
+            
+            
+            if(currEvent.segmentation.bounce){
+                monthObjUpdate.push(escapedMetricVal + '.b');
             }
+            
             common.fillTimeObjectZero(params, tmpTimeObjZero, zeroObjUpdate);
             common.fillTimeObjectMonth(params, tmpTimeObjMonth, monthObjUpdate, 1, true);
-            // if(typeof currEvent.segmentation.segment != "undefined"){
-            //     currEvent.segmentation.segment = common.db.encode(currEvent.segmentation.segment+"");
-            //     var update = {$set:{}};
-            //     update["$set"]["segments."+currEvent.segmentation.segment] =  true;
-            //     common.db.collection("app_networkdata"+params.app_id).update({'_id': "meta_v2"}, update, {'upsert': true}, function(err, res){});
-            // }
+            
+            if(currEvent.dur){
+                var dur = parseInt(currEvent.dur);
+                common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['duration'], dur, true);
+            }
+            if(typeof currEvent.segmentation.segment != "undefined"){
+                currEvent.segmentation.segment = common.db.encode(currEvent.segmentation.segment+"");
+                var update = {$set:{}};
+                update["$set"]["segments."+currEvent.segmentation.segment] =  true;
+                common.db.collection("app_networkdata"+params.app_id).update({'_id': "meta_v2"}, update, {'upsert': true}, function(err, res){});
+            }
             
             if (Object.keys(tmpTimeObjZero).length || Object.keys(tmpSet).length) {
                 tmpSet.m = dateIds.zero;
@@ -520,9 +573,9 @@ var plugin = {},
                 if(Object.keys(tmpTimeObjZero).length)
                     update["$inc"] = tmpTimeObjZero;
                 common.db.collection("app_networkdata"+params.app_id).update({'_id': tmpZeroId}, update, {'upsert': true}, function(){});
-                
-                // common.db.collection("app_networkdata"+params.app_id).update({'_id': dateIds.zero + "_" + postfix}, update, {'upsert': true}, function(){});
-                
+                if(typeof currEvent.segmentation.segment != "undefined"){
+                    common.db.collection("app_networkdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.zero + "_" + postfix}, update, {'upsert': true}, function(){});
+                }
             }
             
             if (Object.keys(tmpTimeObjMonth).length){
@@ -530,9 +583,9 @@ var plugin = {},
                 if(Object.keys(tmpTimeObjMonth).length)
                     update["$inc"] = tmpTimeObjMonth;
                 common.db.collection("app_networkdata"+params.app_id).update({'_id': tmpMonthId}, update, {'upsert': true}, function(){});
-                
-                // common.db.collection("app_networkdata"+params.app_id).update({'_id': dateIds.month + "_" + postfix}, update, {'upsert': true}, function(){});
-                
+                if(typeof currEvent.segmentation.segment != "undefined"){
+                    common.db.collection("app_networkdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.month + "_" + postfix}, update, {'upsert': true}, function(){});
+                }
             }
         });
     }
