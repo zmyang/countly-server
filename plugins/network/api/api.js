@@ -547,19 +547,20 @@ var plugin = {},
                 // }
             }
             
-            if(currEvent.segmentation.start){
-                monthObjUpdate.push(escapedMetricVal + '.s');
-            }
+            // if(currEvent.segmentation.start){
+            //     monthObjUpdate.push(escapedMetricVal + '.s');
+            // }
             
             if(currEvent.segmentation.code && currEvent.segmentation.code!=200){
                 monthObjUpdate.push(escapedMetricVal + '.e');
-                common.db.collection("app_networkerror"+params.app_id).insert( currEvent, {'upsert': true}, function(err, res){});
+                currEvent.segmentation.ts=currEvent.timestamp;
+                common.db.collection("app_networkerror"+params.app_id).insert( currEvent.segmentation, {'upsert': true}, function(err, res){});
             }
             
             
-            if(currEvent.segmentation.bounce){
-                monthObjUpdate.push(escapedMetricVal + '.b');
-            }
+            // if(currEvent.segmentation.bounce){
+            //     monthObjUpdate.push(escapedMetricVal + '.b');
+            // }
             
             common.fillTimeObjectZero(params, tmpTimeObjZero, zeroObjUpdate);
             common.fillTimeObjectMonth(params, tmpTimeObjMonth, monthObjUpdate, 1, true);
