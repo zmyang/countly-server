@@ -551,8 +551,9 @@ var plugin = {},
                 monthObjUpdate.push(escapedMetricVal + '.s');
             }
             
-            if(currEvent.segmentation.error==1){
+            if(currEvent.segmentation.code && currEvent.segmentation.code!=200){
                 monthObjUpdate.push(escapedMetricVal + '.e');
+                common.db.collection("app_networkerror"+params.app_id).insert( currEvent, {'upsert': true}, function(err, res){});
             }
             
             

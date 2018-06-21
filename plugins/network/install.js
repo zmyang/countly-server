@@ -16,6 +16,7 @@ countlyDb.collection('apps').find({}).toArray(function (err, apps) {
 				done();
 		}        
 		countlyDb.collection('app_network' + app._id).ensureIndex({"uid":1},cb);
+		countlyDb.collection('app_networkerror' + app._id).createIndex( { "createdAt": 1 }, { expireAfterSeconds: 3600 } )
 	}
 	async.forEach(apps, upgrade, function(){
 		console.log("Network plugin installation finished");
