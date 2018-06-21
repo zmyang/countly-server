@@ -500,7 +500,7 @@ var plugin = {},
                 return;
             }
             //如果visit有值，说明访问了此接口
-            if(currEvent.segmentation.visit){
+            if(currEvent.segmentation.visit==1){
                 //访问总数要更新
                 monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['total']);
                 //如果之前没有访问过，说明是新增
@@ -551,7 +551,7 @@ var plugin = {},
                 monthObjUpdate.push(escapedMetricVal + '.s');
             }
             
-            if(currEvent.segmentation.error){
+            if(currEvent.segmentation.error==1){
                 monthObjUpdate.push(escapedMetricVal + '.e');
             }
             
