@@ -1,5 +1,5 @@
 window.NetworkView = countlyView.extend({
-    selectedMetric:"u",
+    selectedMetric:"t",
     selectedView:null,
     selectedViews:[],
 	selectedApps: {all:true},
