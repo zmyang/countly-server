@@ -600,8 +600,8 @@ window.NetworkErrorView = countlyView.extend({
             "hasPermission": (countlyGlobal["member"].global_admin || countlyGlobal["admin_apps"][countlyCommon.ACTIVE_APP_ID]) ? true : false,
             "url":url,
 			"data":crashData,
-			"error":crashData.name.substr(0, 80),
-            "fatal": (crashData.nonfatal) ? jQuery.i18n.map["crashes.nonfatal"] : jQuery.i18n.map["crashes.fatal"],
+			"error":crashData[0].name.substr(0, 80),
+            "fatal": (crashData[0].nonfatal) ? jQuery.i18n.map["crashes.nonfatal"] : jQuery.i18n.map["crashes.fatal"],
 			"active-segmentation": this.curTitle,
 			"segmentations": this.metrics,
 			"big-numbers":{
@@ -609,22 +609,22 @@ window.NetworkErrorView = countlyView.extend({
                 "items":[
 					{
                         "title":jQuery.i18n.map["crashes.platform"],
-                        "total":(crashData.not_os_specific) ? jQuery.i18n.map["crashes.varies"] : crashData.os,
+                        "total":(crashData[0].not_os_specific) ? jQuery.i18n.map["crashes.varies"] : crashData[0].os,
                         "help":"crashes.help-platform"
                     },
                     {
                         "title":jQuery.i18n.map["crashes.reports"],
-                        "total":crashData.reports,
+                        "total":crashData[0].reports,
                         "help":"crashes.help-reports"
                     },
                     {
                         "title":jQuery.i18n.map["crashes.affected-users"],
-                        "total":crashData.users + " ("+((crashData.users/crashData.total)*100).toFixed(2)+"%)",
+                        "total":crashData[0].users + " ("+((crashData[0].users/crashData[0].total)*100).toFixed(2)+"%)",
                         "help":"crashes.help-affected"
                     },
 					{
                         "title":jQuery.i18n.map["crashes.highest-version"],
-                        "total":crashData.latest_version.replace(/:/g, '.'),
+                        "total":crashDate.latest_version.replace(/:/g, '.'),
                         "help":"crashes.help-app-version"
                     }
                 ]
@@ -638,31 +638,31 @@ window.NetworkErrorView = countlyView.extend({
                     "help":"crashes.help-ram",
                     "min":crashData.ram.min+" %",
                     "max":crashData.ram.max+" %",
-                    "avg":(crashData.ram.total/crashData.ram.count).toFixed(2)+" %"
+                    "avg":(crashData[0].ram.total/crashData[0].ram.count).toFixed(2)+" %"
                 },
                 {
                     "title":jQuery.i18n.map["crashes.disk"],
                     "icon":"sd_storage",
                     "help":"crashes.help-disk",
-                    "min":crashData.disk.min+" %",
-                    "max":crashData.disk.max+" %",
-                    "avg":(crashData.disk.total/crashData.disk.count).toFixed(2)+" %"
+                    "min":crashData[0].disk.min+" %",
+                    "max":crashData[0].disk.max+" %",
+                    "avg":(crashData[0].disk.total/crashData[0].disk.count).toFixed(2)+" %"
                 },
                 {
                     "title":jQuery.i18n.map["crashes.battery"],
                     "icon":"battery_full",
                     "help":"crashes.help-battery",
-                    "min":crashData.bat.min+" %",
-                    "max":crashData.bat.max+" %",
-                    "avg":(crashData.bat.total/crashData.bat.count).toFixed(2)+" %"
+                    "min":crashData[0].bat.min+" %",
+                    "max":crashData[0].bat.max+" %",
+                    "avg":(crashData[0].bat.total/crashData[0].bat.count).toFixed(2)+" %"
                 },
                 {
                     "title":jQuery.i18n.map["crashes.run"],
                     "icon":"play_arrow",
                     "help":"crashes.help-run",
-                    "min":countlyCommon.timeString(crashData.run.min/60),
-                    "max":countlyCommon.timeString(crashData.run.max/60),
-                    "avg":countlyCommon.timeString((crashData.run.total/crashData.run.count)/60)
+                    "min":countlyCommon.timeString(crashData[0].run.min/60),
+                    "max":countlyCommon.timeString(crashData[0].run.max/60),
+                    "avg":countlyCommon.timeString((crashData[0].run.total/crashData[0].run.count)/60)
                 }
             ];
             
@@ -693,7 +693,7 @@ window.NetworkErrorView = countlyView.extend({
             this.templateData["loss"] = true;
             this.templateData["big-numbers"]["items"].push({
                 "title":jQuery.i18n.map["crashes.loss"],
-                "total":parseFloat(crashData.loss).toFixed(2),
+                "total":parseFloat(crashData[0].loss).toFixed(2),
                 "help":"crashes.help-loss"
             });
         }
@@ -703,17 +703,17 @@ window.NetworkErrorView = countlyView.extend({
         else if(this.templateData["big-numbers"]["items"].length == 5)
             this.templateData["big-numbers"]["class"] = "five-column";
         
-        if(crashData.session && this.templateData["ranges"]){
-            this.templateData["frequency"] = true;
-            this.templateData["ranges"].push({
-                "title":jQuery.i18n.map["crashes.sessions"],
-				"icon":"repeat",
-                "help":"crashes.help-frequency",
-                "min":crashData.session.min,
-                "max":crashData.session.max,
-                "avg":((Math.round(crashData.session.total/crashData.session.count)*100)/100)
-            });
-        }
+        // if(crashData.session && this.templateData["ranges"]){
+        //     this.templateData["frequency"] = true;
+        //     this.templateData["ranges"].push({
+        //         "title":jQuery.i18n.map["crashes.sessions"],
+		// 		"icon":"repeat",
+        //         "help":"crashes.help-frequency",
+        //         "min":crashData.session.min,
+        //         "max":crashData.session.max,
+        //         "avg":((Math.round(crashData.session.total/crashData.session.count)*100)/100)
+        //     });
+        // }
 
         // function changeResolveStateText(crashData){
         //     var selectOptions = "";
