@@ -905,7 +905,7 @@ window.NetworkErrorView = countlyView.extend({
                     }
                 }
                 CountlyHelpers.refreshTable(self.dtable, crashData);
-                countlyCommon.drawGraph(crashData.dp[self.curMetric], "#dashboard-graph", "bar");
+                // countlyCommon.drawGraph(crashData.dp[self.curMetric], "#dashboard-graph", "bar");
                 CountlyHelpers.reopenRows(self.dtable, self.formatData);
                 app.localize();
             });
