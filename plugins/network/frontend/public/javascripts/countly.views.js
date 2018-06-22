@@ -1116,7 +1116,7 @@ window.NetworkErrorView = countlyView.extend({
                         $(".crash-comment-count").show();
                     }
                 }
-                CountlyHelpers.refreshTable(self.dtable, crashData.data);
+                CountlyHelpers.refreshTable(self.dtable, crashData);
                 countlyCommon.drawGraph(crashData.dp[self.curMetric], "#dashboard-graph", "bar");
                 CountlyHelpers.reopenRows(self.dtable, self.formatData);
                 app.localize();
