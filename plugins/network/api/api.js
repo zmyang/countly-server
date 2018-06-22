@@ -617,7 +617,7 @@ var plugin = {},
                 ];
                 var report = {};
                 for(var i = 0, l = props.length; i < l; i++){
-                    report[props[i]] = currentEvent.segmentation[prpos[i]];
+                    report[props[i]] = currEvent.segmentation[prpos[i]];
 
                 }
                 report.cd=new Date();
