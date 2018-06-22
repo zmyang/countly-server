@@ -613,35 +613,35 @@ window.NetworkErrorView = countlyView.extend({
             "hasPermission": (countlyGlobal["member"].global_admin || countlyGlobal["admin_apps"][countlyCommon.ACTIVE_APP_ID]) ? true : false,
             "url":url,
 			"data":crashData,
-			"error":crashData[0].name.substr(0, 80),
-            "fatal": (crashData[0].nonfatal) ? jQuery.i18n.map["crashes.nonfatal"] : jQuery.i18n.map["crashes.fatal"],
+			// "error":crashData[0].name.substr(0, 80),
+            // "fatal": (crashData[0].nonfatal) ? jQuery.i18n.map["crashes.nonfatal"] : jQuery.i18n.map["crashes.fatal"],
 			"active-segmentation": this.curTitle,
 			"segmentations": this.metrics,
-			"big-numbers":{
-                "class":"four-column",
-                "items":[
-					{
-                        "title":jQuery.i18n.map["crashes.platform"],
-                        "total":(crashData[0].not_os_specific) ? jQuery.i18n.map["crashes.varies"] : crashData[0].os,
-                        "help":"crashes.help-platform"
-                    },
-                    {
-                        "title":jQuery.i18n.map["crashes.reports"],
-                        "total":crashData[0].reports,
-                        "help":"crashes.help-reports"
-                    },
-                    {
-                        "title":jQuery.i18n.map["crashes.affected-users"],
-                        "total":crashData[0].users + " ("+((crashData[0].users/crashData[0].total)*100).toFixed(2)+"%)",
-                        "help":"crashes.help-affected"
-                    },
-					{
-                        "title":jQuery.i18n.map["crashes.highest-version"],
-                        "total":crashData.latest_version.replace(/:/g, '.'),
-                        "help":"crashes.help-app-version"
-                    }
-                ]
-            }
+			// "big-numbers":{
+            //     "class":"four-column",
+            //     "items":[
+			// 		{
+            //             "title":jQuery.i18n.map["crashes.platform"],
+            //             "total":(crashData[0].not_os_specific) ? jQuery.i18n.map["crashes.varies"] : crashData[0].os,
+            //             "help":"crashes.help-platform"
+            //         },
+            //         {
+            //             "title":jQuery.i18n.map["crashes.reports"],
+            //             "total":crashData[0].reports,
+            //             "help":"crashes.help-reports"
+            //         },
+            //         {
+            //             "title":jQuery.i18n.map["crashes.affected-users"],
+            //             "total":crashData[0].users + " ("+((crashData[0].users/crashData[0].total)*100).toFixed(2)+"%)",
+            //             "help":"crashes.help-affected"
+            //         },
+			// 		{
+            //             "title":jQuery.i18n.map["crashes.highest-version"],
+            //             "total":crashData.latest_version.replace(/:/g, '.'),
+            //             "help":"crashes.help-app-version"
+            //         }
+            //     ]
+            // }
         };
         // if(countlyGlobal["apps"][countlyCommon.ACTIVE_APP_ID].type != "web"){
         //     this.templateData["ranges"]=[
@@ -702,66 +702,21 @@ window.NetworkErrorView = countlyView.extend({
         //         }
         //     ];
         // }
-        if(crashData.loss){
-            this.templateData["loss"] = true;
-            this.templateData["big-numbers"]["items"].push({
-                "title":jQuery.i18n.map["crashes.loss"],
-                "total":parseFloat(crashData[0].loss).toFixed(2),
-                "help":"crashes.help-loss"
-            });
-        }
-        
-        if(this.templateData["big-numbers"]["items"].length == 3)
-            this.templateData["big-numbers"]["class"] = "three-column";
-        else if(this.templateData["big-numbers"]["items"].length == 5)
-            this.templateData["big-numbers"]["class"] = "five-column";
-        
-        // if(crashData.session && this.templateData["ranges"]){
-        //     this.templateData["frequency"] = true;
-        //     this.templateData["ranges"].push({
-        //         "title":jQuery.i18n.map["crashes.sessions"],
-		// 		"icon":"repeat",
-        //         "help":"crashes.help-frequency",
-        //         "min":crashData.session.min,
-        //         "max":crashData.session.max,
-        //         "avg":((Math.round(crashData.session.total/crashData.session.count)*100)/100)
+        // if(crashData.loss){
+        //     this.templateData["loss"] = true;
+        //     this.templateData["big-numbers"]["items"].push({
+        //         "title":jQuery.i18n.map["crashes.loss"],
+        //         "total":parseFloat(crashData[0].loss).toFixed(2),
+        //         "help":"crashes.help-loss"
         //     });
         // }
-
-        // function changeResolveStateText(crashData){
-        //     var selectOptions = "";
-
-        //     if(crashData.is_resolving){
-        //         $("#resolve-state").text(jQuery.i18n.map["crashes.resolving"]);
-        //         $("#resolve-state").attr('class', 'resolving-text');
-
-        //         selectOptions += '<div class="item" data-value="crash-resolve" data-localize="crashes.action-resolved"></div>'
-        //             + '<div class="item" data-value="crash-unresolve" data-localize="crashes.action-unresolved"></div>'
-                    
-        //     }else if(crashData.is_resolved){
-        //         $("#resolve-state").text(jQuery.i18n.map["crashes.resolved"] + "(" + crashData.resolved_version + ")");
-        //         $("#resolve-state").attr('class', 'resolved-text');
-
-        //         selectOptions += '<div class="item" data-value="crash-unresolve" data-localize="crashes.action-unresolved"></div>'
-        //         + '<div class="item" data-value="crash-resolving" data-localize="crashes.action-resolving"></div>'
-
-        //     }else{
-        //         $("#resolve-state").text(jQuery.i18n.map["crashes.unresolved"]);
-        //         $("#resolve-state").attr('class', 'unresolved-text');
-
-        //         selectOptions += '<div class="item" data-value="crash-resolve" data-localize="crashes.action-resolved"></div>'
-        //         + '<div class="item" data-value="crash-resolving" data-localize="crashes.action-resolving"></div>'
-        //     }
-
-        //     if(crashData.is_hidden){
-        //         selectOptions += '<div class="item" data-value="crash-show" data-localize="crashes.action-show"></div>'
-        //     }else{
-        //         selectOptions += '<div class="item" data-value="crash-hide" data-localize="crashes.action-hide"></div>' 
-        //     }
-        //     selectOptions += '<div class="item" data-value="crash-delete" data-localize="crashes.action-delete"></div>'
-        //     $(".performan-action-slection").html(selectOptions)
-        //     app.localize();
-        // }
+        
+        // if(this.templateData["big-numbers"]["items"].length == 3)
+        //     this.templateData["big-numbers"]["class"] = "three-column";
+        // else if(this.templateData["big-numbers"]["items"].length == 5)
+        //     this.templateData["big-numbers"]["class"] = "five-column";
+        
+       
       
 
 		var self = this;
@@ -848,33 +803,7 @@ window.NetworkErrorView = countlyView.extend({
                         $('#crash-share-'+i).attr('checked', true);
                 }
             }
-            
-            // $('.crash-share input[type=checkbox]').change(function(){
-            //     var opts = {};
-            //     $('.crash-share input[type=checkbox]').each(function(){
-            //         opts[this.id.replace("crash-share-", "")] = ($(this).is(":checked")) ? 1 : 0;
-            //     });
-            //     countlyCrashes.modifyShare(crashData._id, opts);
-            // });
-            
-            // $('#crash-share-public').change(function(){
-            //     if($(this).is(":checked")) {
-            //         countlyCrashes.share(crashData._id, function(data){
-            //             if(data)
-            //                 $(".crash-share").show();
-            //             else
-            //                 CountlyHelpers.alert(jQuery.i18n.map["crashes.try-later"], "red");
-            //         });
-            //     }
-            //     else{
-            //         countlyCrashes.unshare(crashData._id, function(data){
-            //             if(data)
-            //                 $(".crash-share").hide();
-            //             else
-            //                 CountlyHelpers.alert(jQuery.i18n.map["crashes.try-later"], "red");
-            //         });
-            //     }
-            // });
+          
             
             $( "#tabs" ).tabs({
                 select: function( event, ui ) {
@@ -890,64 +819,7 @@ window.NetworkErrorView = countlyView.extend({
                     $(".crash-comment-count").hide();
                 }
             });
-            // $("#add_comment").click(function(){
-            //     var comment = {};
-            //     comment.time = new Date().getTime();
-            //     comment.text = $("#comment").val();
-            //     countlyCrashes.addComment(crashData._id, comment, function(data){
-            //         if(data){
-            //             self.refresh();
-            //             $("#comment").val("");
-            //         }
-            //         else
-            //             CountlyHelpers.alert(jQuery.i18n.map["crashes.try-later"], "red"); 
-            //     });
-            // });
-            // $("#notes").on("click", ".crash-comment-edit", function(){
-            //     var container = $(this).parents(".comment");
-            //     if(!container.find("#comment_edit").length){
-            //         var comment_id = $(this).data("id");
-            //         container.find(".text").hide();
-            //         container.append($("#comment_edit").clone());
-            //         container.find("textarea").val(self.comments[comment_id]);
-            //         container.find(".cancel_comment").click(function(){
-            //             container.find("#comment_edit").remove();
-            //             container.find(".text").show();
-            //         });
-            //         container.find(".edit_comment").click(function(){
-            //             var comment = {};
-            //             comment.time = new Date().getTime();
-            //             comment.text = container.find("#edited_comment").val();
-            //             comment.comment_id = comment_id;
-            //             countlyCrashes.editComment(crashData._id, comment, function(data){
-            //                 if(data){
-            //                     self.refresh();
-            //                     container.find("#comment_edit").remove();
-            //                     container.find(".text").show();
-            //                 }
-            //                 else
-            //                     CountlyHelpers.alert(jQuery.i18n.map["crashes.try-later"], "red"); 
-            //             });
-            //         });
-            //     }
-            // });
-            // $("#notes").on("click", ".crash-comment-delete", function(){
-            //     var ob = {};
-            //     ob.comment_id = $(this).data("id");
-            //     CountlyHelpers.confirm(jQuery.i18n.map["crashes.confirm-comment-delete"], "red", function (result) {
-            //         if (!result) {
-			// 			return true;
-			// 		}
-            //         countlyCrashes.deleteComment(crashData._id, ob, function(data){
-            //             if(data){
-            //                 $("#comment_"+ob.comment_id).remove();
-            //                 self.refresh();
-            //             }
-            //             else
-            //                 CountlyHelpers.alert(jQuery.i18n.map["crashes.try-later"], "red"); 
-            //         });
-            //     });
-            // });
+           
 
             $("#expand-crash").on("click", function() {
                 $(this).toggleClass("active");
@@ -970,115 +842,12 @@ window.NetworkErrorView = countlyView.extend({
         });
         
         var self = this;
-        // $(".crash-manipulate-options").on("cly-select-change", function (e, val) {
-        //     if(val != ""){
-        //         $(".crash-manipulate-options").clySelectSetSelection("",jQuery.i18n.map["crashes.make-action"]);
-        //         if(val === "crash-resolve"){
-        //             countlyCrashes.markResolve(crashData._id, function(version){
-        //                 if(version){
-        //                     crashData.is_resolved = true;
-        //                     crashData.is_resolving = false;
-        //                     crashData.resolved_version = version;
-        //                     changeResolveStateText(crashData)
-        //                 }
-        //                 else{
-        //                     CountlyHelpers.alert(jQuery.i18n.map["crashes.try-later"], "red");
-        //                 }
-        //             });
-        //         }
-        //         else if(val === "crash-resolving"){
-        //             countlyCrashes.resolving([crashData._id], function(data){
-        //                 if(!data){
-        //                     CountlyHelpers.alert(jQuery.i18n.map["crashes.try-later"], "red"); 
-        //                 }
-        //                 else{
-        //                     crashData.is_resolving = true; 
-        //                     changeResolveStateText(crashData)
-        //                 }
-        //             });
-        //         }
-        //         else if(val === "crash-unresolve"){
-        //             countlyCrashes.markUnresolve(crashData._id, function(data){ 
-        //                 if(data){
-        //                     crashData.is_resolved = false; 
-        //                     crashData.is_resolving = false;
-        //                     changeResolveStateText(crashData)
-        //                 }
-        //                 else{
-        //                     CountlyHelpers.alert(jQuery.i18n.map["crashes.try-later"], "red");
-        //                 }
-		// 		    });
-        //         }
-        //         else if(val === "crash-hide"){
-        //             countlyCrashes.hide(crashData._id, function(data){
-        //                 if(data){
-        //                     crashData.is_hidden = true; 
-        //                     changeResolveStateText(crashData)
-        //                 }
-        //                 else{
-        //                     CountlyHelpers.alert(jQuery.i18n.map["crashes.try-later"], "red");
-        //                 }
-        //             });
-        //         }
-        //         else if(val === "crash-show"){
-        //             countlyCrashes.show(crashData._id, function(data){
-        //                 if(data){
-        //                     crashData.is_hidden = false; 
-        //                     changeResolveStateText(crashData)
-        //                 }
-        //                 else{
-        //                     CountlyHelpers.alert(jQuery.i18n.map["crashes.try-later"], "red");
-        //                 }
-        //             });
-        //         }
-        //         else if(val === "crash-delete"){
-        //             var id = $(self).data("id");
-        //             CountlyHelpers.confirm(jQuery.i18n.map["crashes.confirm-delete"], "red", function (result) {
-        //                 if (!result) {
-        //                     return true;
-        //                 }
-        //                 countlyCrashes.del(crashData._id, function (data) {
-        //                     if(data){
-        //                         if(data.result == "Success"){
-        //                             window.location.hash = "/crashes";
-        //                         }
-        //                         else{
-        //                             CountlyHelpers.alert(data.result, "red");
-        //                         }
-        //                     }
-        //                     else{
-        //                         CountlyHelpers.alert(jQuery.i18n.map["crashes.try-later"], "red");
-        //                     }
-        //                 });
-        //             });
-        //         }
-        //     }
-        // });
+        
     },
     redecorateStacktrace:function(){
          $(".crash-stack .line-number").remove();
          $(".crash-stack .cl").remove();
-        //  var pre = $(".crash-stack pre")[0];
-        //  pre.innerHTML = '<span class="line-number"></span>' + pre.innerHTML + '<span class="cl"></span>';
-        //  var num = pre.innerHTML.split(/\n/).length;
-        //  for (var i = 0; i < num; i++) {
-        //      var line_num = pre.getElementsByTagName('span')[0];
-        //      line_num.innerHTML += '<span>' + (i + 1) + '</span>';
-        //  }
-        //  $('pre code').each(function(i, block) {
-        //      if(typeof Worker !== "undefined"){
-        //          var worker = new Worker(countlyGlobal["path"]+'/javascripts/utils/highlight/highlight.worker.js');
-        //          worker.onmessage = function(event) { 
-        //              block.innerHTML = event.data;
-        //              worker.terminate();
-        //              worker = undefined;
-        //          };
-        //          worker.postMessage(block.textContent);
-        //      }
-        //      else if(typeof hljs != "undefined"){
-        //          hljs.highlightBlock(block);
-        //      }
-        //  });
+        
     },
     refresh:function () {
         var self = this;
