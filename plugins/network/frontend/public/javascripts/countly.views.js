@@ -552,6 +552,10 @@ window.NetworkErrorView = countlyView.extend({
     },
     renderCommon:function (isRefresh) {
         var crashData = countlyNetwork.getGroupData();
+        var url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+countlyGlobal["path"]+"/crash/";
+        var crashData = countlyCrashes.getGroupData();
+        if(crashData.url)
+               url += crashData.url;
         crashData.latest_version="12:03";
 		crashData.latest_version = crashData.latest_version.replace(/:/g, '.');
         
