@@ -301,6 +301,15 @@ window.NetworkView = countlyView.extend({
 
             var data = countlyNetwork.getData();
             CountlyHelpers.refreshTable(self.dtable, data.chartData);
+            $('.link-class').on("click", function (event){
+                event.stopPropagation();
+                var id =countlyCommon.hex_md5($(this).attr("id"));
+                if(id){
+                    var link = "#/analytics/networkerror/" + id ;
+                    window.open(link, "_self");
+                } 
+                event.preventDefault();
+            });
             self.drawGraph();
         });
     }
@@ -785,7 +794,9 @@ window.NetworkErrorView = countlyView.extend({
 					$(nRow).attr("id", aData._id);
 				},
                 "aoColumns": [
-					{ "mData": function(row, type){if(type == "display") return countlyCommon.formatTimeAgo(row.ts); else return row.ts;}, "sType":"format-ago", "sTitle": jQuery.i18n.map["crashes.crashed"]},
+                    { "mData": function(row, type){if(type == "display") return countlyCommon.formatTimeAgo(row.ts); else return row.ts;}, "sType":"format-ago", "sTitle": jQuery.i18n.map["error.time"]},
+                    { "mData": function(row, type){return row.name;}, "sType":"string", "sTitle": jQuery.i18n.map["error.name"] },
+                    { "mData": function(row, type){return row.code;}, "sType":"string", "sTitle": jQuery.i18n.map["error.code"] },
 					{ "mData": function(row, type){var str = row.os; if(row.os_version) str += " "+row.os_version.replace(/:/g, '.'); return str;}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.os_version"] },
 					{ "mData": function(row, type){var str = ""; if(row.manufacture) str += row.manufacture+" "; if(row.device) str += countlyDeviceList[row.device] || row.device; return str;}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.device"]},
 					{ "mData": function(row, type){return row.app_version.replace(/:/g, '.');}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.app_version"] }
