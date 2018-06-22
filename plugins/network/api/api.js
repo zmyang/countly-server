@@ -115,8 +115,7 @@ var plugin = {},
                     var cursor = common.db.collection('app_networkerror' + params.app_id).find({name:params.qstring.group}).sort( { $natural: -1 } );
                     cursor.limit(plugins.getConfig("crashes").report_limit);
                     cursor.toArray(function(err, res){
-                            result.data = res;
-                            common.returnOutput(params, result);
+                            common.returnOutput(params, res);
                     });
 
 				}
