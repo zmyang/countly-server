@@ -541,14 +541,14 @@ window.NetworkErrorView = countlyView.extend({
     },
     beforeRender: function() {
         countlyNetwork.reset();
-		if(this.template)
-			return $.when(countlyNetwork.initialize(this.id)).then(function () {});
-		else{
+		// if(this.template)
+		// 	return $.when(countlyNetwork.initialize(this.id)).then(function () {});
+		// else{
 			var self = this;
 			return $.when($.get(countlyGlobal["path"]+'/network/templates/networkerror.html', function(src){
 				self.template = Handlebars.compile(src);
 			}), countlyNetwork.initialize(this.id)).then(function () {});
-		}
+		// }
     },
     renderCommon:function (isRefresh) {
 		var url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+countlyGlobal["path"]+"/crash/";
