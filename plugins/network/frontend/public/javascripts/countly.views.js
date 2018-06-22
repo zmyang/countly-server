@@ -113,7 +113,7 @@ window.NetworkView = countlyView.extend({
                 event.stopPropagation();
                 var id =countlyCommon.hex_md5($(this).attr("id"));
                 if(id){
-                    var link = "#/networkerror/" + id ;
+                    var link = "#/analytics/networkerror/" + id ;
                     window.open(link, "_self");
                 } 
                 event.preventDefault();
