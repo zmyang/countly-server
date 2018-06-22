@@ -111,7 +111,7 @@ window.NetworkView = countlyView.extend({
             }));
             $('.link-class').on("click", function (event){
                 event.stopPropagation();
-                var id =$(this).attr("id");
+                var id =app.md5Hash($(this).attr("id"));
                 if(id){
                     var link = "#/networkerror/" + id ;
                     window.open(link, "_self");
