@@ -219,9 +219,7 @@ app.loadThemeFiles = function(theme, callback){
         callback(loadedThemes[theme]);
 };
 
-app.md5Hash = function(str) {
-    return crypto.createHash('md5').update(str + "").digest('hex');
-}
+
 
 plugins.loadConfigs(countlyDb, function(){
     curTheme = plugins.getConfig("frontend").theme;
