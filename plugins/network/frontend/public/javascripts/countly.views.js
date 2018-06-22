@@ -1212,12 +1212,14 @@ window.NetworkErrorView = countlyView.extend({
 app.networkView = new NetworkView();
 app.networkFrequencyView = new NetworkFrequencyView();
 app.actionMapView = new ActionMapView();
+app.networkErrorView = new NetworkErrorView();
 
 app.route("/analytics/network", 'network', function () {
 	this.renderWhenReady(this.networkView);
 });
 
-app.route("/networkerror/network", 'network', function () {
+app.route("/analytics/networkerror/:id", 'network', function () {
+    this.networkErrorView.id=id;
 	this.renderWhenReady(this.networkView);
 });
 
