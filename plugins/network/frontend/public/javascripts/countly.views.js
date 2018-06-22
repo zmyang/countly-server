@@ -1296,39 +1296,56 @@ app.addPageScript("/drill#", function(){
 });
 
 $( document ).ready(function() {
-    if(!production){
-        CountlyHelpers.loadJS("network/javascripts/simpleheat.js");
-    }
-    jQuery.fn.dataTableExt.oSort['view-frequency-asc']  = function(x, y) {
-        x = countlyNetwork.getFrequencyIndex(x);
-        y = countlyNetwork.getFrequencyIndex(y);
+    // if(!production){
+    //     CountlyHelpers.loadJS("network/javascripts/simpleheat.js");
+    // }
+    // jQuery.fn.dataTableExt.oSort['view-frequency-asc']  = function(x, y) {
+    //     x = countlyNetwork.getFrequencyIndex(x);
+    //     y = countlyNetwork.getFrequencyIndex(y);
 
-        return ((x < y) ? -1 : ((x > y) ?  1 : 0));
-    };
+    //     return ((x < y) ? -1 : ((x > y) ?  1 : 0));
+    // };
 
-    jQuery.fn.dataTableExt.oSort['view-frequency-desc']  = function(x, y) {
-        x = countlyNetwork.getFrequencyIndex(x);
-        y = countlyNetwork.getFrequencyIndex(y);
+    // jQuery.fn.dataTableExt.oSort['view-frequency-desc']  = function(x, y) {
+    //     x = countlyNetwork.getFrequencyIndex(x);
+    //     y = countlyNetwork.getFrequencyIndex(y);
 
-        return ((x < y) ?  1 : ((x > y) ? -1 : 0));
-    };
-	var menu = '<a href="#/analytics/network" class="item">'+
-		'<div class="logo-icon fa fa-eye"></div>'+
-		'<div class="text" data-localize="network.title"></div>'+
-	'</a>';
-	$('#web-type #analytics-submenu').append(menu);
-	$('#mobile-type #analytics-submenu').append(menu);
+    //     return ((x < y) ?  1 : ((x > y) ? -1 : 0));
+    // };
+	// var menu = '<a href="#/analytics/network" class="item">'+
+	// 	'<div class="logo-icon fa fa-eye"></div>'+
+	// 	'<div class="text" data-localize="network.title"></div>'+
+	// '</a>';
+	// $('#web-type #analytics-submenu').append(menu);
+	// $('#mobile-type #analytics-submenu').append(menu);
     
-    var menu = '<a href="#/analytics/view-frequency" class="item">'+
-		'<div class="logo-icon fa fa-eye"></div>'+
-		'<div class="text" data-localize="views.view-frequency"></div>'+
-	'</a>';
-	$('#web-type #engagement-submenu').append(menu);
-	$('#mobile-type #engagement-submenu').append(menu);
+    // var menu = '<a href="#/analytics/view-frequency" class="item">'+
+	// 	'<div class="logo-icon fa fa-eye"></div>'+
+	// 	'<div class="text" data-localize="views.view-frequency"></div>'+
+	// '</a>';
+	// $('#web-type #engagement-submenu').append(menu);
+	// $('#mobile-type #engagement-submenu').append(menu);
     
-    //check if configuration view exists
-    if(app.configurationsView){
-        app.configurationsView.registerLabel("network", "network.title");
-        app.configurationsView.registerLabel("network.view_limit", "network.view-limit");
-    }
+    // //check if configuration view exists
+    // if(app.configurationsView){
+    //     app.configurationsView.registerLabel("network", "network.title");
+    //     app.configurationsView.registerLabel("network.view_limit", "network.view-limit");
+    // }
+    
+    var menu = '<a class="item messaging" id="sidebar-messaging">'+
+        '<div class="logo ion-chatbox-working"></div>'+
+        '<div class="text" data-localize="network.title">Messaging</div>'+
+    '</a>'+
+    '<div class="sidebar-submenu" id="messaging-submenu">'+
+        '<a href="#/analytics/network" class="item">'+
+            '<div class="logo-icon fa fa-line-chart"></div>'+
+            '<div class="text" data-localize="push.sidebar.overview">Overview</div>'+
+        '</a>'+
+    '</div>';
+    if($('#mobile-type #management-menu').length)
+        $('#mobile-type #management-menu').before(menu);
+    else
+        $('#mobile-type').append(menu);
+    
+
 });
