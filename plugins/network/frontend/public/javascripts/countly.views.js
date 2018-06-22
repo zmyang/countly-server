@@ -624,7 +624,7 @@ window.NetworkErrorView = countlyView.extend({
                     },
 					{
                         "title":jQuery.i18n.map["crashes.highest-version"],
-                        "total":crashDate.latest_version.replace(/:/g, '.'),
+                        "total":crashData.latest_version.replace(/:/g, '.'),
                         "help":"crashes.help-app-version"
                     }
                 ]
