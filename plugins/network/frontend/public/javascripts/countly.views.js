@@ -1,4 +1,3 @@
-var common = require('../../../../../api/utils/common.js');
 window.NetworkView = countlyView.extend({
     selectedMetric:"t",
     selectedView:null,
@@ -112,7 +111,7 @@ window.NetworkView = countlyView.extend({
             }));
             $('.link-class').on("click", function (event){
                 event.stopPropagation();
-                var id =common.crypto.createHash("md5").update($(this).attr("id")).digest('base64');
+                var id =$(this).attr("id");
                 if(id){
                     var link = "#/networkerror/" + id ;
                     window.open(link, "_self");
