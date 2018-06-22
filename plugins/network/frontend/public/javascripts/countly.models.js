@@ -13,7 +13,7 @@
         _period = null;
 
     //Public Methods
-    countlyNetwork.initialize = function (id) {
+    countlyNetwork.initialize = function (id, isRefresh) {
         if (_initialized &&  _period == countlyCommon.getPeriodForAjax() && _activeAppKey == countlyCommon.ACTIVE_APP_KEY) {
             return this.refresh();
         }
