@@ -630,65 +630,65 @@ window.NetworkErrorView = countlyView.extend({
                 ]
             }
         };
-        if(countlyGlobal["apps"][countlyCommon.ACTIVE_APP_ID].type != "web"){
-            this.templateData["ranges"]=[
-                {
-                    "title":jQuery.i18n.map["crashes.ram"],
-                    "icon":"memory",
-                    "help":"crashes.help-ram",
-                    "min":crashData.ram.min+" %",
-                    "max":crashData.ram.max+" %",
-                    "avg":(crashData[0].ram.total/crashData[0].ram.count).toFixed(2)+" %"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.disk"],
-                    "icon":"sd_storage",
-                    "help":"crashes.help-disk",
-                    "min":crashData[0].disk.min+" %",
-                    "max":crashData[0].disk.max+" %",
-                    "avg":(crashData[0].disk.total/crashData[0].disk.count).toFixed(2)+" %"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.battery"],
-                    "icon":"battery_full",
-                    "help":"crashes.help-battery",
-                    "min":crashData[0].bat.min+" %",
-                    "max":crashData[0].bat.max+" %",
-                    "avg":(crashData[0].bat.total/crashData[0].bat.count).toFixed(2)+" %"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.run"],
-                    "icon":"play_arrow",
-                    "help":"crashes.help-run",
-                    "min":countlyCommon.timeString(crashData[0].run.min/60),
-                    "max":countlyCommon.timeString(crashData[0].run.max/60),
-                    "avg":countlyCommon.timeString((crashData[0].run.total/crashData[0].run.count)/60)
-                }
-            ];
+        // if(countlyGlobal["apps"][countlyCommon.ACTIVE_APP_ID].type != "web"){
+        //     this.templateData["ranges"]=[
+        //         {
+        //             "title":jQuery.i18n.map["crashes.ram"],
+        //             "icon":"memory",
+        //             "help":"crashes.help-ram",
+        //             "min":crashData.ram.min+" %",
+        //             "max":crashData.ram.max+" %",
+        //             "avg":(crashData[0].ram.total/crashData[0].ram.count).toFixed(2)+" %"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.disk"],
+        //             "icon":"sd_storage",
+        //             "help":"crashes.help-disk",
+        //             "min":crashData[0].disk.min+" %",
+        //             "max":crashData[0].disk.max+" %",
+        //             "avg":(crashData[0].disk.total/crashData[0].disk.count).toFixed(2)+" %"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.battery"],
+        //             "icon":"battery_full",
+        //             "help":"crashes.help-battery",
+        //             "min":crashData[0].bat.min+" %",
+        //             "max":crashData[0].bat.max+" %",
+        //             "avg":(crashData[0].bat.total/crashData[0].bat.count).toFixed(2)+" %"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.run"],
+        //             "icon":"play_arrow",
+        //             "help":"crashes.help-run",
+        //             "min":countlyCommon.timeString(crashData[0].run.min/60),
+        //             "max":countlyCommon.timeString(crashData[0].run.max/60),
+        //             "avg":countlyCommon.timeString((crashData[0].run.total/crashData[0].run.count)/60)
+        //         }
+        //     ];
             
-            this.templateData["bars"]=[
-                {
-                    "title":jQuery.i18n.map["crashes.root"],
-                    "data": countlyCrashes.getBoolBars("root"),
-                    "help":"crashes.help-root"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.online"],
-                    "data":countlyCrashes.getBoolBars("online"),
-                    "help":"crashes.help-online"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.muted"],
-                    "data": countlyCrashes.getBoolBars("muted"),
-                    "help":"crashes.help-muted"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.background"],
-                    "data": countlyCrashes.getBoolBars("background"),
-                    "help":"crashes.help-background"
-                }
-            ];
-        }
+        //     this.templateData["bars"]=[
+        //         {
+        //             "title":jQuery.i18n.map["crashes.root"],
+        //             "data": countlyCrashes.getBoolBars("root"),
+        //             "help":"crashes.help-root"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.online"],
+        //             "data":countlyCrashes.getBoolBars("online"),
+        //             "help":"crashes.help-online"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.muted"],
+        //             "data": countlyCrashes.getBoolBars("muted"),
+        //             "help":"crashes.help-muted"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.background"],
+        //             "data": countlyCrashes.getBoolBars("background"),
+        //             "help":"crashes.help-background"
+        //         }
+        //     ];
+        // }
         if(crashData.loss){
             this.templateData["loss"] = true;
             this.templateData["big-numbers"]["items"].push({
