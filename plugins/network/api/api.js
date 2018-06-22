@@ -109,6 +109,19 @@ var plugin = {},
                 });
             });
 			return true;
+		} else if(params.qstring.method == 'networkerror'){
+            validate(params, function(params){
+				if (params.qstring.group) {
+                    var cursor = common.db.collection('app_networkerror' + params.app_id).find({name:params.qstring.group}).sort( { $natural: -1 } );
+                    cursor.limit(plugins.getConfig("crashes").report_limit);
+                    cursor.toArray(function(err, res){
+                            result.data = res;
+                            common.returnOutput(params, result);
+                    });
+
+				}
+			});
+			return true;
 		}
 		return false;
 	});

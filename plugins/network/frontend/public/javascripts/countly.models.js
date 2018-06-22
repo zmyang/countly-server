@@ -13,60 +13,110 @@
         _period = null;
 
     //Public Methods
-    countlyNetwork.initialize = function () {
+    countlyNetwork.initialize = function (id) {
         if (_initialized &&  _period == countlyCommon.getPeriodForAjax() && _activeAppKey == countlyCommon.ACTIVE_APP_KEY) {
             return this.refresh();
         }
 
         _period = countlyCommon.getPeriodForAjax();
 
-        if (!countlyCommon.DEBUG) {
-            _activeAppKey = countlyCommon.ACTIVE_APP_KEY;
-            _initialized = true;
 
-            return $.when(
-                $.ajax({
-                    type:"GET",
-                    url:countlyCommon.API_PARTS.data.r,
-                    data:{
-                        "api_key":countlyGlobal.member.api_key,
-                        "app_id":countlyCommon.ACTIVE_APP_ID,
-                        "method":"get_network_segments",
-                        "period":_period
-                    },
-                    dataType:"jsonp",
-                    success:function (json) {
-                        if(json && json.segments){
-                            for(var i = 0; i < json.segments.length; i++){
-                                json.segments[i] = countlyCommon.decode(json.segments[i]);
-                            }
-                            _segments = json.segments;
-                            _domains = json.domains;
+        if(id){
+            _lastId = id;
+			return $.ajax({
+				type:"GET",
+				url:countlyCommon.API_PARTS.data.r,
+				data:{
+					"api_key":countlyGlobal.member.api_key,
+					"app_id":countlyCommon.ACTIVE_APP_ID,
+					"method":"networkerror",
+                    "period":_period,
+					"group":id,
+                    "display_loader": !isRefresh
+				},
+				dataType:"jsonp",
+				success:function (json) {
+                    _groupData = json;
+                    if(_groupData.data && _groupData.data.length){
+                        for(var i = 0; i < _groupData.data.length; i++){
+                            _reportData[_groupData.data[i]._id] = _groupData.data[i]; 
                         }
                     }
-                }),
-                $.ajax({
-                    type:"GET",
-                    url:countlyCommon.API_PARTS.data.r,
-                    data:{
-                        "api_key":countlyGlobal.member.api_key,
-                        "app_id":countlyCommon.ACTIVE_APP_ID,
-                        "method":_name,
-                        "segmentation": _segment,
-                        "period":_period
-                    },
-                    dataType:"jsonp",
-                    success:function (json) {
-                        countlyNetwork.setDb(json);
+                    _groupData.name = countlyCommon.decode(_groupData.name);
+                    _groupData.error = countlyCommon.decode(_groupData.error);
+                    _list[_groupData._id] = _groupData.name;
+					_groupData.dp = {};
+					for(var i in _metrics){
+                        if(_groupData[i]){
+                            _usable_metrics.metrics[i] = _metrics[i];
+                            _groupData.dp[i] = countlyCrashes.processMetric(_groupData[i], i, _metrics[i]);
+                        }
+					}
+                    if(_groupData.custom){
+                        for(var i in _groupData.custom){
+                            _groupData.dp[i] = countlyCrashes.processMetric(_groupData.custom[i], i, i);
+                            _usable_metrics.custom[i] = i.charAt(0).toUpperCase() + i.slice(1);
+                        }
                     }
-                })
-            ).then(function(){
+				}, 
+                error:function(jqXHR, textStatus, errorThrown ){
+                    if(errorThrown && errorThrown === "Bad Request"){
+                        CountlyHelpers.alert(jQuery.i18n.map["crashes.not-found"], "red");
+                        app.navigate("/crashes", true);
+                    }
+                }
+			});
+		}else{
+            if (!countlyCommon.DEBUG) {
+                _activeAppKey = countlyCommon.ACTIVE_APP_KEY;
+                _initialized = true;
+    
+                return $.when(
+                    $.ajax({
+                        type:"GET",
+                        url:countlyCommon.API_PARTS.data.r,
+                        data:{
+                            "api_key":countlyGlobal.member.api_key,
+                            "app_id":countlyCommon.ACTIVE_APP_ID,
+                            "method":"get_network_segments",
+                            "period":_period
+                        },
+                        dataType:"jsonp",
+                        success:function (json) {
+                            if(json && json.segments){
+                                for(var i = 0; i < json.segments.length; i++){
+                                    json.segments[i] = countlyCommon.decode(json.segments[i]);
+                                }
+                                _segments = json.segments;
+                                _domains = json.domains;
+                            }
+                        }
+                    }),
+                    $.ajax({
+                        type:"GET",
+                        url:countlyCommon.API_PARTS.data.r,
+                        data:{
+                            "api_key":countlyGlobal.member.api_key,
+                            "app_id":countlyCommon.ACTIVE_APP_ID,
+                            "method":_name,
+                            "segmentation": _segment,
+                            "period":_period
+                        },
+                        dataType:"jsonp",
+                        success:function (json) {
+                            countlyNetwork.setDb(json);
+                        }
+                    })
+                ).then(function(){
+                    return true;
+                });
+            } else {
+                _Db = {"2012":{}};
                 return true;
-            });
-        } else {
-            _Db = {"2012":{}};
-            return true;
+            }
         }
+
+        
     };
 
     countlyNetwork.refresh = function () {
