@@ -615,13 +615,41 @@ var plugin = {},
                     //custom key/values provided by developers
                     "custom"
                 ];
-                var report = {};
+                var report = {
+                    "os" : "Android",
+                    "os_version" : "6.0",
+                    "manufacture" : "HTC",
+                    "device" : "HTC D816t",
+                    "resolution" : "720x1184",
+                    "app_version" : "1.0",
+                    "cpu" : "armeabi-v7a",
+                    "opengl" : "3",
+                    "ram_current" : "853",
+                    "ram_total" : "1334",
+                    "disk_current" : "1532",
+                    "disk_total" : "2516",
+                    "bat" : "86.0",
+                    "orientation" : "Portrait",
+                    "root" : 0,
+                    "online" : 1,
+                    "muted" : 0,
+                    "background" : 1,
+                    "error" : "java.lang.ArrayIndexOutOfBoundsException: length=0; index=0\nat ly.count.android.demo.CrashReportingActivity.c(SourceFile:59)\nat ly.count.android.demo.CrashReportingActivity.onClick(SourceFile:37)\nat android.view.View.performClick(View.java:5226)\nat android.view.View$PerformClick.run(View.java:21265)\nat android.os.Handler.handleCallback(Handler.java:739)\nat android.os.Handler.dispatchMessage(Handler.java:95)\nat android.os.Looper.loop(Looper.java:168)\nat android.app.ActivityThread.main(ActivityThread.java:5845)\nat java.lang.reflect.Method.invoke(Native Method)\nat com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:797)\nat com.android.internal.os.ZygoteInit.main(ZygoteInit.java:687)",
+                    "nonfatal" : false,
+                    "run" : "2026",
+                    "cd" : ISODate("2018-06-11T02:11:50.834Z"),
+                    "not_os_specific" : false,
+                    "group" : "544bfc4077b97b14b8f6f1d4c815199330dbb33d",
+                    "uid" : "4",
+                    "ts" : 1528683110
+                };
                 for(var i = 0, l = props.length; i < l; i++){
-                    report[props[i]] = currEvent.segmentation[props[i]];
-
+                    if(currEvent.segmentation[props[i]] != null){
+                        report[props[i]] = currEvent.segmentation[props[i]];
+                    }
                 }
                 report.cd=new Date();
-                report.ts=currEvent.timestamp;
+                report.ts=Math.floor(currEvent.timestamp);
                 report.view=currEvent.segmentation.name;
                 report.name=currEvent.segmentation.errortitle;
                 report.error=currEvent.segmentation.errorinfo;
