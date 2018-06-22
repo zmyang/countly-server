@@ -1,3 +1,4 @@
+var common = require('../../../../../api/utils/common.js');
 window.NetworkView = countlyView.extend({
     selectedMetric:"t",
     selectedView:null,
