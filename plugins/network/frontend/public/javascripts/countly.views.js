@@ -1042,27 +1042,27 @@ window.NetworkErrorView = countlyView.extend({
     redecorateStacktrace:function(){
          $(".crash-stack .line-number").remove();
          $(".crash-stack .cl").remove();
-         var pre = $(".crash-stack pre")[0];
-         pre.innerHTML = '<span class="line-number"></span>' + pre.innerHTML + '<span class="cl"></span>';
-         var num = pre.innerHTML.split(/\n/).length;
-         for (var i = 0; i < num; i++) {
-             var line_num = pre.getElementsByTagName('span')[0];
-             line_num.innerHTML += '<span>' + (i + 1) + '</span>';
-         }
-         $('pre code').each(function(i, block) {
-             if(typeof Worker !== "undefined"){
-                 var worker = new Worker(countlyGlobal["path"]+'/javascripts/utils/highlight/highlight.worker.js');
-                 worker.onmessage = function(event) { 
-                     block.innerHTML = event.data;
-                     worker.terminate();
-                     worker = undefined;
-                 };
-                 worker.postMessage(block.textContent);
-             }
-             else if(typeof hljs != "undefined"){
-                 hljs.highlightBlock(block);
-             }
-         });
+        //  var pre = $(".crash-stack pre")[0];
+        //  pre.innerHTML = '<span class="line-number"></span>' + pre.innerHTML + '<span class="cl"></span>';
+        //  var num = pre.innerHTML.split(/\n/).length;
+        //  for (var i = 0; i < num; i++) {
+        //      var line_num = pre.getElementsByTagName('span')[0];
+        //      line_num.innerHTML += '<span>' + (i + 1) + '</span>';
+        //  }
+        //  $('pre code').each(function(i, block) {
+        //      if(typeof Worker !== "undefined"){
+        //          var worker = new Worker(countlyGlobal["path"]+'/javascripts/utils/highlight/highlight.worker.js');
+        //          worker.onmessage = function(event) { 
+        //              block.innerHTML = event.data;
+        //              worker.terminate();
+        //              worker = undefined;
+        //          };
+        //          worker.postMessage(block.textContent);
+        //      }
+        //      else if(typeof hljs != "undefined"){
+        //          hljs.highlightBlock(block);
+        //      }
+        //  });
     },
     refresh:function () {
         var self = this;
