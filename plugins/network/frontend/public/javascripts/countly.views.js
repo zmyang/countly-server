@@ -1218,9 +1218,9 @@ app.route("/analytics/network", 'network', function () {
 	this.renderWhenReady(this.networkView);
 });
 
-app.route("/analytics/networkerror/:id", 'network', function () {
+app.route("/analytics/networkerror/:id", 'network', function (id) {
     this.networkErrorView.id=id;
-	this.renderWhenReady(this.networkView);
+	this.renderWhenReady(this.networkErrorView);
 });
 
 app.route("/analytics/view-frequency", 'network', function () {
