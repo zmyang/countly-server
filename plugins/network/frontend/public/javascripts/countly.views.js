@@ -593,193 +593,193 @@ window.NetworkErrorView = countlyView.extend({
         //         crashData[ranges[i]] = {min:0, max:0, total:0, count:1};
         //     }
         // }
-        this.templateData = {
-            "page-title":jQuery.i18n.map["crashes.crashes-by"],
-            "note-placeholder": jQuery.i18n.map["crashes.editnote"],
-            "hasPermission": (countlyGlobal["member"].global_admin || countlyGlobal["admin_apps"][countlyCommon.ACTIVE_APP_ID]) ? true : false,
-            "url":url,
-			"data":crashData,
-			"error":crashData.name.substr(0, 80),
-            "fatal": (crashData.nonfatal) ? jQuery.i18n.map["crashes.nonfatal"] : jQuery.i18n.map["crashes.fatal"],
-			"active-segmentation": this.curTitle,
-			"segmentations": this.metrics,
-			"big-numbers":{
-                "class":"four-column",
-                "items":[
-					{
-                        "title":jQuery.i18n.map["crashes.platform"],
-                        "total":(crashData.not_os_specific) ? jQuery.i18n.map["crashes.varies"] : crashData.os,
-                        "help":"crashes.help-platform"
-                    },
-                    {
-                        "title":jQuery.i18n.map["crashes.reports"],
-                        "total":crashData.reports,
-                        "help":"crashes.help-reports"
-                    },
-                    {
-                        "title":jQuery.i18n.map["crashes.affected-users"],
-                        "total":crashData.users + " ("+((crashData.users/crashData.total)*100).toFixed(2)+"%)",
-                        "help":"crashes.help-affected"
-                    },
-					{
-                        "title":jQuery.i18n.map["crashes.highest-version"],
-                        "total":crashData.latest_version.replace(/:/g, '.'),
-                        "help":"crashes.help-app-version"
-                    }
-                ]
-            }
-        };
-        if(countlyGlobal["apps"][countlyCommon.ACTIVE_APP_ID].type != "web"){
-            this.templateData["ranges"]=[
-                {
-                    "title":jQuery.i18n.map["crashes.ram"],
-                    "icon":"memory",
-                    "help":"crashes.help-ram",
-                    "min":crashData.ram.min+" %",
-                    "max":crashData.ram.max+" %",
-                    "avg":(crashData.ram.total/crashData.ram.count).toFixed(2)+" %"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.disk"],
-                    "icon":"sd_storage",
-                    "help":"crashes.help-disk",
-                    "min":crashData.disk.min+" %",
-                    "max":crashData.disk.max+" %",
-                    "avg":(crashData.disk.total/crashData.disk.count).toFixed(2)+" %"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.battery"],
-                    "icon":"battery_full",
-                    "help":"crashes.help-battery",
-                    "min":crashData.bat.min+" %",
-                    "max":crashData.bat.max+" %",
-                    "avg":(crashData.bat.total/crashData.bat.count).toFixed(2)+" %"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.run"],
-                    "icon":"play_arrow",
-                    "help":"crashes.help-run",
-                    "min":countlyCommon.timeString(crashData.run.min/60),
-                    "max":countlyCommon.timeString(crashData.run.max/60),
-                    "avg":countlyCommon.timeString((crashData.run.total/crashData.run.count)/60)
-                }
-            ];
+        // this.templateData = {
+        //     "page-title":jQuery.i18n.map["crashes.crashes-by"],
+        //     "note-placeholder": jQuery.i18n.map["crashes.editnote"],
+        //     "hasPermission": (countlyGlobal["member"].global_admin || countlyGlobal["admin_apps"][countlyCommon.ACTIVE_APP_ID]) ? true : false,
+        //     "url":url,
+		// 	"data":crashData,
+		// 	"error":crashData.name.substr(0, 80),
+        //     "fatal": (crashData.nonfatal) ? jQuery.i18n.map["crashes.nonfatal"] : jQuery.i18n.map["crashes.fatal"],
+		// 	"active-segmentation": this.curTitle,
+		// 	"segmentations": this.metrics,
+		// 	"big-numbers":{
+        //         "class":"four-column",
+        //         "items":[
+		// 			{
+        //                 "title":jQuery.i18n.map["crashes.platform"],
+        //                 "total":(crashData.not_os_specific) ? jQuery.i18n.map["crashes.varies"] : crashData.os,
+        //                 "help":"crashes.help-platform"
+        //             },
+        //             {
+        //                 "title":jQuery.i18n.map["crashes.reports"],
+        //                 "total":crashData.reports,
+        //                 "help":"crashes.help-reports"
+        //             },
+        //             {
+        //                 "title":jQuery.i18n.map["crashes.affected-users"],
+        //                 "total":crashData.users + " ("+((crashData.users/crashData.total)*100).toFixed(2)+"%)",
+        //                 "help":"crashes.help-affected"
+        //             },
+		// 			{
+        //                 "title":jQuery.i18n.map["crashes.highest-version"],
+        //                 "total":crashData.latest_version.replace(/:/g, '.'),
+        //                 "help":"crashes.help-app-version"
+        //             }
+        //         ]
+        //     }
+        // };
+        // if(countlyGlobal["apps"][countlyCommon.ACTIVE_APP_ID].type != "web"){
+        //     this.templateData["ranges"]=[
+        //         {
+        //             "title":jQuery.i18n.map["crashes.ram"],
+        //             "icon":"memory",
+        //             "help":"crashes.help-ram",
+        //             "min":crashData.ram.min+" %",
+        //             "max":crashData.ram.max+" %",
+        //             "avg":(crashData.ram.total/crashData.ram.count).toFixed(2)+" %"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.disk"],
+        //             "icon":"sd_storage",
+        //             "help":"crashes.help-disk",
+        //             "min":crashData.disk.min+" %",
+        //             "max":crashData.disk.max+" %",
+        //             "avg":(crashData.disk.total/crashData.disk.count).toFixed(2)+" %"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.battery"],
+        //             "icon":"battery_full",
+        //             "help":"crashes.help-battery",
+        //             "min":crashData.bat.min+" %",
+        //             "max":crashData.bat.max+" %",
+        //             "avg":(crashData.bat.total/crashData.bat.count).toFixed(2)+" %"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.run"],
+        //             "icon":"play_arrow",
+        //             "help":"crashes.help-run",
+        //             "min":countlyCommon.timeString(crashData.run.min/60),
+        //             "max":countlyCommon.timeString(crashData.run.max/60),
+        //             "avg":countlyCommon.timeString((crashData.run.total/crashData.run.count)/60)
+        //         }
+        //     ];
             
-            this.templateData["bars"]=[
-                {
-                    "title":jQuery.i18n.map["crashes.root"],
-                    "data": countlyCrashes.getBoolBars("root"),
-                    "help":"crashes.help-root"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.online"],
-                    "data":countlyCrashes.getBoolBars("online"),
-                    "help":"crashes.help-online"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.muted"],
-                    "data": countlyCrashes.getBoolBars("muted"),
-                    "help":"crashes.help-muted"
-                },
-                {
-                    "title":jQuery.i18n.map["crashes.background"],
-                    "data": countlyCrashes.getBoolBars("background"),
-                    "help":"crashes.help-background"
-                }
-            ];
-        }
-        if(crashData.loss){
-            this.templateData["loss"] = true;
-            this.templateData["big-numbers"]["items"].push({
-                "title":jQuery.i18n.map["crashes.loss"],
-                "total":parseFloat(crashData.loss).toFixed(2),
-                "help":"crashes.help-loss"
-            });
-        }
+        //     this.templateData["bars"]=[
+        //         {
+        //             "title":jQuery.i18n.map["crashes.root"],
+        //             "data": countlyCrashes.getBoolBars("root"),
+        //             "help":"crashes.help-root"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.online"],
+        //             "data":countlyCrashes.getBoolBars("online"),
+        //             "help":"crashes.help-online"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.muted"],
+        //             "data": countlyCrashes.getBoolBars("muted"),
+        //             "help":"crashes.help-muted"
+        //         },
+        //         {
+        //             "title":jQuery.i18n.map["crashes.background"],
+        //             "data": countlyCrashes.getBoolBars("background"),
+        //             "help":"crashes.help-background"
+        //         }
+        //     ];
+        // }
+        // if(crashData.loss){
+        //     this.templateData["loss"] = true;
+        //     this.templateData["big-numbers"]["items"].push({
+        //         "title":jQuery.i18n.map["crashes.loss"],
+        //         "total":parseFloat(crashData.loss).toFixed(2),
+        //         "help":"crashes.help-loss"
+        //     });
+        // }
         
-        if(this.templateData["big-numbers"]["items"].length == 3)
-            this.templateData["big-numbers"]["class"] = "three-column";
-        else if(this.templateData["big-numbers"]["items"].length == 5)
-            this.templateData["big-numbers"]["class"] = "five-column";
+        // if(this.templateData["big-numbers"]["items"].length == 3)
+        //     this.templateData["big-numbers"]["class"] = "three-column";
+        // else if(this.templateData["big-numbers"]["items"].length == 5)
+        //     this.templateData["big-numbers"]["class"] = "five-column";
         
-        if(crashData.session && this.templateData["ranges"]){
-            this.templateData["frequency"] = true;
-            this.templateData["ranges"].push({
-                "title":jQuery.i18n.map["crashes.sessions"],
-				"icon":"repeat",
-                "help":"crashes.help-frequency",
-                "min":crashData.session.min,
-                "max":crashData.session.max,
-                "avg":((Math.round(crashData.session.total/crashData.session.count)*100)/100)
-            });
-        }
+        // if(crashData.session && this.templateData["ranges"]){
+        //     this.templateData["frequency"] = true;
+        //     this.templateData["ranges"].push({
+        //         "title":jQuery.i18n.map["crashes.sessions"],
+		// 		"icon":"repeat",
+        //         "help":"crashes.help-frequency",
+        //         "min":crashData.session.min,
+        //         "max":crashData.session.max,
+        //         "avg":((Math.round(crashData.session.total/crashData.session.count)*100)/100)
+        //     });
+        // }
 
-        function changeResolveStateText(crashData){
-            var selectOptions = "";
+        // function changeResolveStateText(crashData){
+        //     var selectOptions = "";
 
-            if(crashData.is_resolving){
-                $("#resolve-state").text(jQuery.i18n.map["crashes.resolving"]);
-                $("#resolve-state").attr('class', 'resolving-text');
+        //     if(crashData.is_resolving){
+        //         $("#resolve-state").text(jQuery.i18n.map["crashes.resolving"]);
+        //         $("#resolve-state").attr('class', 'resolving-text');
 
-                selectOptions += '<div class="item" data-value="crash-resolve" data-localize="crashes.action-resolved"></div>'
-                    + '<div class="item" data-value="crash-unresolve" data-localize="crashes.action-unresolved"></div>'
+        //         selectOptions += '<div class="item" data-value="crash-resolve" data-localize="crashes.action-resolved"></div>'
+        //             + '<div class="item" data-value="crash-unresolve" data-localize="crashes.action-unresolved"></div>'
                     
-            }else if(crashData.is_resolved){
-                $("#resolve-state").text(jQuery.i18n.map["crashes.resolved"] + "(" + crashData.resolved_version + ")");
-                $("#resolve-state").attr('class', 'resolved-text');
+        //     }else if(crashData.is_resolved){
+        //         $("#resolve-state").text(jQuery.i18n.map["crashes.resolved"] + "(" + crashData.resolved_version + ")");
+        //         $("#resolve-state").attr('class', 'resolved-text');
 
-                selectOptions += '<div class="item" data-value="crash-unresolve" data-localize="crashes.action-unresolved"></div>'
-                + '<div class="item" data-value="crash-resolving" data-localize="crashes.action-resolving"></div>'
+        //         selectOptions += '<div class="item" data-value="crash-unresolve" data-localize="crashes.action-unresolved"></div>'
+        //         + '<div class="item" data-value="crash-resolving" data-localize="crashes.action-resolving"></div>'
 
-            }else{
-                $("#resolve-state").text(jQuery.i18n.map["crashes.unresolved"]);
-                $("#resolve-state").attr('class', 'unresolved-text');
+        //     }else{
+        //         $("#resolve-state").text(jQuery.i18n.map["crashes.unresolved"]);
+        //         $("#resolve-state").attr('class', 'unresolved-text');
 
-                selectOptions += '<div class="item" data-value="crash-resolve" data-localize="crashes.action-resolved"></div>'
-                + '<div class="item" data-value="crash-resolving" data-localize="crashes.action-resolving"></div>'
-            }
+        //         selectOptions += '<div class="item" data-value="crash-resolve" data-localize="crashes.action-resolved"></div>'
+        //         + '<div class="item" data-value="crash-resolving" data-localize="crashes.action-resolving"></div>'
+        //     }
 
-            if(crashData.is_hidden){
-                selectOptions += '<div class="item" data-value="crash-show" data-localize="crashes.action-show"></div>'
-            }else{
-                selectOptions += '<div class="item" data-value="crash-hide" data-localize="crashes.action-hide"></div>' 
-            }
-            selectOptions += '<div class="item" data-value="crash-delete" data-localize="crashes.action-delete"></div>'
-            $(".performan-action-slection").html(selectOptions)
-            app.localize();
-        }
+        //     if(crashData.is_hidden){
+        //         selectOptions += '<div class="item" data-value="crash-show" data-localize="crashes.action-show"></div>'
+        //     }else{
+        //         selectOptions += '<div class="item" data-value="crash-hide" data-localize="crashes.action-hide"></div>' 
+        //     }
+        //     selectOptions += '<div class="item" data-value="crash-delete" data-localize="crashes.action-delete"></div>'
+        //     $(".performan-action-slection").html(selectOptions)
+        //     app.localize();
+        // }
       
 
 		var self = this;
         if (!isRefresh) {
-            $(this.el).html(this.template(this.templateData));
-            changeResolveStateText(crashData);
-             if(typeof addDrill != "undefined"){
-                $("#content .widget:first-child .widget-header>.right").append(addDrill("sg.crash", this.id, "[CLY]_crash"));
-            }
-            $(".back-link").click(function(e){
-                e.preventDefault();
-                window.history.back();
-                return false;
-            });
-            if(crashData.comments){
-                var count = 0;
-                for(var i = 0; i < crashData.comments.length; i++){
-                    if(!crashData.comments[i].is_owner && typeof store.get("countly_"+this.id+"_"+crashData.comments[i]._id) == "undefined"){
-                        count++;
-                    }
-                }
-                if(count > 0){
-                    $(".crash-comment-count span").text(count+"");
-                    $(".crash-comment-count").show();
-                }
-            }
-			$(".segmentation-option").on("click", function () {
-				self.switchMetric($(this).data("value"));
-			});
+            // $(this.el).html(this.template(this.templateData));
+            // changeResolveStateText(crashData);
+            //  if(typeof addDrill != "undefined"){
+            //     $("#content .widget:first-child .widget-header>.right").append(addDrill("sg.crash", this.id, "[CLY]_crash"));
+            // }
+            // $(".back-link").click(function(e){
+            //     e.preventDefault();
+            //     window.history.back();
+            //     return false;
+            // });
+            // if(crashData.comments){
+            //     var count = 0;
+            //     for(var i = 0; i < crashData.comments.length; i++){
+            //         if(!crashData.comments[i].is_owner && typeof store.get("countly_"+this.id+"_"+crashData.comments[i]._id) == "undefined"){
+            //             count++;
+            //         }
+            //     }
+            //     if(count > 0){
+            //         $(".crash-comment-count span").text(count+"");
+            //         $(".crash-comment-count").show();
+            //     }
+            // }
+			// $(".segmentation-option").on("click", function () {
+			// 	self.switchMetric($(this).data("value"));
+			// });
 			this.dtable = $('.d-table').dataTable($.extend({}, $.fn.dataTable.defaults, {
                 "aaSorting": [[0,'desc']],
-                "aaData": crashData.data || [],
+                "aaData": crashData || [],
 				"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 					$(nRow).attr("id", aData._id);
 				},
