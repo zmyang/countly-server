@@ -10,6 +10,7 @@
         _segments = [],
         _domains = [],
         _name = "network",
+        _groupData = {},
         _period = null;
 
     //Public Methods
@@ -117,6 +118,10 @@
         }
 
         
+    };
+
+    countlyNetwork.getGroupData = function () {
+		return _groupData;
     };
 
     countlyNetwork.refresh = function () {

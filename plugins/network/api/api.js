@@ -112,7 +112,7 @@ var plugin = {},
 		} else if(params.qstring.method == 'networkerror'){
             validateUserForDataReadAPI(params, function(params){
 				if (params.qstring.group) {
-                    var cursor = common.db.collection('app_networkerror' + params.app_id).find({groupid:params.qstring.group}).sort( { $natural: -1 } );
+                    var cursor = common.db.collection('app_networkerror' + params.app_id).find({group:params.qstring.group}).sort( { $natural: -1 } );
                     cursor.limit(plugins.getConfig("crashes").report_limit);
                     cursor.toArray(function(err, res){
                             common.returnOutput(params, res);
@@ -565,9 +565,70 @@ var plugin = {},
             
             if(currEvent.segmentation.code && currEvent.segmentation.code!=200){
                 monthObjUpdate.push(escapedMetricVal + '.e');
-                currEvent.segmentation.ts=currEvent.timestamp;
-                currEvent.segmentation.groupid=common.crypto.createHash("md5").update(currEvent.segmentation.name).digest('hex');
-                common.db.collection("app_networkerror"+params.app_id).insert( currEvent.segmentation, {'upsert': true}, function(err, res){});
+
+                var props = [
+                    //device metrics
+                    "os",
+                    "os_version",
+                    "manufacture", //may not be provided for ios or be constant, like Apple
+                    "device", //model for Android, iPhone1,1 etc for iOS
+                    "resolution",
+                    "app_version",
+                    "cpu", //type of cpu used on device (for ios will be based on device)
+                    "opengl", //version of open gl supported
+                    "view", //screen, view or page where error happened
+                    "browser", //browser in which error happened, if applicable
+                    
+                    //state of device
+                    "ram_current", //in megabytes
+                    "ram_total",
+                    "disk_current", //in megabytes
+                    "disk_total",
+                    "bat_current", //battery level, probably usually from 0 to 100
+                    "bat_total", //but for consistency also provide total
+                    "bat", //or simple value from 0 to 100
+                    "orientation", //in which device was held, landscape, portrait, etc
+                    
+                    //bools
+                    "root", //true if device is rooted/jailbroken, false or not provided if not
+                    "online", //true if device is connected to the internet (WiFi or 3G), false or not provided if not connected
+                    "muted", //true if volume is off, device is in muted state
+                    "signal", //true if have cell/gsm signal or is not in airplane mode, false when no gsm signal or in airplane mode
+                    "background", //true if app was in background when it crashed
+                    
+                    //error info
+                    "name", //optional if provided by OS/Platform, else will use first line of stack
+                    "type", //optional type of the error
+                    "error", //error stack
+                    "nonfatal", //true if handled exception, false or not provided if crash
+                    "logs",//some additional logs provided, if any 
+                    "run", //running time since app start in seconds
+                    
+                    //build specific fields
+                    "architecture",
+                    "app_build",
+                    "binary_images",
+                    "build_uuid",
+                    "executable_name",
+                    "load_address",
+                    
+                    //custom key/values provided by developers
+                    "custom"
+                ];
+                var report = {};
+                for(var i = 0, l = props.length; i < l; i++){
+                    report[props[i]] = currentEvent.segmentation[prpos[i]];
+
+                }
+                report.cd=new Date();
+                report.ts=currEvent.timestamp;
+                report.view=currEvent.segmentation.name;
+                report.name=currEvent.segmentation.errortitle;
+                report.error=currEvent.segmentation.errorinfo;
+                report.code=currEvent.segmentation.code;
+                report.group=common.crypto.createHash("md5").update(currEvent.segmentation.name).digest('hex');
+              
+                common.db.collection("app_networkerror"+params.app_id).insert(report, {'upsert': true}, function(err, res){});
             }
             
             
