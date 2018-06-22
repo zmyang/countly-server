@@ -60,7 +60,7 @@ window.NetworkView = countlyView.extend({
                 { "mData": "d", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.response-time"] },
                 { "mData": function(row, type){
                     var time = (row.d == 0 || row.t == 0) ? 0 : (row.d/row.t).toFixed(2);
-                    return (time/1000)+"毫秒";
+                    return time;
                      // if(type === "display")
                     //  return countlyCommon.timeString(time/1000);
                     // else return time
