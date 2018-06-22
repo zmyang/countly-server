@@ -553,6 +553,7 @@ window.NetworkErrorView = countlyView.extend({
     renderCommon:function (isRefresh) {
 		var url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+countlyGlobal["path"]+"/crash/";
         var crashData = countlyNetwork.getGroupData();
+        crashData.latest_version="12:03";
         if(crashData.url)
                url += crashData.url;
 		crashData.latest_version = crashData.latest_version.replace(/:/g, '.');
@@ -565,33 +566,33 @@ window.NetworkErrorView = countlyView.extend({
             });
         }
         
-        if(crashData.comments){
-            for(var i = 0; i < crashData.comments.length; i++){
-                this.comments[crashData.comments[i]._id] = crashData.comments[i].text;
-                if(typeof marked != "undefined")
-                    crashData.comments[i].html = marked(crashData.comments[i].text);
-                else
-                    crashData.comments[i].html = crashData.comments[i].text;
-            }
-        }
+        // if(crashData.comments){
+        //     for(var i = 0; i < crashData.comments.length; i++){
+        //         this.comments[crashData.comments[i]._id] = crashData.comments[i].text;
+        //         if(typeof marked != "undefined")
+        //             crashData.comments[i].html = marked(crashData.comments[i].text);
+        //         else
+        //             crashData.comments[i].html = crashData.comments[i].text;
+        //     }
+        // }
 		
-		if (!isRefresh) {
-			this.metrics = countlyCrashes.getMetrics();
-            for(var i in this.metrics){
-                for(var j in this.metrics[i]){
-                    this.curMetric = j;
-                    this.curTitle = this.metrics[i][j];
-                    break;
-                }
-                break;
-            }
-		}
-        var ranges = ["ram", "disk", "bat", "run"];
-        for(var i = 0; i < ranges.length; i++){
-            if(!crashData[ranges[i]]){
-                crashData[ranges[i]] = {min:0, max:0, total:0, count:1};
-            }
-        }
+		// if (!isRefresh) {
+		// 	this.metrics = countlyCrashes.getMetrics();
+        //     for(var i in this.metrics){
+        //         for(var j in this.metrics[i]){
+        //             this.curMetric = j;
+        //             this.curTitle = this.metrics[i][j];
+        //             break;
+        //         }
+        //         break;
+        //     }
+		// }
+        // var ranges = ["ram", "disk", "bat", "run"];
+        // for(var i = 0; i < ranges.length; i++){
+        //     if(!crashData[ranges[i]]){
+        //         crashData[ranges[i]] = {min:0, max:0, total:0, count:1};
+        //     }
+        // }
         this.templateData = {
             "page-title":jQuery.i18n.map["crashes.crashes-by"],
             "note-placeholder": jQuery.i18n.map["crashes.editnote"],
