@@ -59,14 +59,18 @@ window.NetworkView = countlyView.extend({
                 { "mData": "t", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.request-cnts"] },
                 { "mData": "d", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.http.response-time"] },
                 { "mData": function(row, type){
-                    var time = (row.d == 0 || row.t == 0) ? 0 : row.d/row.t;
+                    var time = (row.d == 0 || row.t == 0) ? 0 : (row.d/row.t).toFixed(2);
                     return (time/1000)+"毫秒";
                      // if(type === "display")
                     //  return countlyCommon.timeString(time/1000);
                     // else return time
                 }, sType:"numeric", "sTitle": jQuery.i18n.map["network.avg-duration"] },
                 { "mData": function(row, type){
-                    return "<p id='"+row.network+"' class='table-link green link-class'>" +countlyCommon.formatNumber(row.e)+ "</a>";
+                    if(row.e > 0){
+                        return "<p id='"+row.network+"' class='table-link green link-class'>" +countlyCommon.formatNumber(row.e)+ "</a>";
+                    }else{
+                        return 0;
+                    }
                 }, sType:"numeric", "sTitle": jQuery.i18n.map["network.http.error-cnts"] },
                 // { "mData": "e", sType:"formatted-num", "mRender":function(d) { return "<p id='"+row.network+"' class='table-link green link-class'>" +countlyCommon.formatNumber(d)+ "</a>"; }, "sTitle": jQuery.i18n.map["network.http.error-cnts"] }
             //    { "mData": "s", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.starts"] },
