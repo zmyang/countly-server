@@ -567,7 +567,7 @@ var plugin = {},
             if(currEvent.segmentation.code && currEvent.segmentation.code!=200){
                 monthObjUpdate.push(escapedMetricVal + '.e');
                 currEvent.segmentation.ts=currEvent.timestamp;
-                currEvent.segmentation.groupid=common.crypto.createHash("md5").update(currEvent.segmentation.name).digest('base32');
+                currEvent.segmentation.groupid=common.crypto.createHash("md5").update(currEvent.segmentation.name).digest('hex');
                 common.db.collection("app_networkerror"+params.app_id).insert( currEvent.segmentation, {'upsert': true}, function(err, res){});
             }
             
