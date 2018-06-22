@@ -37,27 +37,27 @@
 				dataType:"jsonp",
 				success:function (json) {
                     _groupData = json;
-                    if(_groupData.data && _groupData.data.length){
-                        for(var i = 0; i < _groupData.data.length; i++){
-                            _reportData[_groupData.data[i]._id] = _groupData.data[i]; 
-                        }
-                    }
-                    _groupData.name = countlyCommon.decode(_groupData.name);
-                    _groupData.error = countlyCommon.decode(_groupData.error);
-                    _list[_groupData._id] = _groupData.name;
-					_groupData.dp = {};
-					for(var i in _metrics){
-                        if(_groupData[i]){
-                            _usable_metrics.metrics[i] = _metrics[i];
-                            _groupData.dp[i] = countlyCrashes.processMetric(_groupData[i], i, _metrics[i]);
-                        }
-					}
-                    if(_groupData.custom){
-                        for(var i in _groupData.custom){
-                            _groupData.dp[i] = countlyCrashes.processMetric(_groupData.custom[i], i, i);
-                            _usable_metrics.custom[i] = i.charAt(0).toUpperCase() + i.slice(1);
-                        }
-                    }
+                    // if(_groupData.data && _groupData.data.length){
+                    //     for(var i = 0; i < _groupData.data.length; i++){
+                    //         _reportData[_groupData.data[i]._id] = _groupData.data[i]; 
+                    //     }
+                    // }
+                    // _groupData.name = countlyCommon.decode(_groupData.name);
+                    // _groupData.error = countlyCommon.decode(_groupData.error);
+                    // _list[_groupData._id] = _groupData.name;
+					// _groupData.dp = {};
+					// for(var i in _metrics){
+                    //     if(_groupData[i]){
+                    //         _usable_metrics.metrics[i] = _metrics[i];
+                    //         _groupData.dp[i] = countlyCrashes.processMetric(_groupData[i], i, _metrics[i]);
+                    //     }
+					// }
+                    // if(_groupData.custom){
+                    //     for(var i in _groupData.custom){
+                    //         _groupData.dp[i] = countlyCrashes.processMetric(_groupData.custom[i], i, i);
+                    //         _usable_metrics.custom[i] = i.charAt(0).toUpperCase() + i.slice(1);
+                    //     }
+                    // }
 				}, 
                 error:function(jqXHR, textStatus, errorThrown ){
                     if(errorThrown && errorThrown === "Bad Request"){
