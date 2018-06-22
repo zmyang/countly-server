@@ -4,10 +4,10 @@ window.NetworkView = countlyView.extend({
     selectedViews:[],
 	selectedApps: {all:true},
 	selectedCount: 0,
-   ids:{},
+    ids:{},
     lastId:0,
     token: false,
-   useView: null,
+    useView: null,
     beforeRender: function() {
 			var self = this;
 			return $.when($.get(countlyGlobal["path"]+'/network/templates/network.html', function(src){
@@ -111,7 +111,7 @@ window.NetworkView = countlyView.extend({
             }));
             $('.link-class').on("click", function (event){
                 event.stopPropagation();
-                var id = $(this).attr("id");
+                var id =common.crypto.createHash("md5").update($(this).attr("id")).digest('base64');
                 if(id){
                     var link = "#/networkerror/" + id ;
                     window.open(link, "_self");
