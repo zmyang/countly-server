@@ -798,7 +798,7 @@ window.NetworkErrorView = countlyView.extend({
 					window.location.hash = window.location.hash.toString()+"/"+id;
 			});*/
 			CountlyHelpers.expandRows(this.dtable, this.formatData);
-			countlyCommon.drawGraph(crashData.dp[this.curMetric], "#dashboard-graph", "bar");
+			// countlyCommon.drawGraph(crashData.dp[this.curMetric], "#dashboard-graph", "bar");
  
          
             $(".btn-share-crash").click(function(e){
