@@ -649,7 +649,7 @@ var plugin = {},
                     }
                 }
                 report.cd=new Date();
-                report.ts=Math.floor(currEvent.timestamp);
+                report.ts=currEvent.timestamp;
                 // report.view=currEvent.segmentation.name;
                 report.name=currEvent.segmentation.err_breif;
                 report.url=currEvent.segmentation.name;
