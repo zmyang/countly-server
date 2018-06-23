@@ -654,7 +654,7 @@ var plugin = {},
                 report.name=currEvent.segmentation.err_breif;
                 report.url=currEvent.segmentation.name;
                 // report.error=currEvent.segmentation.errorinfo;
-                // report.code=currEvent.segmentation.code;
+                report.code=currEvent.segmentation.code;
                 report.group=common.crypto.createHash("md5").update(currEvent.segmentation.name).digest('hex');
               
                 common.db.collection("app_networkerror"+params.app_id).insert(report, {'upsert': true}, function(err, res){});
