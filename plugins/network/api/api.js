@@ -636,6 +636,7 @@ var plugin = {},
                     "background" : 1,
                     "error" : "java.lang.ArrayIndexOutOfBoundsException: length=0; index=0\nat ly.count.android.demo.CrashReportingActivity.c(SourceFile:59)\nat ly.count.android.demo.CrashReportingActivity.onClick(SourceFile:37)\nat android.view.View.performClick(View.java:5226)\nat android.view.View$PerformClick.run(View.java:21265)\nat android.os.Handler.handleCallback(Handler.java:739)\nat android.os.Handler.dispatchMessage(Handler.java:95)\nat android.os.Looper.loop(Looper.java:168)\nat android.app.ActivityThread.main(ActivityThread.java:5845)\nat java.lang.reflect.Method.invoke(Native Method)\nat com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:797)\nat com.android.internal.os.ZygoteInit.main(ZygoteInit.java:687)",
                     "nonfatal" : false,
+                    "code":500,
                     "run" : "2026",
                     "not_os_specific" : false,
                     "group" : "544bfc4077b97b14b8f6f1d4c815199330dbb33d",
@@ -649,10 +650,11 @@ var plugin = {},
                 }
                 report.cd=new Date();
                 report.ts=Math.floor(currEvent.timestamp);
-                report.view=currEvent.segmentation.name;
-                report.name=currEvent.segmentation.errortitle;
-                report.error=currEvent.segmentation.errorinfo;
-                report.code=currEvent.segmentation.code;
+                // report.view=currEvent.segmentation.name;
+                report.name=currEvent.segmentation.err_breif;
+                report.url=currEvent.segmentation.name;
+                // report.error=currEvent.segmentation.errorinfo;
+                // report.code=currEvent.segmentation.code;
                 report.group=common.crypto.createHash("md5").update(currEvent.segmentation.name).digest('hex');
               
                 common.db.collection("app_networkerror"+params.app_id).insert(report, {'upsert': true}, function(err, res){});
