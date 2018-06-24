@@ -407,7 +407,7 @@ window.ActivitiesView = countlyView.extend({
 			"big-numbers":{
                 "items":[
                     {
-                        "title":jQuery.i18n.map["crashes.unresolved-crashes"],
+                        "title":jQuery.i18n.map["activities.unresolved"],
                         "total":crashData.crashes.unresolved,
                         "help":"crashes.help-unresolved"
                     },
@@ -417,12 +417,12 @@ window.ActivitiesView = countlyView.extend({
                         "help":"crashes.help-latest-version"
                     },
                     {
-                        "title":jQuery.i18n.map["crashes.new-crashes"],
+                        "title":jQuery.i18n.map["activities.new"],
                         "total":crashData.crashes.news,
                         "help":"crashes.help-new"
                     },
                     {
-                        "title":jQuery.i18n.map["crashes.renew-crashes"],
+                        "title":jQuery.i18n.map["activities.renew"],
                         "total":crashData.crashes.renewed,
                         "help":"crashes.help-reoccurred"
                     }
