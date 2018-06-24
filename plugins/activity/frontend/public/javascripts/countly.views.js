@@ -378,7 +378,7 @@ window.ActivitiesView = countlyView.extend({
 					"data":dashboard.usage['cr'],
 					"id":"crash-cr",
                     "help":"crashes.help-total"
-				},
+				}/*,
 				{
 					"title":jQuery.i18n.map["crashes.unique"],
 					"data":dashboard.usage['cru'],
@@ -396,7 +396,7 @@ window.ActivitiesView = countlyView.extend({
 					"data":dashboard.usage['crf'],
 					"id":"crash-crf",
                     "help":"crashes.help-fatal"
-				}/*,
+				},
 				{
 					"title":jQuery.i18n.map["crashes.resolved-users"],
 					"data":dashboard.usage['crru'],
