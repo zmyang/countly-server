@@ -39,8 +39,8 @@ window.ActivitiesView = countlyView.extend({
         this.metrics = {
 			cr:jQuery.i18n.map["crashes.total"],
 			cru:jQuery.i18n.map["crashes.unique"],
-			crnf:jQuery.i18n.map["crashes.nonfatal"]+" "+jQuery.i18n.map["crashes.title"],
-			crf:jQuery.i18n.map["crashes.fatal"]+" "+jQuery.i18n.map["crashes.title"],
+			crnf:jQuery.i18n.map["crashes.nonfatal"]+" "+jQuery.i18n.map["activities.title"],
+			crf:jQuery.i18n.map["crashes.fatal"]+" "+jQuery.i18n.map["activities.title"],
 			crru:jQuery.i18n.map["crashes.resolved-users"]
 		};
     },
@@ -370,7 +370,7 @@ window.ActivitiesView = countlyView.extend({
         var chartData = countlyActivities.getChartData(this.curMetric, this.metrics[this.curMetric]);
         var dashboard = countlyActivities.getDashboardData();
         this.templateData = {
-            "page-title":jQuery.i18n.map["crashes.title"],
+            "page-title":jQuery.i18n.map["activities.title"],
             "no-data":jQuery.i18n.map["common.bar.no-data"],
             "usage":[
 				{
@@ -386,13 +386,13 @@ window.ActivitiesView = countlyView.extend({
                     "help":"crashes.help-unique"
 				},
 				{
-					"title":jQuery.i18n.map["crashes.nonfatal"]+" "+jQuery.i18n.map["crashes.title"],
+					"title":jQuery.i18n.map["crashes.nonfatal"]+" "+jQuery.i18n.map["activities.title"],
 					"data":dashboard.usage['crnf'],
 					"id":"crash-crnf",
                     "help":"crashes.help-nonfatal"
 				},
 				{
-					"title":jQuery.i18n.map["crashes.fatal"]+" "+jQuery.i18n.map["crashes.title"],
+					"title":jQuery.i18n.map["crashes.fatal"]+" "+jQuery.i18n.map["activities.title"],
 					"data":dashboard.usage['crf'],
 					"id":"crash-crf",
                     "help":"crashes.help-fatal"
@@ -1582,7 +1582,7 @@ app.addPageScript("/drill#", function(){
     var drillClone;
     var self = app.drillView;
     if(countlyGlobal["record_crashes"]){
-        $("#drill-types").append('<div id="drill-type-crashes" class="item">'+jQuery.i18n.map["crashes.title"]+'</div>');
+        $("#drill-types").append('<div id="drill-type-crashes" class="item">'+jQuery.i18n.map["activities.title"]+'</div>');
         $("#drill-type-crashes").on("click", function() {
             if ($(this).hasClass("active")) {
                 return true;
@@ -1626,7 +1626,7 @@ app.addPageScript("/drill#", function(){
 
 app.addPageScript("/users/#", function(){
     if(app.activeView && app.activeView.tabs){
-        app.activeView.tabs.tabs('add','#usertab-crashes', jQuery.i18n.map["crashes.title"]);
+        app.activeView.tabs.tabs('add','#usertab-crashes', jQuery.i18n.map["activities.title"]);
         app.activeView.tabs.tabs("refresh");
         var userDetails = countlyUserdata.getUserdetails();
         $("#usertab-crashes").append("<div class='widget-header'><div class='left'><div class='title'>"+jQuery.i18n.map["userdata.crashes"]+"</div></div></div><table id='d-table-crashes' class='d-table sortable help-zone-vb' cellpadding='0' cellspacing='0'></table>");
