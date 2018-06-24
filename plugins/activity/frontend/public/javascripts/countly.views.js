@@ -1669,10 +1669,10 @@ $( document ).ready(function() {
     
     var menu = '<a class="item" id="sidebar-crashes">'+
         '<div class="logo ion-alert-circled"></div>'+
-        '<div class="text" data-localize="crashes.title"></div>'+
+        '<div class="text" data-localize="activities.title"></div>'+
     '</a>'+
     '<div class="sidebar-submenu" id="crash-submenu">'+
-        '<a href="#/crashes" class="item">'+
+        '<a href="#/activities" class="item">'+
             '<div class="logo-icon fa fa-line-chart"></div>'+
             '<div class="text" data-localize="sidebar.dashboard">Overview</div>'+
         '</a>'+
@@ -1684,6 +1684,6 @@ $( document ).ready(function() {
     
     //check if configuration view exists
     if(app.configurationsView){
-        app.configurationsView.registerLabel("crashes", "crashes.title");
+        app.configurationsView.registerLabel("activities", "activities.title");
     }
 });
