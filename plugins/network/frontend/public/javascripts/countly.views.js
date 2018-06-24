@@ -754,7 +754,7 @@ window.NetworkErrorView = countlyView.extend({
 				},
                 "aoColumns": [
                     { "mData": function(row, type){if(type == "display") return countlyCommon.formatTimeAgo(row.ts); else return row.ts;}, "sType":"format-ago", "sTitle": jQuery.i18n.map["error.time"]},
-                    { "mData": function(row, type){return row.url;}, "sType":"string", "sTitle": jQuery.i18n.map["network.table.url"] },
+                    // { "mData": function(row, type){return row.url;}, "sType":"string", "sTitle": jQuery.i18n.map["network.table.url"] },
                     { "mData": function(row, type){return row.name;}, "sType":"string", "sTitle": jQuery.i18n.map["error.name"] },
                     { "mData": function(row, type){return row.code;}, "sType":"numeric", "sTitle": jQuery.i18n.map["error.code"] },
 					{ "mData": function(row, type){var str = row.os; if(row.os_version) str += " "+row.os_version.replace(/:/g, '.'); return str;}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.os_version"] },
