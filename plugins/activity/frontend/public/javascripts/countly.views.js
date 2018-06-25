@@ -1668,7 +1668,7 @@ $( document ).ready(function() {
     }
     
     var menu = '<a class="item" id="sidebar-crashes">'+
-        '<div class="logo ion-alert-circled"></div>'+
+        '<div class="logo-icon fa fa-envelope"></div>'+
         '<div class="text" data-localize="activities.title"></div>'+
     '</a>'+
     '<div class="sidebar-submenu" id="crash-submenu">'+
