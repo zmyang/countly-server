@@ -122,9 +122,9 @@ window.ActivitiesView = countlyView.extend({
                         } 
 
                         if (row.nonfatal) {
-                            tagDivs += separator + "<div class='tag'>" + jQuery.i18n.map["crashes.nonfatal"] + "</div>";
+                            tagDivs += separator + "<div class='tag'>" + jQuery.i18n.map["activities.nonfatal"] + "</div>";
                         } else {
-                            tagDivs += separator + "<div class='tag'>" + jQuery.i18n.map["crashes.fatal"] + "</div>";
+                            tagDivs += separator + "<div class='tag'>" + jQuery.i18n.map["activities.fatal"] + "</div>";
                         }
 
                         if (row.session) {
@@ -445,7 +445,7 @@ window.ActivitiesView = countlyView.extend({
                     "help":"crashes.help-platforms"
                 },
 				{
-                    "title":jQuery.i18n.map["crashes.fatality"],
+                    "title":jQuery.i18n.map["activities.fatality"],
                     "data": countlyActivities.getFatalBars(),
                     "help":"crashes.help-fatals"
                 }
@@ -944,7 +944,7 @@ window.ActivitygroupView = countlyView.extend({
             "url":url,
 			"data":crashData,
 			"error":crashData.name.substr(0, 80),
-            "fatal": (crashData.nonfatal) ? jQuery.i18n.map["crashes.nonfatal"] : jQuery.i18n.map["crashes.fatal"],
+            "fatal": (crashData.nonfatal) ? jQuery.i18n.map["activities.nonfatal"] : jQuery.i18n.map["activities.fatal"],
 			"active-segmentation": this.curTitle,
 			"segmentations": this.metrics,
 			"big-numbers":{
