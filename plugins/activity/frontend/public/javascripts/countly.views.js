@@ -139,7 +139,7 @@ window.ActivitiesView = countlyView.extend({
                         return "<div class='truncated'>" + row.name + "</div>" + tagDivs;
                     },
                     "sType": "string",
-                    "sTitle": jQuery.i18n.map["crashes.error"]
+                    "sTitle": jQuery.i18n.map["activities.error"]
                 },
                 {
                     "mData": function(row, type) {
@@ -1648,7 +1648,7 @@ app.addPageScript("/users/#", function(){
                 });
             },
             "aoColumns": [
-                {"mData": function(row, type){return countlyActivities.getCrashName(row.group);}, "sType":"numeric", "sTitle": jQuery.i18n.map["crashes.error"], "sClass": "break web-50", "bSortable":false },
+                {"mData": function(row, type){return countlyActivities.getCrashName(row.group);}, "sType":"numeric", "sTitle": jQuery.i18n.map["activities.error"], "sClass": "break web-50", "bSortable":false },
                 {"mData": function(row, type){return row.reports;}, "sType":"numeric", "sTitle": jQuery.i18n.map["crashes.reports"] },
                 {"mData": function(row, type){if(type == "display"){ return (row.last === 0) ? jQuery.i18n.map["common.unknown"]+"&nbsp;<a class='table-link green' href='#/activities/"+row.group+"' style='float: right;'>" + jQuery.i18n.map["common.view"] + "</a>" : countlyCommon.formatTimeAgo(row.last)+"&nbsp;<a class='table-link green' href='#/activities/"+row.group+"' style='float: right;'>" + jQuery.i18n.map["common.view"] + "</a>";} else return row.last;}, "sType":"numeric", "sTitle": jQuery.i18n.map["crashes.last_time"] }
             ]
