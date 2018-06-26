@@ -130,7 +130,7 @@ window.ActivitiesView = countlyView.extend({
                         if (row.session) {
                             tagDivs += separator + "<div class='tag'>" + ((Math.round(row.session.total / row.session.count) * 100) / 100) + " " + jQuery.i18n.map["crashes.sessions"] + "</div>";
                         } else {
-                            tagDivs += separator + "<div class='tag'>" + jQuery.i18n.map["crashes.first-crash"] + "</div>";
+                            tagDivs += separator + "<div class='tag'>" + jQuery.i18n.map["activities.first-crash"] + "</div>";
                         }
 
                         tagDivs += "<div class='tag not-viewed' title='" + jQuery.i18n.map["crashes.not-viewed"] + "'><i class='fa fa-eye-slash'></i></div>";
@@ -1513,7 +1513,7 @@ window.ActivitygroupView = countlyView.extend({
                                 if(data.session)
                                     str += jQuery.i18n.map["crashes.after"]+' '+data.session+' '+jQuery.i18n.map["crashes.sessions"]+'<br/>';
                                 else
-                                    str += jQuery.i18n.map["crashes.frequency"]+': '+jQuery.i18n.map["crashes.first-crash"]+'<br/>';
+                                    str += jQuery.i18n.map["crashes.frequency"]+': '+jQuery.i18n.map["activities.first-crash"]+'<br/>';
                                 str += jQuery.i18n.map["crashes.online"]+": "+((data.online)? "yes" : "no")+"<br/>";
                                 str += jQuery.i18n.map["crashes.background"]+": "+((data.background)? "yes" : "no")+"<br/>";
                                 str += jQuery.i18n.map["crashes.muted"]+": "+((data.muted)? "yes" : "no")+"<br/>";
