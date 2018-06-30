@@ -938,7 +938,7 @@ window.ActivitygroupView = countlyView.extend({
             }
         }
         this.templateData = {
-            "page-title":jQuery.i18n.map["crashes.crashes-by"],
+            "page-title":jQuery.i18n.map["activities.crashes-by"],
             "note-placeholder": jQuery.i18n.map["crashes.editnote"],
             "hasPermission": (countlyGlobal["member"].global_admin || countlyGlobal["admin_apps"][countlyCommon.ACTIVE_APP_ID]) ? true : false,
             "url":url,
@@ -1000,7 +1000,7 @@ window.ActivitygroupView = countlyView.extend({
                     "avg":(crashData.bat.total/crashData.bat.count).toFixed(2)+" %"
                 },
                 {
-                    "title":jQuery.i18n.map["crashes.run"],
+                    "title":jQuery.i18n.map["activities.run"],
                     "icon":"play_arrow",
                     "help":"crashes.help-run",
                     "min":countlyCommon.timeString(crashData.run.min/60),
@@ -1016,17 +1016,17 @@ window.ActivitygroupView = countlyView.extend({
                     "help":"crashes.help-root"
                 },
                 {
-                    "title":jQuery.i18n.map["crashes.online"],
+                    "title":jQuery.i18n.map["activities.online"],
                     "data":countlyActivities.getBoolBars("online"),
                     "help":"crashes.help-online"
                 },
                 {
-                    "title":jQuery.i18n.map["crashes.muted"],
+                    "title":jQuery.i18n.map["activities.muted"],
                     "data": countlyActivities.getBoolBars("muted"),
                     "help":"crashes.help-muted"
                 },
                 {
-                    "title":jQuery.i18n.map["crashes.background"],
+                    "title":jQuery.i18n.map["activities.background"],
                     "data": countlyActivities.getBoolBars("background"),
                     "help":"crashes.help-background"
                 }
@@ -1128,7 +1128,7 @@ window.ActivitygroupView = countlyView.extend({
 					$(nRow).attr("id", aData._id);
 				},
                 "aoColumns": [
-					{ "mData": function(row, type){if(type == "display") return countlyCommon.formatTimeAgo(row.ts); else return row.ts;}, "sType":"format-ago", "sTitle": jQuery.i18n.map["crashes.crashed"]},
+					{ "mData": function(row, type){if(type == "display") return countlyCommon.formatTimeAgo(row.ts); else return row.ts;}, "sType":"format-ago", "sTitle": jQuery.i18n.map["activities.crashed"]},
 					{ "mData": function(row, type){var str = row.os; if(row.os_version) str += " "+row.os_version.replace(/:/g, '.'); return str;}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.os_version"] },
 					{ "mData": function(row, type){var str = ""; if(row.manufacture) str += row.manufacture+" "; if(row.device) str += countlyDeviceList[row.device] || row.device; return str;}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.device"]},
 					{ "mData": function(row, type){return row.app_version.replace(/:/g, '.');}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.app_version"] }

@@ -234,7 +234,7 @@ plugins.setConfigs("crashes", {
                 ];
                 
                 var error = preprocessCrash(params.qstring.crash);
-                if(error != ""){
+                if(error != ""){    
                     var report = {};
                     for(var i = 0, l = props.length; i < l; i++){
                         if(params.qstring.crash["_"+props[i]])
