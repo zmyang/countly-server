@@ -73,10 +73,10 @@ window.NetworkView = countlyView.extend({
                     }
                 }, sType:"numeric", "sTitle": jQuery.i18n.map["network.http.error-cnts"] },
                 { "mData": function(row, type){
-                    var rate = (row.e == 0 ) ? 0 : (row.e/row.t).toFixed(2);
-                    return rate*100+"%";
+                    var rate = (row.e == 0 ) ? 0 : (row.e/row.t*100).toFixed(2);
+                    return rate+"%";
                   
-                }, sType:"string", "sTitle": jQuery.i18n.map["network.error"] },
+                }, sType:"string", "sTitle": jQuery.i18n.map["network.error-rate"] },
                 // { "mData": "e", sType:"formatted-num", "mRender":function(d) { return "<p id='"+row.network+"' class='table-link green link-class'>" +countlyCommon.formatNumber(d)+ "</a>"; }, "sTitle": jQuery.i18n.map["network.http.error-cnts"] }
             //    { "mData": "s", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.starts"] },
             //    { "mData": "e", sType:"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["network.exits"] },
