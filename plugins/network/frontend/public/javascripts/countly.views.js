@@ -1116,13 +1116,12 @@ $( document ).ready(function() {
             '<div class="logo-icon fa fa-line-chart"></div>'+
             '<div class="text" data-localize="push.sidebar.overview">概要</div>'+
         '</a>'+
-    '</div>'+
-    '<div class="sidebar-submenu" id="messaging-submenu">'+
         '<a href="#/analytics/network" class="item">'+
             '<div class="logo-icon fa fa-line-chart"></div>'+
             '<div class="text" data-localize="network.http.overview">HTTP请求</div>'+
         '</a>'+
     '</div>';
+   
     if($('#mobile-type #management-menu').length)
         $('#mobile-type #management-menu').before(menu);
     else
