@@ -352,7 +352,20 @@ plugins.setConfigs("activities", {
                                             var groupInc = {};
                                             var groupMin = {};
                                             var groupMax = {};
+                                            var comments = new Array();
+                                            var defaultComment = {};
                                             
+                                          
+                                            defaultComment.time = new Date().getTime();
+                                                                                      
+                                            defaultComment.text = "";
+                                
+                                            defaultComment.author = "admin";
+                                            comment.author_id = params.member._id+"";
+                                            comment._id = common.crypto.createHash('sha1').update(params.qstring.args.app_id + params.qstring.args.crash_id+JSON.stringify(comment)+"").digest('hex');
+                                            
+
+
                                             groupSet._id = hash;
                                             groupSet.os = report.os;
                                             groupSet.lastTs = report.ts;

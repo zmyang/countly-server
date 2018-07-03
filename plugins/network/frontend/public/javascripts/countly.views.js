@@ -1109,12 +1109,18 @@ $( document ).ready(function() {
     
     var menu = '<a class="item messaging" id="sidebar-messaging">'+
         '<div class="logo ion-chatbox-working"></div>'+
-        '<div class="text" data-localize="network.title">Messaging</div>'+
+        '<div class="text" data-localize="network.title">网络</div>'+
     '</a>'+
     '<div class="sidebar-submenu" id="messaging-submenu">'+
         '<a href="#/analytics/network" class="item">'+
             '<div class="logo-icon fa fa-line-chart"></div>'+
-            '<div class="text" data-localize="push.sidebar.overview">Overview</div>'+
+            '<div class="text" data-localize="push.sidebar.overview">概要</div>'+
+        '</a>'+
+    '</div>'+
+    '<div class="sidebar-submenu" id="messaging-submenu">'+
+        '<a href="#/analytics/network" class="item">'+
+            '<div class="logo-icon fa fa-line-chart"></div>'+
+            '<div class="text" data-localize="network.http.overview">HTTP请求</div>'+
         '</a>'+
     '</div>';
     if($('#mobile-type #management-menu').length)
