@@ -899,12 +899,12 @@ window.NetworkMetricView = countlyView.extend({
         this.selectedCrashes = {};
         this.selectedCrashesIds = [];
 		if(this.template)
-			return $.when(countlyNetwork.initialize("metrics")).then(function () {});
+			return $.when(countlyNetwork.initialize(this.id)).then(function () {});
 		else{
 			var self = this;
 			return $.when($.get(countlyGlobal["path"]+'/network/templates/metrics.html', function(src){
 				self.template = Handlebars.compile(src);
-			}), countlyNetwork.initialize("metrics")).then(function () {});
+			}), countlyNetwork.initialize(this.id)).then(function () {});
 		}
     },
     
@@ -1063,6 +1063,7 @@ app.networkErrorView = new NetworkErrorView();
 app.networkMetricView = new NetworkMetricView();
 
 app.route("/analytics/metrics", 'network', function () {
+    this.networkMetricView.id="metrics";
 	this.renderWhenReady(this.networkMetricView);
 });
 
