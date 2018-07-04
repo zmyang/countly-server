@@ -156,6 +156,45 @@
             if(!_initialized)
                 return this.initialize();
 
+                _period = countlyCommon.getPeriodForAjax();
+                if(id){
+                    return $.ajax({
+                        type:"GET",
+                        url:countlyCommon.API_PARTS.data.r,
+                        data:{
+                            "api_key":countlyGlobal.member.api_key,
+                            "app_id":countlyCommon.ACTIVE_APP_ID,
+                            "method":"networkerror",
+                            "period":_period,
+                            "group":id,
+                            "display_loader": false
+                        },
+                        dataType:"jsonp",
+                        success:function (json) {
+                            _groupData = json;
+                            if(_groupData.data && _groupData.data.length){
+                                for(var i = 0; i < _groupData.data.length; i++){
+                                    _reportData[_groupData.data[i]._id] = _groupData.data[i]; 
+                                }
+                            }
+                            _list[_groupData._id] = _groupData.name;
+                            _groupData.dp = {};
+                            for(var i in _metrics){
+                                if(_groupData[i]){
+                                    _usable_metrics.metrics[i] = _metrics[i];
+                                    _groupData.dp[i] = countlyNetwork.processMetric(_groupData[i], i, _metrics[i]);
+                                }
+                            }
+                            if(_groupData.custom){
+                                for(var i in _groupData.custom){
+                                    _groupData.dp[i] = countlyNetwork.processMetric(_groupData.custom[i], i, i);
+                                    _usable_metrics.custom[i] = i.charAt(0).toUpperCase() + i.slice(1);
+                                }
+                            }
+                        }
+                    });
+                }
+
             return $.when(
                 $.ajax({
                     type:"GET",
@@ -202,6 +241,30 @@
             return true;
         }
     };
+
+    countlyNetwork.processMetric = function (data, metric, label) {
+        
+		var ret = {dp:[{data:[[-1,null]], "label":label}],ticks:[[-1,""]]};
+		if(data){
+            var vals = [];
+			for(var key in data){
+                vals.push({key:key, val:data[key]});
+            }
+            vals.sort(function(a,b){
+                return b.val - a.val;
+            });
+            for(var i = 0; i < vals.length; i++){
+				ret.dp[0].data.push([i,vals[i].val]);
+                var l = vals[i].key.replace(/:/g, '.');
+                if(metric == "device" && countlyDeviceList && countlyDeviceList[l])
+                    l = countlyDeviceList[l];
+				ret.ticks.push([i,l]);
+			}
+			ret.dp[0].data.push([vals.length,null]);
+		}
+		return ret;
+    };
+
 
     countlyNetwork._reset = countlyNetwork.reset;
     countlyNetwork.reset = function () {
