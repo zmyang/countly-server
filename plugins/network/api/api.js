@@ -122,6 +122,7 @@ var plugin = {},
 			});
 			return true;
 		}else if(params.qstring.method == 'metrics'){
+            validateUserForDataReadAPI(params, function(params){
                 var result = {};
                 common.db.collection('app_users' + params.app_id).count({},function(err, total) {
                     result.users = {};
@@ -171,6 +172,7 @@ var plugin = {},
                         });
                     });
                 });
+            });
             }
 		return false;
 	});
