@@ -1667,219 +1667,219 @@ window.NetworkMetricView = countlyView.extend({
             });
         }
     },
-	getExportQuery: function(){
-        function replacer(key, value) {
-            if (value instanceof RegExp)
-                return ("__REGEXP " + value.toString());
-            else
-                return value;
-        }
-        var qstring = {
-            api_key: countlyGlobal["member"].api_key,
-            db: "countly",
-            collection: "app_crashgroups"+countlyCommon.ACTIVE_APP_ID,
-            query:this._query || {}
-        };
-        if($('.dataTables_filter input').val().length){
-            qstring.query["name"] = {"$regex": new RegExp(".*"+$('.dataTables_filter input').val()+".*", 'i')};
-        }
-        if(this.filter && this.filter != ""){
-            switch (this.filter) {
-                case "crash-resolved":
-                    qstring.query["is_resolved"] = true;
-                    break;
-                case "crash-hidden":
-                    qstring.query["is_hidden"] = true;
-                    break;
-                case "crash-unresolved":
-                    qstring.query["is_resolved"] = false;
-                    break;
-                case "crash-nonfatal":
-                    qstring.query["nonfatal"] = true;
-                    break;
-                case "crash-fatal":
-                    qstring.query["nonfatal"] = false;
-                    break;
-                case "crash-new":
-                    qstring.query["is_new"] = true;
-                    break;
-                case "crash-viewed":
-                    qstring.query["is_new"] = false;
-                    break;
-                case "crash-reoccurred":
-                    qstring.query["is_renewed"] = true;
-                    break;
-                case "crash-resolving":
-                    qstring.query["is_resolving"] = true;
-                    break;
-            }
-        }
-        if(this.filter !== "crash-hidden"){
-            qstring.query["is_hidden"] = {$ne: true};
-        }
-        qstring.query["_id"] = {$ne:"meta"};
-        qstring.query = JSON.stringify(qstring.query, replacer);
-        return qstring;
-    },
-    filterCrashes: function(filter){
-        this.filter = filter;  
-		store.set("countly_crashfilter", filter);
-		$("#"+this.filter).addClass("selected").addClass("active");
-		this.dtable.fnDraw();
-	},
+	// getExportQuery: function(){
+    //     function replacer(key, value) {
+    //         if (value instanceof RegExp)
+    //             return ("__REGEXP " + value.toString());
+    //         else
+    //             return value;
+    //     }
+    //     var qstring = {
+    //         api_key: countlyGlobal["member"].api_key,
+    //         db: "countly",
+    //         collection: "app_crashgroups"+countlyCommon.ACTIVE_APP_ID,
+    //         query:this._query || {}
+    //     };
+    //     if($('.dataTables_filter input').val().length){
+    //         qstring.query["name"] = {"$regex": new RegExp(".*"+$('.dataTables_filter input').val()+".*", 'i')};
+    //     }
+    //     if(this.filter && this.filter != ""){
+    //         switch (this.filter) {
+    //             case "crash-resolved":
+    //                 qstring.query["is_resolved"] = true;
+    //                 break;
+    //             case "crash-hidden":
+    //                 qstring.query["is_hidden"] = true;
+    //                 break;
+    //             case "crash-unresolved":
+    //                 qstring.query["is_resolved"] = false;
+    //                 break;
+    //             case "crash-nonfatal":
+    //                 qstring.query["nonfatal"] = true;
+    //                 break;
+    //             case "crash-fatal":
+    //                 qstring.query["nonfatal"] = false;
+    //                 break;
+    //             case "crash-new":
+    //                 qstring.query["is_new"] = true;
+    //                 break;
+    //             case "crash-viewed":
+    //                 qstring.query["is_new"] = false;
+    //                 break;
+    //             case "crash-reoccurred":
+    //                 qstring.query["is_renewed"] = true;
+    //                 break;
+    //             case "crash-resolving":
+    //                 qstring.query["is_resolving"] = true;
+    //                 break;
+    //         }
+    //     }
+    //     if(this.filter !== "crash-hidden"){
+    //         qstring.query["is_hidden"] = {$ne: true};
+    //     }
+    //     qstring.query["_id"] = {$ne:"meta"};
+    //     qstring.query = JSON.stringify(qstring.query, replacer);
+    //     return qstring;
+    // },
+    // filterCrashes: function(filter){
+    //     this.filter = filter;  
+	// 	store.set("countly_crashfilter", filter);
+	// 	$("#"+this.filter).addClass("selected").addClass("active");
+	// 	this.dtable.fnDraw();
+	// },
     switchMetric:function(){
 		var chartData = countlyCrashes.getChartData(this.curMetric, this.metrics[this.curMetric]);
 		countlyCommon.drawTimeGraph(chartData.chartDP, "#dashboard-graph");
 	},
-    getFilters: function(currEvent) {
-        var self = this;
-        var usedFilters = {};
+    // getFilters: function(currEvent) {
+    //     var self = this;
+    //     var usedFilters = {};
 
-        $(".query:visible").each(function (index) {
-            var filterType = $(this).find(".filter-name .text").data("type");
+    //     $(".query:visible").each(function (index) {
+    //         var filterType = $(this).find(".filter-name .text").data("type");
 
-            // number and date types can be used multiple times for range queries
-            if (filterType != "n" && filterType != "d") {
-                usedFilters[$(this).find(".filter-name .text").data("value")] = true;
-            }
-        });
+    //         // number and date types can be used multiple times for range queries
+    //         if (filterType != "n" && filterType != "d") {
+    //             usedFilters[$(this).find(".filter-name .text").data("value")] = true;
+    //         }
+    //     });
 
-        var defaultFilters = countlySegmentation.getFilters(currEvent),
-            allFilters = "";
-        var filters = [];
-        for(var i = 0; i < defaultFilters.length; i++){
-            if(defaultFilters[i].id){
-                if(self.convertFilter[defaultFilters[i].id])
-                    filters.push(defaultFilters[i]);
-            }
-        }
-        var add = {
-            "is_new": jQuery.i18n.map["crashes.new-crashes"],
-            "is_resolved": jQuery.i18n.map["crashes.resolved"],
-            "is_hidden": jQuery.i18n.map["crashes.hidden"],
-            "is_renewed": jQuery.i18n.map["crashes.renew-crashes"],
-            "reports": jQuery.i18n.map["crashes.reports"],
-            "users": jQuery.i18n.map["crashes.affected-users"],
-            "ram_min": jQuery.i18n.map["crashes.ram"] + " " + jQuery.i18n.map["crashes.min"].toLowerCase(),
-            "ram_max": jQuery.i18n.map["crashes.ram"] + " " + jQuery.i18n.map["crashes.max"].toLowerCase(),
-            "bat_min": jQuery.i18n.map["crashes.battery"] + " " + jQuery.i18n.map["crashes.min"].toLowerCase(),
-            "bat_max": jQuery.i18n.map["crashes.battery"] + " " + jQuery.i18n.map["crashes.max"].toLowerCase(),
-            "disk_min": jQuery.i18n.map["crashes.disk"] + " " + jQuery.i18n.map["crashes.min"].toLowerCase(),
-            "disk_max": jQuery.i18n.map["crashes.disk"] + " " + jQuery.i18n.map["crashes.max"].toLowerCase(),
-            "run_min": jQuery.i18n.map["crashes.run"] + " " + jQuery.i18n.map["crashes.min"].toLowerCase(),
-            "run_max": jQuery.i18n.map["crashes.run"] + " " + jQuery.i18n.map["crashes.max"].toLowerCase()
-        };
+    //     var defaultFilters = countlySegmentation.getFilters(currEvent),
+    //         allFilters = "";
+    //     var filters = [];
+    //     for(var i = 0; i < defaultFilters.length; i++){
+    //         if(defaultFilters[i].id){
+    //             if(self.convertFilter[defaultFilters[i].id])
+    //                 filters.push(defaultFilters[i]);
+    //         }
+    //     }
+    //     var add = {
+    //         "is_new": jQuery.i18n.map["crashes.new-crashes"],
+    //         "is_resolved": jQuery.i18n.map["crashes.resolved"],
+    //         "is_hidden": jQuery.i18n.map["crashes.hidden"],
+    //         "is_renewed": jQuery.i18n.map["crashes.renew-crashes"],
+    //         "reports": jQuery.i18n.map["crashes.reports"],
+    //         "users": jQuery.i18n.map["crashes.affected-users"],
+    //         "ram_min": jQuery.i18n.map["crashes.ram"] + " " + jQuery.i18n.map["crashes.min"].toLowerCase(),
+    //         "ram_max": jQuery.i18n.map["crashes.ram"] + " " + jQuery.i18n.map["crashes.max"].toLowerCase(),
+    //         "bat_min": jQuery.i18n.map["crashes.battery"] + " " + jQuery.i18n.map["crashes.min"].toLowerCase(),
+    //         "bat_max": jQuery.i18n.map["crashes.battery"] + " " + jQuery.i18n.map["crashes.max"].toLowerCase(),
+    //         "disk_min": jQuery.i18n.map["crashes.disk"] + " " + jQuery.i18n.map["crashes.min"].toLowerCase(),
+    //         "disk_max": jQuery.i18n.map["crashes.disk"] + " " + jQuery.i18n.map["crashes.max"].toLowerCase(),
+    //         "run_min": jQuery.i18n.map["crashes.run"] + " " + jQuery.i18n.map["crashes.min"].toLowerCase(),
+    //         "run_max": jQuery.i18n.map["crashes.run"] + " " + jQuery.i18n.map["crashes.max"].toLowerCase()
+    //     };
         
-        for(var i in add){
-            filters.push({id:i, name:add[i], type:(i.indexOf("is_") === 0) ? "l" : "n"});
-        }
+    //     for(var i in add){
+    //         filters.push({id:i, name:add[i], type:(i.indexOf("is_") === 0) ? "l" : "n"});
+    //     }
 
-        if (filters.length == 0) {
-            CountlyHelpers.alert(jQuery.i18n.map["drill.no-filters"], "black");
-        }
+    //     if (filters.length == 0) {
+    //         CountlyHelpers.alert(jQuery.i18n.map["drill.no-filters"], "black");
+    //     }
 
-        for (var i = 0; i < filters.length; i++) {
-            if(typeof filters[i].id != "undefined"){
-                if (usedFilters[filters[i].id] == true) {
-                    continue;
-                }
+    //     for (var i = 0; i < filters.length; i++) {
+    //         if(typeof filters[i].id != "undefined"){
+    //             if (usedFilters[filters[i].id] == true) {
+    //                 continue;
+    //             }
     
-                var tmpItem = $("<div>");
+    //             var tmpItem = $("<div>");
     
-                tmpItem.addClass("item");
-                tmpItem.attr("data-type", filters[i].type);
-                tmpItem.attr("data-value", filters[i].id);
-                tmpItem.text(filters[i].name);
+    //             tmpItem.addClass("item");
+    //             tmpItem.attr("data-type", filters[i].type);
+    //             tmpItem.attr("data-value", filters[i].id);
+    //             tmpItem.text(filters[i].name);
     
-                allFilters += tmpItem.prop('outerHTML');
-            }
-            else{
-                var tmpItem = $("<div>");
+    //             allFilters += tmpItem.prop('outerHTML');
+    //         }
+    //         else{
+    //             var tmpItem = $("<div>");
     
-                tmpItem.addClass("group");
-                tmpItem.text(filters[i].name);
+    //             tmpItem.addClass("group");
+    //             tmpItem.text(filters[i].name);
     
-                allFilters += tmpItem.prop('outerHTML');
-            }
-        }
+    //             allFilters += tmpItem.prop('outerHTML');
+    //         }
+    //     }
 
-        return allFilters;
-    },
-    setUpFilters: function(elem){
-        var rootHTML = $(elem).parents(".query").find(".filter-value .select-items>div");
-        if(this.convertFilter[$(elem).data("value")] && this.convertFilter[$(elem).data("value")].type === "boolsegment")
-            this.setUpFilterValues(rootHTML, ["yes", "no"], ["yes", "no"]);
-        else if(this.convertFilter[$(elem).data("value")] && this.convertFilter[$(elem).data("value")].type === "booltype")
-            this.setUpFilterValues(rootHTML, [true, false], ["yes", "no"]);
-        else
-            this.setUpFilterValues(rootHTML, countlySegmentation.getFilterValues($(elem).data("value")), countlySegmentation.getFilterNames($(elem).data("value")));
-    },
-    generateFilter: function(filterObj, filterObjTypes) {
-        var self = this;
-        var dbFilter = {};
-        for (var prop in filterObj) {
-            var filter = (self.convertFilter[prop]) ? self.convertFilter[prop].prop : prop.replace("sg.","");
-            for (var i = 0; i < filterObj[prop].length; i++) {
-                if(_.isObject(filterObj[prop][i])) {
-                    dbFilter[filter] = {};
-                    for (var tmpFilter in filterObj[prop][i]) {
-                        dbFilter[filter][tmpFilter] = filterObj[prop][i][tmpFilter];
-                    }
-                } else if (filterObjTypes[prop][i] == "!=") {
-                    if(!self.convertFilter[prop] || self.convertFilter[prop].type === "segment" || self.convertFilter[prop].type === "boolsegment"){
-                        if(filter === "os_version"){
-                            filterObj[prop][i] = countlyDeviceDetails.getCleanVersion(filterObj[prop][i]);
-                        }
-                        dbFilter[filter+"."+filterObj[prop][i]] = {$exists:false};
-                    }else if(self.convertFilter[prop].type === "booltype"){
-                        if(filterObj[prop][i]==="true"){
-                            dbFilter[filter] = {$ne: true};
-                        }
-                        else{
-                            dbFilter[filter] = {$eq: true};
-                        }
-                    }else{
-                        dbFilter[filter] = {};
-                        if (!dbFilter[filter]["$nin"]) {
-                            dbFilter[filter]["$nin"] = [];
-                        }
-                        dbFilter[filter]["$nin"].push(filterObj[prop][i]);
-                    }
-                } else {
-                    if(!self.convertFilter[prop] || self.convertFilter[prop].type === "segment" || self.convertFilter[prop].type === "boolsegment"){
-                        if(filter === "os_version"){
-                            filterObj[prop][i] = countlyDeviceDetails.getCleanVersion(filterObj[prop][i]);
-                        }
-                        dbFilter[filter+"."+filterObj[prop][i]] = {$exists:true};
-                    }else if(self.convertFilter[prop].type === "booltype"){
-                        if(filterObj[prop][i]==="true"){
-                            dbFilter[filter] = {$eq: true};
-                        }
-                        else{
-                            dbFilter[filter] = {$ne: true};
-                        }
-                    }else{
-                        dbFilter[filter] = {};
-                        if (!dbFilter[filter]["$in"]) {
-                            dbFilter[filter]["$in"] = [];
-                        }
-                        dbFilter[filter]["$in"].push(filterObj[prop][i]);
-                    }
-                }
-            }
-        }
-        return dbFilter;
-    },
-    loadAndRefresh: function() {
-        var filter = {};
-        for(var i in this.filterObj){
-            filter[i.replace("up.", "")] = this.filterObj[i];
-        }
-        this._query = filter;
-        app.navigate("/crashes/filter/"+JSON.stringify(filter), false);
-        this.dtable.fnPageChange(0);
-        this.refresh(true);
-    }
+    //     return allFilters;
+    // },
+    // setUpFilters: function(elem){
+    //     var rootHTML = $(elem).parents(".query").find(".filter-value .select-items>div");
+    //     if(this.convertFilter[$(elem).data("value")] && this.convertFilter[$(elem).data("value")].type === "boolsegment")
+    //         this.setUpFilterValues(rootHTML, ["yes", "no"], ["yes", "no"]);
+    //     else if(this.convertFilter[$(elem).data("value")] && this.convertFilter[$(elem).data("value")].type === "booltype")
+    //         this.setUpFilterValues(rootHTML, [true, false], ["yes", "no"]);
+    //     else
+    //         this.setUpFilterValues(rootHTML, countlySegmentation.getFilterValues($(elem).data("value")), countlySegmentation.getFilterNames($(elem).data("value")));
+    // },
+    // generateFilter: function(filterObj, filterObjTypes) {
+    //     var self = this;
+    //     var dbFilter = {};
+    //     for (var prop in filterObj) {
+    //         var filter = (self.convertFilter[prop]) ? self.convertFilter[prop].prop : prop.replace("sg.","");
+    //         for (var i = 0; i < filterObj[prop].length; i++) {
+    //             if(_.isObject(filterObj[prop][i])) {
+    //                 dbFilter[filter] = {};
+    //                 for (var tmpFilter in filterObj[prop][i]) {
+    //                     dbFilter[filter][tmpFilter] = filterObj[prop][i][tmpFilter];
+    //                 }
+    //             } else if (filterObjTypes[prop][i] == "!=") {
+    //                 if(!self.convertFilter[prop] || self.convertFilter[prop].type === "segment" || self.convertFilter[prop].type === "boolsegment"){
+    //                     if(filter === "os_version"){
+    //                         filterObj[prop][i] = countlyDeviceDetails.getCleanVersion(filterObj[prop][i]);
+    //                     }
+    //                     dbFilter[filter+"."+filterObj[prop][i]] = {$exists:false};
+    //                 }else if(self.convertFilter[prop].type === "booltype"){
+    //                     if(filterObj[prop][i]==="true"){
+    //                         dbFilter[filter] = {$ne: true};
+    //                     }
+    //                     else{
+    //                         dbFilter[filter] = {$eq: true};
+    //                     }
+    //                 }else{
+    //                     dbFilter[filter] = {};
+    //                     if (!dbFilter[filter]["$nin"]) {
+    //                         dbFilter[filter]["$nin"] = [];
+    //                     }
+    //                     dbFilter[filter]["$nin"].push(filterObj[prop][i]);
+    //                 }
+    //             } else {
+    //                 if(!self.convertFilter[prop] || self.convertFilter[prop].type === "segment" || self.convertFilter[prop].type === "boolsegment"){
+    //                     if(filter === "os_version"){
+    //                         filterObj[prop][i] = countlyDeviceDetails.getCleanVersion(filterObj[prop][i]);
+    //                     }
+    //                     dbFilter[filter+"."+filterObj[prop][i]] = {$exists:true};
+    //                 }else if(self.convertFilter[prop].type === "booltype"){
+    //                     if(filterObj[prop][i]==="true"){
+    //                         dbFilter[filter] = {$eq: true};
+    //                     }
+    //                     else{
+    //                         dbFilter[filter] = {$ne: true};
+    //                     }
+    //                 }else{
+    //                     dbFilter[filter] = {};
+    //                     if (!dbFilter[filter]["$in"]) {
+    //                         dbFilter[filter]["$in"] = [];
+    //                     }
+    //                     dbFilter[filter]["$in"].push(filterObj[prop][i]);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return dbFilter;
+    // },
+    // loadAndRefresh: function() {
+    //     var filter = {};
+    //     for(var i in this.filterObj){
+    //         filter[i.replace("up.", "")] = this.filterObj[i];
+    //     }
+    //     this._query = filter;
+    //     app.navigate("/crashes/filter/"+JSON.stringify(filter), false);
+    //     this.dtable.fnPageChange(0);
+    //     this.refresh(true);
+    // }
 });
 
 
