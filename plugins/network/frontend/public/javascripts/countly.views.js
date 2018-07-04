@@ -1000,7 +1000,7 @@ window.NetworkErrorView = countlyView.extend({
 
 
 
-window.networkMetricView = countlyView.extend({
+window.NetworkMetricView = countlyView.extend({
     convertFilter: {
         "sg.crash":{prop:"_id", type:"string"},
         "sg.cpu":{prop:"cpu", type:"segment"},
@@ -1889,10 +1889,10 @@ app.networkView = new NetworkView();
 app.networkFrequencyView = new NetworkFrequencyView();
 app.actionMapView = new ActionMapView();
 app.networkErrorView = new NetworkErrorView();
-app.networkMetric = new NetworkMetric();
+app.networkMetricView = new NetworkMetricView();
 
 app.route("/analytics/metrics", 'network', function () {
-	this.renderWhenReady(this.networkMetric);
+	this.renderWhenReady(this.networkMetricView);
 });
 
 app.route("/analytics/network", 'network', function () {
