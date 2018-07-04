@@ -3,6 +3,8 @@
     CountlyHelpers.createMetricModel(window.countlyNetwork, {name: "network"}, jQuery);
     //Private Properties
     var _periodObj = {},
+        _crashTimeline = {},
+        _crashData = {},
         _actionData = {},
         _activeAppKey = 0,
         _initialized = false,
@@ -23,50 +25,59 @@
 
 
         if(id){
-            _lastId = id;
-			return $.ajax({
-				type:"GET",
-				url:countlyCommon.API_PARTS.data.r,
-				data:{
-					"api_key":countlyGlobal.member.api_key,
-					"app_id":countlyCommon.ACTIVE_APP_ID,
-					"method":"networkerror",
-                    "period":_period,
-					"group":id,
-                    "display_loader": !isRefresh
-				},
-				dataType:"jsonp",
-				success:function (json) {
-                    _groupData = json;
-                    // if(_groupData.data && _groupData.data.length){
-                    //     for(var i = 0; i < _groupData.data.length; i++){
-                    //         _reportData[_groupData.data[i]._id] = _groupData.data[i]; 
-                    //     }
-                    // }
-                    // _groupData.name = countlyCommon.decode(_groupData.name);
-                    // _groupData.error = countlyCommon.decode(_groupData.error);
-                    // _list[_groupData._id] = _groupData.name;
-					// _groupData.dp = {};
-					// for(var i in _metrics){
-                    //     if(_groupData[i]){
-                    //         _usable_metrics.metrics[i] = _metrics[i];
-                    //         _groupData.dp[i] = countlyCrashes.processMetric(_groupData[i], i, _metrics[i]);
-                    //     }
-					// }
-                    // if(_groupData.custom){
-                    //     for(var i in _groupData.custom){
-                    //         _groupData.dp[i] = countlyCrashes.processMetric(_groupData.custom[i], i, i);
-                    //         _usable_metrics.custom[i] = i.charAt(0).toUpperCase() + i.slice(1);
-                    //     }
-                    // }
-				}, 
-                error:function(jqXHR, textStatus, errorThrown ){
-                    if(errorThrown && errorThrown === "Bad Request"){
-                        CountlyHelpers.alert(jQuery.i18n.map["crashes.not-found"], "red");
-                        app.navigate("/crashes", true);
+            if('metrics'==id){
+                return $.ajax({
+                    type:"GET",
+                    url:countlyCommon.API_PARTS.data.r,
+                    data:{
+                        "api_key":countlyGlobal.member.api_key,
+                        "app_id":countlyCommon.ACTIVE_APP_ID,
+                        "period":_period,
+                        "method":"metrics",
+                        "graph":1,
+                        "display_loader": !isRefresh
+                    },
+                    dataType:"jsonp",
+                    success:function (json) {
+                        _crashData = json;
+                        _crashTimeline = json.data;
+                        setMeta();
+                        if(_crashData.crashes.latest_version == "")
+                            _crashData.crashes.latest_version = "None";
+                        if(_crashData.crashes.error == "")
+                            _crashData.crashes.error = "None";
+                        if(_crashData.crashes.os == "")
+                            _crashData.crashes.os = "None";
+                        if(_crashData.crashes.highest_app == "")
+                            _crashData.crashes.highest_app = "None";
                     }
-                }
-			});
+                });
+            }else{
+                _lastId = id;
+                return $.ajax({
+                    type:"GET",
+                    url:countlyCommon.API_PARTS.data.r,
+                    data:{
+                        "api_key":countlyGlobal.member.api_key,
+                        "app_id":countlyCommon.ACTIVE_APP_ID,
+                        "method":"networkerror",
+                        "period":_period,
+                        "group":id,
+                        "display_loader": !isRefresh
+                    },
+                    dataType:"jsonp",
+                    success:function (json) {
+                        _groupData = json;
+                    }, 
+                    error:function(jqXHR, textStatus, errorThrown ){
+                        if(errorThrown && errorThrown === "Bad Request"){
+                            CountlyHelpers.alert(jQuery.i18n.map["crashes.not-found"], "red");
+                            app.navigate("/crashes", true);
+                        }
+                    }
+                });
+            }
+           
 		}else{
             if (!countlyCommon.DEBUG) {
                 _activeAppKey = countlyCommon.ACTIVE_APP_KEY;
@@ -123,6 +134,14 @@
     countlyNetwork.getGroupData = function () {
 		return _groupData;
     };
+
+    function setMeta() {
+        if (_crashTimeline['meta']) {
+			for(var i in _crashTimeline['meta']){
+				_metas[i] = (_crashTimeline['meta'][i]) ? _crashTimeline['meta'][i] : [];
+			}
+        }
+    }
 
     countlyNetwork.refresh = function () {
         _periodObj = countlyCommon.periodObj;
@@ -330,6 +349,32 @@
         return chartData;
     };
     
+    countlyNetwork.getMetricsData = function (){
+        return _crashData;
+    }
+    countlyNetwork.getDashboardData = function () {
+        var data = countlyCommon.getDashboardData(_crashTimeline, ["cr", "crnf", "crf", "cru", "crru"], ["cru"], null, countlyNetwork.clearObject);
+        return {usage:data};
+    };
+    countlyNetwork.getMetricsChartData = function(metric, name){
+		var chartData = [
+                { data:[], label:name, color:'#DDDDDD', mode:"ghost" },
+                { data:[], label:name, color:'#333933' }
+            ],
+            dataProps = [
+                {
+                    name:"p"+metric,
+                    func:function (dataObj) {
+                        return dataObj[metric]
+                    },
+                    period:"previous"
+                },
+                { name:metric }
+            ];
+
+        return countlyCommon.extractChartData(_crashTimeline, countlyNetwork.clearMetricsObject, chartData, dataProps);
+    };
+    
     countlyNetwork.clearObject = function (obj) {
         if (obj) {
             if (!obj["u"]) obj["u"] = 0;
@@ -343,6 +388,21 @@
         else {
             obj = {"u":0, "t":0, "n":0, "s":0, "e":0, "b":0, "d":0};
         }
+        return obj;
+    };
+
+    countlyNetwork.clearMetricsObject = function (obj) {
+        if (obj) {
+            if (!obj["cr"]) obj["cr"] = 0;
+            if (!obj["cru"]) obj["cru"] = 0;
+            if (!obj["crnf"]) obj["crnf"] = 0;
+            if (!obj["crf"]) obj["crf"] = 0;
+            if (!obj["crru"]) obj["crru"] = 0;
+        }
+        else {
+            obj = {"cr":0, "cru":0, "crnf":0, "crf":0, "crru":0};
+        }
+
         return obj;
     };
     

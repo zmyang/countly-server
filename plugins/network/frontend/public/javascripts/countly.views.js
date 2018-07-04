@@ -585,33 +585,6 @@ window.NetworkErrorView = countlyView.extend({
             });
         }
         
-        // if(crashData.comments){
-        //     for(var i = 0; i < crashData.comments.length; i++){
-        //         this.comments[crashData.comments[i]._id] = crashData.comments[i].text;
-        //         if(typeof marked != "undefined")
-        //             crashData.comments[i].html = marked(crashData.comments[i].text);
-        //         else
-        //             crashData.comments[i].html = crashData.comments[i].text;
-        //     }
-        // }
-		
-		// if (!isRefresh) {
-		// 	this.metrics = countlyCrashes.getMetrics();
-        //     for(var i in this.metrics){
-        //         for(var j in this.metrics[i]){
-        //             this.curMetric = j;
-        //             this.curTitle = this.metrics[i][j];
-        //             break;
-        //         }
-        //         break;
-        //     }
-		// }
-        // var ranges = ["ram", "disk", "bat", "run"];
-        // for(var i = 0; i < ranges.length; i++){
-        //     if(!crashData[ranges[i]]){
-        //         crashData[ranges[i]] = {min:0, max:0, total:0, count:1};
-        //     }
-        // }
         this.templateData = {
             "page-title":jQuery.i18n.map["crashes.crashes-by"],
             "note-placeholder": jQuery.i18n.map["crashes.editnote"],
@@ -622,135 +595,11 @@ window.NetworkErrorView = countlyView.extend({
             // "fatal": (crashData[0].nonfatal) ? jQuery.i18n.map["crashes.nonfatal"] : jQuery.i18n.map["crashes.fatal"],
 			"active-segmentation": this.curTitle,
 			"segmentations": this.metrics,
-			// "big-numbers":{
-            //     "class":"four-column",
-            //     "items":[
-			// 		{
-            //             "title":jQuery.i18n.map["crashes.platform"],
-            //             "total":(crashData[0].not_os_specific) ? jQuery.i18n.map["crashes.varies"] : crashData[0].os,
-            //             "help":"crashes.help-platform"
-            //         },
-            //         {
-            //             "title":jQuery.i18n.map["crashes.reports"],
-            //             "total":crashData[0].reports,
-            //             "help":"crashes.help-reports"
-            //         },
-            //         {
-            //             "title":jQuery.i18n.map["crashes.affected-users"],
-            //             "total":crashData[0].users + " ("+((crashData[0].users/crashData[0].total)*100).toFixed(2)+"%)",
-            //             "help":"crashes.help-affected"
-            //         },
-			// 		{
-            //             "title":jQuery.i18n.map["crashes.highest-version"],
-            //             "total":crashData.latest_version.replace(/:/g, '.'),
-            //             "help":"crashes.help-app-version"
-            //         }
-            //     ]
-            // }
         };
-        // if(countlyGlobal["apps"][countlyCommon.ACTIVE_APP_ID].type != "web"){
-        //     this.templateData["ranges"]=[
-        //         {
-        //             "title":jQuery.i18n.map["crashes.ram"],
-        //             "icon":"memory",
-        //             "help":"crashes.help-ram",
-        //             "min":crashData.ram.min+" %",
-        //             "max":crashData.ram.max+" %",
-        //             "avg":(crashData[0].ram.total/crashData[0].ram.count).toFixed(2)+" %"
-        //         },
-        //         {
-        //             "title":jQuery.i18n.map["crashes.disk"],
-        //             "icon":"sd_storage",
-        //             "help":"crashes.help-disk",
-        //             "min":crashData[0].disk.min+" %",
-        //             "max":crashData[0].disk.max+" %",
-        //             "avg":(crashData[0].disk.total/crashData[0].disk.count).toFixed(2)+" %"
-        //         },
-        //         {
-        //             "title":jQuery.i18n.map["crashes.battery"],
-        //             "icon":"battery_full",
-        //             "help":"crashes.help-battery",
-        //             "min":crashData[0].bat.min+" %",
-        //             "max":crashData[0].bat.max+" %",
-        //             "avg":(crashData[0].bat.total/crashData[0].bat.count).toFixed(2)+" %"
-        //         },
-        //         {
-        //             "title":jQuery.i18n.map["crashes.run"],
-        //             "icon":"play_arrow",
-        //             "help":"crashes.help-run",
-        //             "min":countlyCommon.timeString(crashData[0].run.min/60),
-        //             "max":countlyCommon.timeString(crashData[0].run.max/60),
-        //             "avg":countlyCommon.timeString((crashData[0].run.total/crashData[0].run.count)/60)
-        //         }
-        //     ];
-            
-        //     this.templateData["bars"]=[
-        //         {
-        //             "title":jQuery.i18n.map["crashes.root"],
-        //             "data": countlyCrashes.getBoolBars("root"),
-        //             "help":"crashes.help-root"
-        //         },
-        //         {
-        //             "title":jQuery.i18n.map["crashes.online"],
-        //             "data":countlyCrashes.getBoolBars("online"),
-        //             "help":"crashes.help-online"
-        //         },
-        //         {
-        //             "title":jQuery.i18n.map["crashes.muted"],
-        //             "data": countlyCrashes.getBoolBars("muted"),
-        //             "help":"crashes.help-muted"
-        //         },
-        //         {
-        //             "title":jQuery.i18n.map["crashes.background"],
-        //             "data": countlyCrashes.getBoolBars("background"),
-        //             "help":"crashes.help-background"
-        //         }
-        //     ];
-        // }
-        // if(crashData.loss){
-        //     this.templateData["loss"] = true;
-        //     this.templateData["big-numbers"]["items"].push({
-        //         "title":jQuery.i18n.map["crashes.loss"],
-        //         "total":parseFloat(crashData[0].loss).toFixed(2),
-        //         "help":"crashes.help-loss"
-        //     });
-        // }
-        
-        // if(this.templateData["big-numbers"]["items"].length == 3)
-        //     this.templateData["big-numbers"]["class"] = "three-column";
-        // else if(this.templateData["big-numbers"]["items"].length == 5)
-        //     this.templateData["big-numbers"]["class"] = "five-column";
-        
-       
-      
 
 		var self = this;
         if (!isRefresh) {
             $(this.el).html(this.template(this.templateData));
-            // changeResolveStateText(crashData);
-            //  if(typeof addDrill != "undefined"){
-            //     $("#content .widget:first-child .widget-header>.right").append(addDrill("sg.crash", this.id, "[CLY]_crash"));
-            // }
-            // $(".back-link").click(function(e){
-            //     e.preventDefault();
-            //     window.history.back();
-            //     return false;
-            // });
-            // if(crashData.comments){
-            //     var count = 0;
-            //     for(var i = 0; i < crashData.comments.length; i++){
-            //         if(!crashData.comments[i].is_owner && typeof store.get("countly_"+this.id+"_"+crashData.comments[i]._id) == "undefined"){
-            //             count++;
-            //         }
-            //     }
-            //     if(count > 0){
-            //         $(".crash-comment-count span").text(count+"");
-            //         $(".crash-comment-count").show();
-            //     }
-            // }
-			// $(".segmentation-option").on("click", function () {
-			// 	self.switchMetric($(this).data("value"));
-			// });
 			this.dtable = $('.d-table').dataTable($.extend({}, $.fn.dataTable.defaults, {
                 "aaSorting": [[0,'desc']],
                 "aaData": crashData || [],
@@ -1050,21 +899,21 @@ window.NetworkMetricView = countlyView.extend({
         this.selectedCrashes = {};
         this.selectedCrashesIds = [];
 		if(this.template)
-			return $.when(countlyCrashes.initialize()).then(function () {});
+			return $.when(countlyNetwork.initialize("metrics")).then(function () {});
 		else{
 			var self = this;
 			return $.when($.get(countlyGlobal["path"]+'/network/templates/metrics.html', function(src){
 				self.template = Handlebars.compile(src);
-			}), countlyCrashes.initialize()).then(function () {});
+			}), countlyNetwork.initialize("metrics")).then(function () {});
 		}
     },
     
     renderCommon:function (isRefresh) {
-        var crashData = countlyCrashes.getData();
-        var chartData = countlyCrashes.getChartData(this.curMetric, this.metrics[this.curMetric]);
-        var dashboard = countlyCrashes.getDashboardData();
+        var crashData = countlyNetwork.getMetricsData();
+        var chartData = countlyNetwork.getMetricsChartData(this.curMetric, this.metrics[this.curMetric]);
+        var dashboard = countlyNetwork.getDashboardData();
         this.templateData = {
-            "page-title":jQuery.i18n.map["crashes.title"],
+            "page-title":jQuery.i18n.map["network.overview-title"],
             "no-data":jQuery.i18n.map["common.bar.no-data"],
             "usage":[
 				{
@@ -1161,7 +1010,7 @@ window.NetworkMetricView = countlyView.extend({
         var self = this;
         if(this.loaded){
             this.loaded = false;
-            $.when(countlyCrashes.refresh()).then(function () {
+            $.when(countlyNetwork.refresh()).then(function () {
                 self.loaded = true;
                 if (app.activeView != self) {
                     return false;
@@ -1191,7 +1040,7 @@ window.NetworkMetricView = countlyView.extend({
                 });
 
                 // self.dtable.fnDraw(false);
-                var chartData = countlyCrashes.getChartData(self.curMetric, self.metrics[self.curMetric]);
+                var chartData = countlyNetwork.getMetricsChartData(self.curMetric, self.metrics[self.curMetric]);
                 countlyCommon.drawTimeGraph(chartData.chartDP, "#dashboard-graph");
                 //app.localize();
             });
@@ -1199,7 +1048,7 @@ window.NetworkMetricView = countlyView.extend({
     },
 	
     switchMetric:function(){
-		var chartData = countlyCrashes.getChartData(this.curMetric, this.metrics[this.curMetric]);
+		var chartData = countlyNetwork.getMetricsChartData(this.curMetric, this.metrics[this.curMetric]);
 		countlyCommon.drawTimeGraph(chartData.chartDP, "#dashboard-graph");
 	}
 });
