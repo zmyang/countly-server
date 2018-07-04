@@ -167,7 +167,6 @@ var plugin = {},
                         }
                         fetch.getTimeObj("crashdata", params, {unique: "cru"/*, levels:{daily:["cr","crnf","cru","crf", "crru"], monthly:["cr","crnf","cru","crf", "crru"]}*/}, function(data){
                             result.data = data;
-                            console.log("querycrashdata="+data)
                             common.returnOutput(params, result);
                         });
                     });
