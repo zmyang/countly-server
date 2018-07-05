@@ -1010,7 +1010,7 @@ window.NetworkMetricView = countlyView.extend({
         var self = this;
         if(this.loaded){
             this.loaded = false;
-            $.when(countlyNetwork.refresh()).then(function () {
+            $.when(countlyNetwork.refresh(this.id)).then(function () {
                 self.loaded = true;
                 if (app.activeView != self) {
                     return false;
