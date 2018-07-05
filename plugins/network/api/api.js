@@ -173,6 +173,7 @@ var plugin = {},
                     });
                 });
             });
+            return true;
             }
 		return false;
 	});
