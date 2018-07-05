@@ -18,7 +18,7 @@
     //Public Methods
     countlyNetwork.initialize = function (id, isRefresh) {
         if (_initialized &&  _period == countlyCommon.getPeriodForAjax() && _activeAppKey == countlyCommon.ACTIVE_APP_KEY) {
-            return this.refresh();
+            return this.refresh(id);
         }
 
         _period = countlyCommon.getPeriodForAjax();
@@ -143,7 +143,7 @@
         }
     }
 
-    countlyNetwork.refresh = function () {
+    countlyNetwork.refresh = function (id) {
         _periodObj = countlyCommon.periodObj;
 
         if (!countlyCommon.DEBUG) {
@@ -158,41 +158,71 @@
 
                 _period = countlyCommon.getPeriodForAjax();
                 if(id){
-                    return $.ajax({
-                        type:"GET",
-                        url:countlyCommon.API_PARTS.data.r,
-                        data:{
-                            "api_key":countlyGlobal.member.api_key,
-                            "app_id":countlyCommon.ACTIVE_APP_ID,
-                            "method":"networkerror",
-                            "period":_period,
-                            "group":id,
-                            "display_loader": false
-                        },
-                        dataType:"jsonp",
-                        success:function (json) {
-                            _groupData = json;
-                            if(_groupData.data && _groupData.data.length){
-                                for(var i = 0; i < _groupData.data.length; i++){
-                                    _reportData[_groupData.data[i]._id] = _groupData.data[i]; 
+                    if(id=='metrics'){
+                        return $.ajax({
+                            type:"GET",
+                            url:countlyCommon.API_PARTS.data.r,
+                            data:{
+                                "api_key":countlyGlobal.member.api_key,
+                                "app_id":countlyCommon.ACTIVE_APP_ID,
+                                "period":_period,
+                                "method":"crashes",
+                                "graph":1,
+                                "display_loader": false
+                            },
+                            dataType:"jsonp",
+                            success:function (json) {
+                                _crashData = json;
+                                if(_crashData.crashes.latest_version == "")
+                                    _crashData.crashes.latest_version = "None";
+                                if(_crashData.crashes.error == "")
+                                    _crashData.crashes.error = "None";
+                                if(_crashData.crashes.os == "")
+                                    _crashData.crashes.os = "None";
+                                if(_crashData.crashes.highest_app == "")
+                                    _crashData.crashes.highest_app = "None";
+                                
+                                countlyCommon.extendDbObj(_crashTimeline, json.data);
+                            }
+                        });
+                    }else{
+                        return $.ajax({
+                            type:"GET",
+                            url:countlyCommon.API_PARTS.data.r,
+                            data:{
+                                "api_key":countlyGlobal.member.api_key,
+                                "app_id":countlyCommon.ACTIVE_APP_ID,
+                                "method":"networkerror",
+                                "period":_period,
+                                "group":id,
+                                "display_loader": false
+                            },
+                            dataType:"jsonp",
+                            success:function (json) {
+                                _groupData = json;
+                                if(_groupData.data && _groupData.data.length){
+                                    for(var i = 0; i < _groupData.data.length; i++){
+                                        _reportData[_groupData.data[i]._id] = _groupData.data[i]; 
+                                    }
+                                }
+                                _list[_groupData._id] = _groupData.name;
+                                _groupData.dp = {};
+                                for(var i in _metrics){
+                                    if(_groupData[i]){
+                                        _usable_metrics.metrics[i] = _metrics[i];
+                                        _groupData.dp[i] = countlyNetwork.processMetric(_groupData[i], i, _metrics[i]);
+                                    }
+                                }
+                                if(_groupData.custom){
+                                    for(var i in _groupData.custom){
+                                        _groupData.dp[i] = countlyNetwork.processMetric(_groupData.custom[i], i, i);
+                                        _usable_metrics.custom[i] = i.charAt(0).toUpperCase() + i.slice(1);
+                                    }
                                 }
                             }
-                            _list[_groupData._id] = _groupData.name;
-                            _groupData.dp = {};
-                            for(var i in _metrics){
-                                if(_groupData[i]){
-                                    _usable_metrics.metrics[i] = _metrics[i];
-                                    _groupData.dp[i] = countlyNetwork.processMetric(_groupData[i], i, _metrics[i]);
-                                }
-                            }
-                            if(_groupData.custom){
-                                for(var i in _groupData.custom){
-                                    _groupData.dp[i] = countlyNetwork.processMetric(_groupData.custom[i], i, i);
-                                    _usable_metrics.custom[i] = i.charAt(0).toUpperCase() + i.slice(1);
-                                }
-                            }
-                        }
-                    });
+                        });
+                    }
+                    
                 }
 
             return $.when(
