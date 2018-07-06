@@ -166,7 +166,7 @@ var plugin = {},
                                 }
                             }
                         }
-                        fetch.getTimeObj("crashdata", params, {unique: "cru"/*, levels:{daily:["cr","crnf","cru","crf", "crru"], monthly:["cr","crnf","cru","crf", "crru"]}*/}, function(data){
+                        fetch.getTimeObj("networkmetricdata", params, {unique: "cru"/*, levels:{daily:["cr","crnf","cru","crf", "crru"], monthly:["cr","crnf","cru","crf", "crru"]}*/}, function(data){
                             result.data = data;
                             common.returnOutput(params, result);
                         });
