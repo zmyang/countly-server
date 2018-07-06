@@ -552,6 +552,10 @@ var plugin = {},
     
         //making sure metrics are strings
         tmpSet["meta_v2." + tmpMetric.set + "." + escapedMetricVal] = true;
+
+       
+
+
         
         var dateIds = common.getDateIds(params),
             tmpZeroId = "no-segment_" + dateIds.zero + "_" + postfix,
@@ -615,8 +619,13 @@ var plugin = {},
             // if(currEvent.segmentation.start){
             //     monthObjUpdate.push(escapedMetricVal + '.s');
             // }
+
+            var metrics = ["cr", "cru"];
+                                                
+           
             
             if(currEvent.segmentation.code && currEvent.segmentation.code!=200){
+                metrics.push("crf");
                 monthObjUpdate.push(escapedMetricVal + '.e');
 
                 var props = [
@@ -713,7 +722,7 @@ var plugin = {},
                 common.db.collection("app_networkerror"+params.app_id).insert(report, {'upsert': true}, function(err, res){});
             }
             
-            
+            common.recordCustomMetric(params, "networkmetricdata", params.app_id, metrics, 1, null, ["cru"], currEvent.timestamp);
             // if(currEvent.segmentation.bounce){
             //     monthObjUpdate.push(escapedMetricVal + '.b');
             // }

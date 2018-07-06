@@ -166,7 +166,7 @@
                                 "api_key":countlyGlobal.member.api_key,
                                 "app_id":countlyCommon.ACTIVE_APP_ID,
                                 "period":_period,
-                                "method":"crashes",
+                                "method":"metrics",
                                 "graph":1,
                                 "display_loader": false
                             },
