@@ -11,18 +11,10 @@
                 <div class="big-numbers top four-column help-zone-vs" data-help-localize="{{this.help}}">
                     <div class="inner">
                         <div class="number">
-                            {{#ifCond this.id "==" "crash-crnf"}}
-                            <span class="value">{{getShortNumber this.data.usage['crnf'].total/this.data.usage['cr'].total}}</span>
+                            {{#ifCond this.id "==" "crash-crnf" || this.id "==" "crash-crf"}}
+                            <span class="value">{{getShortNumber this.data.total/this.total}}</span>
                             {{else}}
-                                {{#ifCond this.id "==" "crash-crf"}}
-                                <span class="value">{{getShortNumber this.data.usage['crf'].total/this.data.usage['cr'].total}}</span>
-                                {{/else}}
-                                    {{#ifCond this.id "==" "crash-cr"}}
-                                    <span class="value">{{getShortNumber this.data.usage['crf'].total}}</span>
-                                    {{/else}}
-                                    <span class="value">{{getShortNumber this.data.usage['cru'].total}}</span>
-                                    {{/ifCond}}
-                                {{/ifCond}}
+                                <span class="value">{{getShortNumber this.data.total}}</span>
                             {{/ifCond}}
                             {{#if this.data.isEstimate}}
                                 <span id="total-user-estimate-ind"><i class="fa fa-asterisk"></i></span>
