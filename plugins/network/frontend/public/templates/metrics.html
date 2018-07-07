@@ -14,7 +14,11 @@
                             {{#ifCond this.id "==" "crash-crnf" || this.id "==" "crash-crf"}}
                             <span class="value">{{getShortNumber this.data.total/this.total}}</span>
                             {{else}}
-                                <span class="value">{{getShortNumber this.data.total}}</span>
+                                {{#ifCond this.id "==" "crash-crf"}}
+                                <span class="value">{{getShortNumber this.data.total/this.total}}</span>
+                                {{/else}}
+                                    <span class="value">{{getShortNumber this.data.total}}</span>
+                                {{/ifCond}}
                             {{/ifCond}}
                             {{#if this.data.isEstimate}}
                                 <span id="total-user-estimate-ind"><i class="fa fa-asterisk"></i></span>
