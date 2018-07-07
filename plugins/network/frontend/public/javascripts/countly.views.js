@@ -912,10 +912,11 @@ window.NetworkMetricView = countlyView.extend({
         var crashData = countlyNetwork.getMetricsData();
         var chartData = countlyNetwork.getMetricsChartData(this.curMetric, this.metrics[this.curMetric]);
         var dashboard = countlyNetwork.getDashboardData();
+        dashboard.usage['crnf'].total = (dashboard.usage['crnf'].total/dashboard.usage['cr'].total).toFixed(2);
+        dashboard.usage['crf'].total = (dashboard.usage['crf'].total/dashboard.usage['cr'].total).toFixed(2);
         this.templateData = {
             "page-title":jQuery.i18n.map["network.overview-title"],
             "no-data":jQuery.i18n.map["common.bar.no-data"],
-            "total":dashboard.usage['cr'].total,
             "usage":[
 				{
 					"title":jQuery.i18n.map["network.http.request-cnts"],
