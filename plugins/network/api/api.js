@@ -620,12 +620,12 @@ var plugin = {},
             //     monthObjUpdate.push(escapedMetricVal + '.s');
             // }
 
-            var metrics = ["cr", "cru"];
+            var metrics = ["cr"];
                                                 
            
             
             if(currEvent.segmentation.code && currEvent.segmentation.code!=200){
-                metrics.push("crf");
+                metrics.push("cru");
                 monthObjUpdate.push(escapedMetricVal + '.e');
 
                 var props = [
@@ -703,6 +703,7 @@ var plugin = {},
                     "not_os_specific" : false,
                     "group" : "544bfc4077b97b14b8f6f1d4c815199330dbb33d",
                     "uid" : "4",
+                    "resbytes" : 200,
                     "ts" : 1528683110
                 };
                 for(var i = 0, l = props.length; i < l; i++){
@@ -723,6 +724,8 @@ var plugin = {},
             }
             
             common.recordCustomMetric(params, "networkmetricdata", params.app_id, metrics, 1, null, ["cru"], currEvent.timestamp);
+            common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crnf"], currEvent.run, null, ["cru"], currEvent.timestamp);
+            common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crf"], currEvent.resbytes, null, ["cru"], currEvent.timestamp);
             // if(currEvent.segmentation.bounce){
             //     monthObjUpdate.push(escapedMetricVal + '.b');
             // }

@@ -923,13 +923,13 @@ window.NetworkMetricView = countlyView.extend({
                     "help":"crashes.help-total"
 				},
 				{
-					"title":jQuery.i18n.map["network.http.response-time"],
+					"title":jQuery.i18n.map["network.http.error-cnts"],
 					"data":dashboard.usage['cru'],
 					"id":"crash-cru",
                     "help":"crashes.help-unique"
 				},
 				{
-					"title":jQuery.i18n.map["network.http.error-cnts"],
+					"title":jQuery.i18n.map["network.http.response-time"],
 					"data":dashboard.usage['crnf'],
 					"id":"crash-crnf",
                     "help":"crashes.help-nonfatal"
