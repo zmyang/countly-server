@@ -12,10 +12,10 @@
                     <div class="inner">
                         <div class="number">
                             {{#ifCond this.id "==" "crash-crnf"}}
-                            <span class="value">{{this.data.total/this.total}}</span>
+                            <span class="value">{{this.data.total/total}}</span>
                             {{else}}
                                 {{#ifCond this.id "==" "crash-crf"}}
-                                <span class="value">{{this.data.total/this.total}}</span>
+                                <span class="value">{{this.data.total/total}}</span>
                                 {{else}}
                                     <span class="value">{{getShortNumber this.data.total}}</span>
                                 {{/ifCond}}
