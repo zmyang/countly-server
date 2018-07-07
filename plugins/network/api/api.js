@@ -724,7 +724,7 @@ var plugin = {},
                 common.db.collection("app_networkerror"+params.app_id).insert(report, {'upsert': true}, function(err, res){});
             }
             
-            common.recordCustomMetric(params, "networkmetricdata", params.app_id, metrics, 1, null, ["cru"], currEvent.timestamp);
+            common.recordCustomMetric(params, "networkmetricdata", params.app_id, metrics, 1, null, ["cr"], currEvent.timestamp);
             common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crnf"], currEvent.segmentation.dur, null, ["cru"], currEvent.timestamp);
             common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crf"], currEvent.segmentation.resbytes, null, ["cru"], currEvent.timestamp);
             // if(currEvent.segmentation.bounce){
