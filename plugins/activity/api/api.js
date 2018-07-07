@@ -356,13 +356,13 @@ plugins.setConfigs("activities", {
                                             var defaultComment = {};
                                             
                                           
-                                            defaultComment.time = new Date().getTime();
+                                            // defaultComment.time = new Date().getTime();
                                                                                       
-                                            defaultComment.text = "";
+                                            // defaultComment.text = "";
                                 
-                                            defaultComment.author = "admin";
-                                            defaultComment.author_id = params.member._id+"";
-                                            defaultComment._id = common.crypto.createHash('sha1').update(params.qstring.args.app_id + params.qstring.args.crash_id+JSON.stringify(comment)+"").digest('hex');
+                                            // defaultComment.author = "admin";
+                                            // defaultComment.author_id = params.member._id+"";
+                                            // defaultComment._id = common.crypto.createHash('sha1').update(params.qstring.args.app_id + params.qstring.args.crash_id+JSON.stringify(comment)+"").digest('hex');
                                             
 
 
