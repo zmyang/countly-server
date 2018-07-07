@@ -519,254 +519,258 @@ var plugin = {},
     });
     
     function processView(params, currEvent){
-        var escapedMetricVal = common.db.encode(currEvent.segmentation.name+"");
+        if (currEvent.key == "[CLY]_network"){
+            var escapedMetricVal = common.db.encode(currEvent.segmentation.name+"");
+                
+            var update = {$set:{lv:currEvent.segmentation.name}};
             
-        var update = {$set:{lv:currEvent.segmentation.name}};
-        
-        if(currEvent.segmentation.visit){
-            update["$inc"] = {vc:1};
-            update["$max"] = {lvt:params.time.timestamp};
-        }
-        common.updateAppUser(params, update);
-        if(currEvent.segmentation.visit){
-            var lastView = {};
-            lastView[escapedMetricVal] = params.time.timestamp;           
-            common.db.collection('app_network' + params.app_id).findAndModify({'_id': params.app_user_id },{}, {$max:lastView},{upsert:true, new:false}, function (err, view){
-                recordMetrics(params, currEvent, params.app_user, view && view.ok ? view.value : null);
-            });
-        }
-        else{
-            recordMetrics(params, currEvent, params.app_user);
+            if(currEvent.segmentation.visit){
+                update["$inc"] = {vc:1};
+                update["$max"] = {lvt:params.time.timestamp};
+            }
+            common.updateAppUser(params, update);
+            if(currEvent.segmentation.visit){
+                var lastView = {};
+                lastView[escapedMetricVal] = params.time.timestamp;           
+                common.db.collection('app_network' + params.app_id).findAndModify({'_id': params.app_user_id },{}, {$max:lastView},{upsert:true, new:false}, function (err, view){
+                    recordMetrics(params, currEvent, params.app_user, view && view.ok ? view.value : null);
+                });
+            }
+            else{
+                recordMetrics(params, currEvent, params.app_user);
+            }
         }
 	}
     
     function recordMetrics(params, currEvent, user, view){
-        var tmpMetric = { name: "_view", set: "network", short_code: "v" },
-        tmpTimeObjZero = {},
-        tmpTimeObjMonth = {},
-        tmpSet = {},
-        zeroObjUpdate = [],
-        monthObjUpdate = [],
-        escapedMetricVal = common.db.encode(currEvent.segmentation.name+""),
-        postfix = common.crypto.createHash("md5").update(escapedMetricVal).digest('base64')[0];
-    
-        //making sure metrics are strings
-        tmpSet["meta_v2." + tmpMetric.set + "." + escapedMetricVal] = true;
-
-       
-
+        if (currEvent.key == "[CLY]_network"){
+            var tmpMetric = { name: "_view", set: "network", short_code: "v" },
+            tmpTimeObjZero = {},
+            tmpTimeObjMonth = {},
+            tmpSet = {},
+            zeroObjUpdate = [],
+            monthObjUpdate = [],
+            escapedMetricVal = common.db.encode(currEvent.segmentation.name+""),
+            postfix = common.crypto.createHash("md5").update(escapedMetricVal).digest('base64')[0];
+        
+            //making sure metrics are strings
+            tmpSet["meta_v2." + tmpMetric.set + "." + escapedMetricVal] = true;
 
         
-        var dateIds = common.getDateIds(params),
-            tmpZeroId = "no-segment_" + dateIds.zero + "_" + postfix,
-            tmpMonthId = "no-segment_" + dateIds.month + "_" + postfix;
-                
-        common.db.collection("app_networkdata"+params.app_id).findOne({'_id': tmpZeroId}, {meta_v2:1}, function(err, res){
-            //checking if view should be ignored because of limit
-            if(!err && res && res.meta_v2 && res.meta_v2.network &&
-                typeof res.meta_v2.network[escapedMetricVal] === "undefined" &&
-                Object.keys(res.meta_v2.network).length >= plugins.getConfig("network").view_limit){
-                return;
-            }
-            //如果visit有值，说明访问了此接口
-            currEvent.segmentation.resbytes = 100;
-            if(currEvent.segmentation.visit==1){
-                //访问总数要更新
-                monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['total']);
-                //如果之前没有访问过，说明是新增
-                if (view && !view[escapedMetricVal]) {
-                    monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['new']);
+
+
+            
+            var dateIds = common.getDateIds(params),
+                tmpZeroId = "no-segment_" + dateIds.zero + "_" + postfix,
+                tmpMonthId = "no-segment_" + dateIds.month + "_" + postfix;
+                    
+            common.db.collection("app_networkdata"+params.app_id).findOne({'_id': tmpZeroId}, {meta_v2:1}, function(err, res){
+                //checking if view should be ignored because of limit
+                if(!err && res && res.meta_v2 && res.meta_v2.network &&
+                    typeof res.meta_v2.network[escapedMetricVal] === "undefined" &&
+                    Object.keys(res.meta_v2.network).length >= plugins.getConfig("network").view_limit){
+                    return;
                 }
-                /**
-                 * 计算unique次数
-                 */
-                //如果以前有访问过
-                // if (view && view[escapedMetricVal]) {
-                //     var lastViewTimestamp = view[escapedMetricVal],
-                //         currDate = common.getDate(params.time.timestamp, params.appTimezone),
-                //         lastViewDate = common.getDate(lastViewTimestamp, params.appTimezone),
-                //         secInMin = (60 * (currDate.getMinutes())) + currDate.getSeconds(),
-                //         secInHour = (60 * 60 * (currDate.getHours())) + secInMin,
-                //         secInMonth = (60 * 60 * 24 * (currDate.getDate() - 1)) + secInHour,
-                //         secInYear = (60 * 60 * 24 * (common.getDOY(params.time.timestamp, params.appTimezone) - 1)) + secInHour;
-                //     //当前小时的unique次数
-                //     if (lastViewTimestamp < (params.time.timestamp - secInMin)) {
-                //         tmpTimeObjMonth['d.' + params.time.day + '.' + params.time.hour + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                //     }
-                //     //当前天的unique次数
-                //     if (lastViewTimestamp < (params.time.timestamp - secInHour)) {
-                //         tmpTimeObjMonth['d.' + params.time.day + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                //     }
-                //     //当前周的unique次数
-                //     if (lastViewDate.getFullYear() == params.time.yearly &&
-                //         Math.ceil(common.moment(lastViewDate).tz(params.appTimezone).format("DDD") / 7) < params.time.weekly) {
-                //         tmpTimeObjZero["d.w" + params.time.weekly + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                //     }
-                //     //当前月
-                //     if (lastViewTimestamp < (params.time.timestamp - secInMonth)) {
-                //         tmpTimeObjZero['d.' + params.time.month + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                //     }
-                //     //当前年
-                //     if (lastViewTimestamp < (params.time.timestamp - secInYear)) {
-                //         tmpTimeObjZero['d.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
-                //     }
+                //如果visit有值，说明访问了此接口
+                currEvent.segmentation.resbytes = 100;
+                if(currEvent.segmentation.visit==1){
+                    //访问总数要更新
+                    monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['total']);
+                    //如果之前没有访问过，说明是新增
+                    if (view && !view[escapedMetricVal]) {
+                        monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['new']);
+                    }
+                    /**
+                     * 计算unique次数
+                     */
+                    //如果以前有访问过
+                    // if (view && view[escapedMetricVal]) {
+                    //     var lastViewTimestamp = view[escapedMetricVal],
+                    //         currDate = common.getDate(params.time.timestamp, params.appTimezone),
+                    //         lastViewDate = common.getDate(lastViewTimestamp, params.appTimezone),
+                    //         secInMin = (60 * (currDate.getMinutes())) + currDate.getSeconds(),
+                    //         secInHour = (60 * 60 * (currDate.getHours())) + secInMin,
+                    //         secInMonth = (60 * 60 * 24 * (currDate.getDate() - 1)) + secInHour,
+                    //         secInYear = (60 * 60 * 24 * (common.getDOY(params.time.timestamp, params.appTimezone) - 1)) + secInHour;
+                    //     //当前小时的unique次数
+                    //     if (lastViewTimestamp < (params.time.timestamp - secInMin)) {
+                    //         tmpTimeObjMonth['d.' + params.time.day + '.' + params.time.hour + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                    //     }
+                    //     //当前天的unique次数
+                    //     if (lastViewTimestamp < (params.time.timestamp - secInHour)) {
+                    //         tmpTimeObjMonth['d.' + params.time.day + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                    //     }
+                    //     //当前周的unique次数
+                    //     if (lastViewDate.getFullYear() == params.time.yearly &&
+                    //         Math.ceil(common.moment(lastViewDate).tz(params.appTimezone).format("DDD") / 7) < params.time.weekly) {
+                    //         tmpTimeObjZero["d.w" + params.time.weekly + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                    //     }
+                    //     //当前月
+                    //     if (lastViewTimestamp < (params.time.timestamp - secInMonth)) {
+                    //         tmpTimeObjZero['d.' + params.time.month + '.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                    //     }
+                    //     //当前年
+                    //     if (lastViewTimestamp < (params.time.timestamp - secInYear)) {
+                    //         tmpTimeObjZero['d.' + escapedMetricVal + '.' + common.dbMap['unique']] = 1;
+                    //     }
+                    // }
+                    // else{//以前没有访问过
+                    //     common.fillTimeObjectZero(params, tmpTimeObjZero, escapedMetricVal + '.' + common.dbMap['unique']);
+                    //     common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['unique'], 1, true);
+                    // }
+                }
+                
+                // if(currEvent.segmentation.start){
+                //     monthObjUpdate.push(escapedMetricVal + '.s');
                 // }
-                // else{//以前没有访问过
-                //     common.fillTimeObjectZero(params, tmpTimeObjZero, escapedMetricVal + '.' + common.dbMap['unique']);
-                //     common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['unique'], 1, true);
+
+                var metrics = ["cr"];
+                                                    
+            
+                
+                if(currEvent.segmentation.code && currEvent.segmentation.code!=200){
+                    metrics.push("cru");
+                    monthObjUpdate.push(escapedMetricVal + '.e');
+
+                    var props = [
+                        //device metrics
+                        "os",
+                        "os_version",
+                        "manufacture", //may not be provided for ios or be constant, like Apple
+                        "device", //model for Android, iPhone1,1 etc for iOS
+                        "resolution",
+                        "app_version",
+                        "cpu", //type of cpu used on device (for ios will be based on device)
+                        "opengl", //version of open gl supported
+                        "view", //screen, view or page where error happened
+                        "browser", //browser in which error happened, if applicable
+                        
+                        //state of device
+                        "ram_current", //in megabytes
+                        "ram_total",
+                        "disk_current", //in megabytes
+                        "disk_total",
+                        "bat_current", //battery level, probably usually from 0 to 100
+                        "bat_total", //but for consistency also provide total
+                        "bat", //or simple value from 0 to 100
+                        "orientation", //in which device was held, landscape, portrait, etc
+                        
+                        //bools
+                        "root", //true if device is rooted/jailbroken, false or not provided if not
+                        "online", //true if device is connected to the internet (WiFi or 3G), false or not provided if not connected
+                        "muted", //true if volume is off, device is in muted state
+                        "signal", //true if have cell/gsm signal or is not in airplane mode, false when no gsm signal or in airplane mode
+                        "background", //true if app was in background when it crashed
+                        
+                        //error info
+                        "name", //optional if provided by OS/Platform, else will use first line of stack
+                        "type", //optional type of the error
+                        "error", //error stack
+                        "nonfatal", //true if handled exception, false or not provided if crash
+                        "logs",//some additional logs provided, if any 
+                        "run", //running time since app start in seconds
+                        
+                        //build specific fields
+                        "architecture",
+                        "app_build",
+                        "binary_images",
+                        "build_uuid",
+                        "executable_name",
+                        "load_address",
+                        
+                        //custom key/values provided by developers
+                        "custom"
+                    ];
+                    var report = {
+                        "os" : "Android",
+                        "os_version" : "6.0",
+                        "manufacture" : "HTC",
+                        "device" : "HTC D816t",
+                        "resolution" : "720x1184",
+                        "app_version" : "1.0",
+                        "cpu" : "armeabi-v7a",
+                        "opengl" : "3",
+                        "ram_current" : "853",
+                        "ram_total" : "1334",
+                        "disk_current" : "1532",
+                        "disk_total" : "2516",
+                        "bat" : "86.0",
+                        "orientation" : "Portrait",
+                        "root" : 0,
+                        "online" : 1,
+                        "muted" : 0,
+                        "background" : 1,
+                        "error" : "java.lang.ArrayIndexOutOfBoundsException: length=0; index=0\nat ly.count.android.demo.CrashReportingActivity.c(SourceFile:59)\nat ly.count.android.demo.CrashReportingActivity.onClick(SourceFile:37)\nat android.view.View.performClick(View.java:5226)\nat android.view.View$PerformClick.run(View.java:21265)\nat android.os.Handler.handleCallback(Handler.java:739)\nat android.os.Handler.dispatchMessage(Handler.java:95)\nat android.os.Looper.loop(Looper.java:168)\nat android.app.ActivityThread.main(ActivityThread.java:5845)\nat java.lang.reflect.Method.invoke(Native Method)\nat com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:797)\nat com.android.internal.os.ZygoteInit.main(ZygoteInit.java:687)",
+                        "nonfatal" : false,
+                        "code":500,
+                        "run" : "2026",
+                        "not_os_specific" : false,
+                        "group" : "544bfc4077b97b14b8f6f1d4c815199330dbb33d",
+                        "uid" : "4",
+                        "resbytes" : 200,
+                        "ts" : 1528683110
+                    };
+                    for(var i = 0, l = props.length; i < l; i++){
+                        if(currEvent.segmentation[props[i]] != null){
+                            report[props[i]] = currEvent.segmentation[props[i]];
+                        }
+                    }
+                    report.cd=new Date();
+                    report.ts=currEvent.timestamp;
+                    // report.view=currEvent.segmentation.name;
+                    report.name=currEvent.segmentation.err_breif;
+                    report.url=currEvent.segmentation.name;
+                    // report.error=currEvent.segmentation.errorinfo;
+                    report.code=currEvent.segmentation.code;
+                    report.group=common.crypto.createHash("md5").update(currEvent.segmentation.name).digest('hex');
+                
+                    common.db.collection("app_networkerror"+params.app_id).insert(report, {'upsert': true}, function(err, res){});
+                }
+                
+                common.recordCustomMetric(params, "networkmetricdata", params.app_id, metrics, 1, null, ["cru"], currEvent.timestamp);
+                common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crnf"], currEvent.segmentation.dur, null, ["cr"], currEvent.timestamp);
+                common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crf"], currEvent.segmentation.resbytes, null, ["cr"], currEvent.timestamp);
+                // if(currEvent.segmentation.bounce){
+                //     monthObjUpdate.push(escapedMetricVal + '.b');
                 // }
-            }
-            
-            // if(currEvent.segmentation.start){
-            //     monthObjUpdate.push(escapedMetricVal + '.s');
-            // }
-
-            var metrics = ["cr"];
-                                                
-           
-            
-            if(currEvent.segmentation.code && currEvent.segmentation.code!=200){
-                metrics.push("cru");
-                monthObjUpdate.push(escapedMetricVal + '.e');
-
-                var props = [
-                    //device metrics
-                    "os",
-                    "os_version",
-                    "manufacture", //may not be provided for ios or be constant, like Apple
-                    "device", //model for Android, iPhone1,1 etc for iOS
-                    "resolution",
-                    "app_version",
-                    "cpu", //type of cpu used on device (for ios will be based on device)
-                    "opengl", //version of open gl supported
-                    "view", //screen, view or page where error happened
-                    "browser", //browser in which error happened, if applicable
-                    
-                    //state of device
-                    "ram_current", //in megabytes
-                    "ram_total",
-                    "disk_current", //in megabytes
-                    "disk_total",
-                    "bat_current", //battery level, probably usually from 0 to 100
-                    "bat_total", //but for consistency also provide total
-                    "bat", //or simple value from 0 to 100
-                    "orientation", //in which device was held, landscape, portrait, etc
-                    
-                    //bools
-                    "root", //true if device is rooted/jailbroken, false or not provided if not
-                    "online", //true if device is connected to the internet (WiFi or 3G), false or not provided if not connected
-                    "muted", //true if volume is off, device is in muted state
-                    "signal", //true if have cell/gsm signal or is not in airplane mode, false when no gsm signal or in airplane mode
-                    "background", //true if app was in background when it crashed
-                    
-                    //error info
-                    "name", //optional if provided by OS/Platform, else will use first line of stack
-                    "type", //optional type of the error
-                    "error", //error stack
-                    "nonfatal", //true if handled exception, false or not provided if crash
-                    "logs",//some additional logs provided, if any 
-                    "run", //running time since app start in seconds
-                    
-                    //build specific fields
-                    "architecture",
-                    "app_build",
-                    "binary_images",
-                    "build_uuid",
-                    "executable_name",
-                    "load_address",
-                    
-                    //custom key/values provided by developers
-                    "custom"
-                ];
-                var report = {
-                    "os" : "Android",
-                    "os_version" : "6.0",
-                    "manufacture" : "HTC",
-                    "device" : "HTC D816t",
-                    "resolution" : "720x1184",
-                    "app_version" : "1.0",
-                    "cpu" : "armeabi-v7a",
-                    "opengl" : "3",
-                    "ram_current" : "853",
-                    "ram_total" : "1334",
-                    "disk_current" : "1532",
-                    "disk_total" : "2516",
-                    "bat" : "86.0",
-                    "orientation" : "Portrait",
-                    "root" : 0,
-                    "online" : 1,
-                    "muted" : 0,
-                    "background" : 1,
-                    "error" : "java.lang.ArrayIndexOutOfBoundsException: length=0; index=0\nat ly.count.android.demo.CrashReportingActivity.c(SourceFile:59)\nat ly.count.android.demo.CrashReportingActivity.onClick(SourceFile:37)\nat android.view.View.performClick(View.java:5226)\nat android.view.View$PerformClick.run(View.java:21265)\nat android.os.Handler.handleCallback(Handler.java:739)\nat android.os.Handler.dispatchMessage(Handler.java:95)\nat android.os.Looper.loop(Looper.java:168)\nat android.app.ActivityThread.main(ActivityThread.java:5845)\nat java.lang.reflect.Method.invoke(Native Method)\nat com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:797)\nat com.android.internal.os.ZygoteInit.main(ZygoteInit.java:687)",
-                    "nonfatal" : false,
-                    "code":500,
-                    "run" : "2026",
-                    "not_os_specific" : false,
-                    "group" : "544bfc4077b97b14b8f6f1d4c815199330dbb33d",
-                    "uid" : "4",
-                    "resbytes" : 200,
-                    "ts" : 1528683110
-                };
-                for(var i = 0, l = props.length; i < l; i++){
-                    if(currEvent.segmentation[props[i]] != null){
-                        report[props[i]] = currEvent.segmentation[props[i]];
+                
+                common.fillTimeObjectZero(params, tmpTimeObjZero, zeroObjUpdate);
+                common.fillTimeObjectMonth(params, tmpTimeObjMonth, monthObjUpdate, 1, true);
+                
+                if(currEvent.dur){
+                    var dur = parseInt(currEvent.dur);
+                    common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['duration'], dur, true);
+                }
+                if(typeof currEvent.segmentation.segment != "undefined"){
+                    currEvent.segmentation.segment = common.db.encode(currEvent.segmentation.segment+"");
+                    var update = {$set:{}};
+                    update["$set"]["segments."+currEvent.segmentation.segment] =  true;
+                    common.db.collection("app_networkdata"+params.app_id).update({'_id': "meta_v2"}, update, {'upsert': true}, function(err, res){});
+                }
+                
+                if (Object.keys(tmpTimeObjZero).length || Object.keys(tmpSet).length) {
+                    tmpSet.m = dateIds.zero;
+                    tmpSet.a = params.app_id + "";
+                    var update = {$set: tmpSet};
+                    if(Object.keys(tmpTimeObjZero).length)
+                        update["$inc"] = tmpTimeObjZero;
+                    common.db.collection("app_networkdata"+params.app_id).update({'_id': tmpZeroId}, update, {'upsert': true}, function(){});
+                    if(typeof currEvent.segmentation.segment != "undefined"){
+                        common.db.collection("app_networkdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.zero + "_" + postfix}, update, {'upsert': true}, function(){});
                     }
                 }
-                report.cd=new Date();
-                report.ts=currEvent.timestamp;
-                // report.view=currEvent.segmentation.name;
-                report.name=currEvent.segmentation.err_breif;
-                report.url=currEvent.segmentation.name;
-                // report.error=currEvent.segmentation.errorinfo;
-                report.code=currEvent.segmentation.code;
-                report.group=common.crypto.createHash("md5").update(currEvent.segmentation.name).digest('hex');
-              
-                common.db.collection("app_networkerror"+params.app_id).insert(report, {'upsert': true}, function(err, res){});
-            }
-            
-            common.recordCustomMetric(params, "networkmetricdata", params.app_id, metrics, 1, null, ["cr"], currEvent.timestamp);
-            common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crnf"], currEvent.segmentation.dur, null, ["cr"], currEvent.timestamp);
-            common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crf"], currEvent.segmentation.resbytes, null, ["cr"], currEvent.timestamp);
-            // if(currEvent.segmentation.bounce){
-            //     monthObjUpdate.push(escapedMetricVal + '.b');
-            // }
-            
-            common.fillTimeObjectZero(params, tmpTimeObjZero, zeroObjUpdate);
-            common.fillTimeObjectMonth(params, tmpTimeObjMonth, monthObjUpdate, 1, true);
-            
-            if(currEvent.dur){
-                var dur = parseInt(currEvent.dur);
-                common.fillTimeObjectMonth(params, tmpTimeObjMonth, escapedMetricVal + '.' + common.dbMap['duration'], dur, true);
-            }
-            if(typeof currEvent.segmentation.segment != "undefined"){
-                currEvent.segmentation.segment = common.db.encode(currEvent.segmentation.segment+"");
-                var update = {$set:{}};
-                update["$set"]["segments."+currEvent.segmentation.segment] =  true;
-                common.db.collection("app_networkdata"+params.app_id).update({'_id': "meta_v2"}, update, {'upsert': true}, function(err, res){});
-            }
-            
-            if (Object.keys(tmpTimeObjZero).length || Object.keys(tmpSet).length) {
-                tmpSet.m = dateIds.zero;
-                tmpSet.a = params.app_id + "";
-                var update = {$set: tmpSet};
-                if(Object.keys(tmpTimeObjZero).length)
-                    update["$inc"] = tmpTimeObjZero;
-                common.db.collection("app_networkdata"+params.app_id).update({'_id': tmpZeroId}, update, {'upsert': true}, function(){});
-                if(typeof currEvent.segmentation.segment != "undefined"){
-                    common.db.collection("app_networkdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.zero + "_" + postfix}, update, {'upsert': true}, function(){});
+                
+                if (Object.keys(tmpTimeObjMonth).length){
+                    var update = {$set: {m: dateIds.month, a: params.app_id + ""}};
+                    if(Object.keys(tmpTimeObjMonth).length)
+                        update["$inc"] = tmpTimeObjMonth;
+                    common.db.collection("app_networkdata"+params.app_id).update({'_id': tmpMonthId}, update, {'upsert': true}, function(){});
+                    if(typeof currEvent.segmentation.segment != "undefined"){
+                        common.db.collection("app_networkdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.month + "_" + postfix}, update, {'upsert': true}, function(){});
+                    }
                 }
-            }
-            
-            if (Object.keys(tmpTimeObjMonth).length){
-                var update = {$set: {m: dateIds.month, a: params.app_id + ""}};
-                if(Object.keys(tmpTimeObjMonth).length)
-                    update["$inc"] = tmpTimeObjMonth;
-                common.db.collection("app_networkdata"+params.app_id).update({'_id': tmpMonthId}, update, {'upsert': true}, function(){});
-                if(typeof currEvent.segmentation.segment != "undefined"){
-                    common.db.collection("app_networkdata"+params.app_id).update({'_id': currEvent.segmentation.segment+"_"+dateIds.month + "_" + postfix}, update, {'upsert': true}, function(){});
-                }
-            }
-        });
+            });
+        }
     }
     
     plugins.register("/i/apps/create", function(ob){
