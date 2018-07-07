@@ -913,7 +913,7 @@ window.NetworkMetricView = countlyView.extend({
         var chartData = countlyNetwork.getMetricsChartData(this.curMetric, this.metrics[this.curMetric]);
         var dashboard = countlyNetwork.getDashboardData();
         dashboard.usage['crnf'].total = (dashboard.usage['crnf'].total/dashboard.usage['cr'].total).toFixed(1);
-        dashboard.usage['crf'].total = (dashboard.usage['crf'].total/(dashboard.usage['cr'].total*1000*1024).toFixed(1);
+        dashboard.usage['crf'].total = (dashboard.usage['crf'].total/(dashboard.usage['cr'].total*1000*1024)).toFixed(1);
         this.templateData = {
             "page-title":jQuery.i18n.map["network.overview-title"],
             "no-data":jQuery.i18n.map["common.bar.no-data"],
