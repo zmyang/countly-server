@@ -890,7 +890,7 @@ window.NetworkMetricView = countlyView.extend({
         this.metrics = {
 			cr:jQuery.i18n.map["network.total-visits"],
 			cru:jQuery.i18n.map["network.http.error-cnts"],
-			crnf:jQuery.i18n.map["network.http.response-time"],
+			crnf:jQuery.i18n.map["network.http.restime"],
 			crf:jQuery.i18n.map["network.http.bytes"],
 			crru:jQuery.i18n.map["crashes.resolved-users"]
 		};
