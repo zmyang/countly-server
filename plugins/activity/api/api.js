@@ -361,8 +361,8 @@ plugins.setConfigs("activities", {
                                             defaultComment.text = "";
                                 
                                             defaultComment.author = "admin";
-                                            comment.author_id = params.member._id+"";
-                                            comment._id = common.crypto.createHash('sha1').update(params.qstring.args.app_id + params.qstring.args.crash_id+JSON.stringify(comment)+"").digest('hex');
+                                            defaultComment.author_id = params.member._id+"";
+                                            defaultComment._id = common.crypto.createHash('sha1').update(params.qstring.args.app_id + params.qstring.args.crash_id+JSON.stringify(comment)+"").digest('hex');
                                             
 
 
