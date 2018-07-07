@@ -572,7 +572,9 @@ var plugin = {},
                     return;
                 }
                 //如果visit有值，说明访问了此接口
-                currEvent.resbytes = 100;
+                if(!currEvent.segmentation.resbytes){
+                    currEvent.segmentation.resbytes = 100;
+                }
                 if(currEvent.segmentation.visit==1){
                     //访问总数要更新
                     monthObjUpdate.push(escapedMetricVal + '.' + common.dbMap['total']);
@@ -730,7 +732,7 @@ var plugin = {},
                 common.recordCustomMetric(params, "networkmetricdata", params.app_id, metrics, 1, null, null, currEvent.timestamp);
                 if(currEvent.segmentation.code && currEvent.segmentation.code==200){
                     common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crnf"], currEvent.dur, null, ["cr"], currEvent.timestamp);
-                    common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crf"], currEvent.resbytes, null, ["cr"], currEvent.timestamp);
+                    common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crf"], currEvent.segmentation.resbytes, null, ["cr"], currEvent.timestamp);
                 }
                 // if(currEvent.segmentation.bounce){
                 //     monthObjUpdate.push(escapedMetricVal + '.b');
