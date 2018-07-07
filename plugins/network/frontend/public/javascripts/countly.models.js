@@ -446,7 +446,7 @@
         return _crashData;
     }
     countlyNetwork.getDashboardData = function () {
-        var data = countlyCommon.getDashboardData(_crashTimeline, ["cr", "crnf", "crf", "cru", "crru"], ["cru"], null, countlyNetwork.clearObject);
+        var data = countlyCommon.getDashboardData(_crashTimeline, ["cr", "crnf", "crf", "cru", "crru"], ["cru"], null, countlyNetwork.clearMetricsObject);
         return {usage:data};
     };
     countlyNetwork.getMetricsChartData = function(metric, name){
@@ -484,6 +484,8 @@
         return obj;
     };
 
+
+    
     countlyNetwork.clearMetricsObject = function (obj) {
         if (obj) {
             if (!obj["cr"]) obj["cr"] = 0;
