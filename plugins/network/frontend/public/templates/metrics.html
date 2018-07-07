@@ -11,7 +11,7 @@
                 <div class="big-numbers top four-column help-zone-vs" data-help-localize="{{this.help}}">
                     <div class="inner">
                         <div class="number">
-                            {{#ifCond this.id "==" "crash-crnf" || this.id "==" "crash-crf"}}
+                            {{#ifCond this.id "==" "crash-crnf"}}
                             <span class="value">{{getShortNumber this.data.total/this.total}}</span>
                             {{else}}
                                 {{#ifCond this.id "==" "crash-crf"}}
