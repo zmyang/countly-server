@@ -888,10 +888,10 @@ window.NetworkMetricView = countlyView.extend({
 		this.filter = (store.get("countly_crashfilter")) ? store.get("countly_crashfilter") : "crash-all";
         this.curMetric = "cr";
         this.metrics = {
-			cr:jQuery.i18n.map["crashes.total"],
-			cru:jQuery.i18n.map["crashes.unique"],
-			crnf:jQuery.i18n.map["crashes.nonfatal"]+" "+jQuery.i18n.map["crashes.title"],
-			crf:jQuery.i18n.map["crashes.fatal"]+" "+jQuery.i18n.map["crashes.title"],
+			cr:jQuery.i18n.map["network.total-visits"],
+			cru:jQuery.i18n.map["network.http.error-cnts"],
+			crnf:jQuery.i18n.map["network.http.response-time"],
+			crf:jQuery.i18n.map["network.http.bytes"],
 			crru:jQuery.i18n.map["crashes.resolved-users"]
 		};
     },
