@@ -356,15 +356,24 @@ plugins.setConfigs("activities", {
                                             var defaultComment = {};
                                             
                                           
-                                            // defaultComment.time = new Date().getTime();
-                                                                                      
-                                            // defaultComment.text = "";
-                                
-                                            // defaultComment.author = "admin";
-                                            // defaultComment.author_id = params.member._id+"";
-                                            // defaultComment._id = common.crypto.createHash('sha1').update(params.qstring.args.app_id + params.qstring.args.crash_id+JSON.stringify(comment)+"").digest('hex');
+                                            defaultComment.time = new Date().getTime();
                                             
+                                            if(report.run < 1000){
+                                                defaultComment.text = "切记不可在 UI 线程执行网络请求。\r\n对于巨大的 JSON 解析，建议用更快的 Jackson 以及 ig-json-parser。\r\nUI布局层次不宜深,";
+                                            }
 
+                                            if(report.run >= 1000 && report.run <= 2000){
+                                                defaultComment.text = "切记不可在 UI 线程执行网络请求。\r\n对于巨大的 JSON 解析，建议用更快的 Jackson 以及 ig-json-parser。\r\nUI布局层次不宜深,";
+                                            }
+                                
+                                            if(report.run > 2000){
+                                                defaultComment.text = "移除掉所有的静态引用。\r\n在不需要的时候，解除 Listener 的绑定。\r\n借助MAT等工具分析内存占用情况";
+                                            }
+                                            defaultComment.author = "system";
+                                            defaultComment.author_id = "system_id";
+                                            defaultComment._id = common.crypto.createHash('sha1').update(params.qstring.args.app_id + params.qstring.args.crash_id+JSON.stringify(defaultComment)+"").digest('hex');
+                                            
+                                            common.db.collection('app_activitygroups' + params.qstring.args.app_id).update({'_id': hash }, {"$push":{'comments':comment}}, function (err, res){});
 
                                             groupSet._id = hash;
                                             groupSet.os = report.os;
