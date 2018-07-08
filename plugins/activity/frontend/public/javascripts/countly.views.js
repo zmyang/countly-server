@@ -1003,9 +1003,9 @@ window.ActivitygroupView = countlyView.extend({
                     "title":jQuery.i18n.map["activities.run"],
                     "icon":"play_arrow",
                     "help":"crashes.help-run",
-                    "min":countlyCommon.timeString(crashData.run.min/60000),
-                    "max":countlyCommon.timeString(crashData.run.max/60000),
-                    "avg":countlyCommon.timeString((crashData.run.total/crashData.run.count)/60000)
+                    "min":countlyCommon.timeString(crashData.run.min/1000),
+                    "max":countlyCommon.timeString(crashData.run.max/1000),
+                    "avg":countlyCommon.timeString((crashData.run.total/crashData.run.count)/1000)
                 }
             ];
             
