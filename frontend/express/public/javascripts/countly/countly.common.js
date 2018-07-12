@@ -2161,7 +2161,7 @@
         if (Math.round(timestamp).toString().length === 10)
             timestamp *= 1000;
         var target = new Date(timestamp);
-        var tooltip = moment(target).format("ddd, yyyy-MM-dd HH:mm:ss");
+        var tooltip = moment(target).format("yyyy-MM-dd HH:mm:ss");
         var elem = $("<span>");
         elem.prop("title", tooltip);
         var now = new Date();
