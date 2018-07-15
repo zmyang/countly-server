@@ -372,7 +372,7 @@ plugins.setConfigs("activities", {
                                             
                                             // common.db.collection('app_activitygroups' + params.app_id).update({'_id': hash }, {"$push":{'comments':defaultComment}}, function (err, res){});
                                             // common.db.collection('app_activitygroups' + params.app_id).update({'_id': hash }, {"$set":{'comments.0':defaultComment}}, function (err, res){});
-                                            common.db.collection('app_activitygroups' + params.app_id).update({'_id': hash }, {"comments":{'$slice':1}}, function (err, res){
+                                            common.db.collection('app_activitygroups' + params.app_id).find({'_id': hash }, function (err, res){
                                                     console.log(res);
                                             });
                                             groupSet._id = hash;
