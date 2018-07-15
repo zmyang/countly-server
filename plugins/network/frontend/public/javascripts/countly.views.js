@@ -914,6 +914,7 @@ window.NetworkMetricView = countlyView.extend({
         var dashboard = countlyNetwork.getDashboardData();
         dashboard.usage['crnf'].total = (dashboard.usage['crnf'].total/(dashboard.usage['cr'].total-dashboard.usage['cru'].total)).toFixed(2);
         dashboard.usage['crf'].total = (dashboard.usage['crf'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(2);
+        dashboard.usage['crruf'].total = (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(2);
         this.templateData = {
             "page-title":jQuery.i18n.map["network.overview-title"],
             "no-data":jQuery.i18n.map["common.bar.no-data"],
@@ -945,7 +946,7 @@ window.NetworkMetricView = countlyView.extend({
                 {
 					"title":jQuery.i18n.map["network.http.reportcnts"],
 					"data":dashboard.usage['crf'],
-					"id":"crash-crf",
+					"id":"crash-crf-cnts",
                     "help":"crashes.help-fatal"
 				}/*,
 				{
