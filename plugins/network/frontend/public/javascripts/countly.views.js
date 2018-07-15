@@ -912,8 +912,8 @@ window.NetworkMetricView = countlyView.extend({
         var crashData = countlyNetwork.getMetricsData();
         var chartData = countlyNetwork.getMetricsChartData(this.curMetric, this.metrics[this.curMetric]);
         var dashboard = countlyNetwork.getDashboardData();
-        dashboard.usage['crnf'].total = (dashboard.usage['crnf'].total/(dashboard.usage['cr'].total-dashboard.usage['cru'].total)).toFixed(2);
-        dashboard.usage['crf'].total = (dashboard.usage['crf'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(2);
+        dashboard.usage['crnf'].total = (dashboard.usage['crnf'].total/(dashboard.usage['cr'].total-dashboard.usage['cru'].total)).toFixed(1);
+        dashboard.usage['crf'].total = (dashboard.usage['crf'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(1);
         // dashboard.usage['crruf'].total = (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(2);
         this.templateData = {
             "page-title":jQuery.i18n.map["network.overview-title"],
@@ -946,7 +946,7 @@ window.NetworkMetricView = countlyView.extend({
                 ,
                 {
 					"title":jQuery.i18n.map["network.http.reportcnts"],
-					"data":{"total":(dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(2)},
+					"data":{"total":(dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(1)},
 					"id":"crash-crf-cnts",
                     "help":"crashes.help-resolved-users"
                 }
