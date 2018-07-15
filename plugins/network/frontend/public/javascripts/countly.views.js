@@ -942,13 +942,14 @@ window.NetworkMetricView = countlyView.extend({
 					"data":dashboard.usage['crf'],
 					"id":"crash-crf",
                     "help":"crashes.help-fatal"
-                },
-                {
-					"title":jQuery.i18n.map["network.http.reportcnts"],
-					"data":dashboard.usage['crf'],
-					"id":"crash-crf-cnts",
-                    "help":"crashes.help-fatal"
-				}/*,
+                }
+                // ,
+                // {
+				// 	"title":jQuery.i18n.map["network.http.reportcnts"],
+				// 	"data":dashboard.usage['crf'],
+				// 	"id":"crash-crf-cnts",
+                //     "help":"crashes.help-fatal"
+				// }/*,
 				{
 					"title":jQuery.i18n.map["crashes.resolved-users"],
 					"data":dashboard.usage['crru'],
