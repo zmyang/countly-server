@@ -373,7 +373,7 @@ plugins.setConfigs("activities", {
                                             defaultComment.author_id = "system_id";
                                             defaultComment._id = common.crypto.createHash('sha1').update(params.app_id + report._id+JSON.stringify(defaultComment)+"").digest('hex');
                                             
-                                            common.db.collection('app_activitygroups' + params.app_id).update({'_id': hash }, {"$push":{'comments':comment}}, function (err, res){});
+                                            common.db.collection('app_activitygroups' + params.app_id).update({'_id': hash }, {"$push":{'comments':defaultComment}}, function (err, res){});
 
                                             groupSet._id = hash;
                                             groupSet.os = report.os;
