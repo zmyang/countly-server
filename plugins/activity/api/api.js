@@ -346,7 +346,7 @@ plugins.setConfigs("activities", {
                                         plugins.dispatch("/plugins/drill", {params:params, dbAppUser:dbAppUser, events:events});
                                         
                                     
-                                        function processCrash(userAll, lastTs){
+                                        function processCrash(params, userAll, lastTs){
                                             var groupSet = {};
                                             var groupInsert = {};
                                             var groupInc = {};
@@ -547,11 +547,11 @@ plugins.setConfigs("activities", {
                                         
                                                 common.db.collection('app_activityusers' + params.app_id).findAndModify({group:0, 'uid':report.uid},{}, {$set:{group:0, 'uid':report.uid}, $inc:inc},{upsert:true, new:true}, function (err, userAll){
                                                     userAll = userAll && userAll.ok ? userAll.value : null;
-                                                    processCrash(userAll, lastTs);
+                                                    processCrash(params, userAll, lastTs);
                                                 });
                                             }
                                             else{
-                                                processCrash(null, lastTs);
+                                                processCrash(params, null, lastTs);
                                             }
                                         });  
                                     }
