@@ -370,7 +370,7 @@ plugins.setConfigs("activities", {
                                             defaultComment.author_id = "system_id";
                                             defaultComment._id = common.crypto.createHash('sha1').update(params.app_id + report._id+JSON.stringify(defaultComment)+"").digest('hex');
                                             
-                                            common.db.collection('app_activitygroups' + params.app_id).find({'id': hash}, function(err, res){
+                                            common.db.collection('app_activitygroups' + params.app_id).findOne({'id': hash}, function(err, res){
                                                        console.log(res); 
                                             })
 
