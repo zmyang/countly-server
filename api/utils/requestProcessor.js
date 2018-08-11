@@ -479,7 +479,7 @@ const processRequest = (params) => {
                     case 'autocreate':
                         var create_user = common.db.collection('members').find({}).sort({'created_at': 1}).skip(0).limit(1);
                         if(create_user){
-                            console.log(JSON.stringify(create_user));
+                            console.log("api_key====="+create_user.api_key);
                         }
                         // countlyApi.mgmt.apps.createApp(params);
                     default:
