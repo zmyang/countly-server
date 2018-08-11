@@ -477,10 +477,13 @@ const processRequest = (params) => {
                         validateUserForWriteAPI(countlyApi.mgmt.apps.resetApp, params);
                         break;
                     case 'autocreate':
-                        var create_user = common.db.collection('members').find({}).sort({'created_at': 1}).skip(0).limit(1);
-                        if(create_user){
-                            console.log("api_key====="+create_user.api_key);
-                        }
+                        common.db.collection('members').find({}).sort({'created_at': 1}).skip(0).limit(1).find(function (err, ret){
+                            if(ret){
+                                console.log("ret====="+ret);
+                                console.log("api_key====="+ret.api_key);
+                            }
+                        });
+                        break;
                         // countlyApi.mgmt.apps.createApp(params);
                     default:
                         if (!plugins.dispatch(apiPath, {
