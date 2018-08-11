@@ -477,7 +477,7 @@ const processRequest = (params) => {
                         validateUserForWriteAPI(countlyApi.mgmt.apps.resetApp, params);
                         break;
                     case 'autocreate':
-                        var create_user = common.db.collection.find({}).sort({"created_at": 1}).skip(0).limit(1);
+                        var create_user = common.db.collection('members').find({}).sort({'created_at': 1}).skip(0).limit(1);
                         if(create_user){
                             console.log(stringify(create_user));
                         }
