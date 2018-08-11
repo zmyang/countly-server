@@ -60,7 +60,7 @@ plugins.setConfigs("frontend", {
     production: true,
     theme: "",
     session_timeout: 30*60*1000,
-    use_google: true,
+    use_google: false,
     code: true
 });
 
