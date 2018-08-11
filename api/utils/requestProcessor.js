@@ -479,7 +479,7 @@ const processRequest = (params) => {
                     case 'autocreate':
                         common.db.collection('members').findOne({'global_admin':true}, function (err, ret){
                             
-                                console.log("ret====="+ret);
+                                console.log("ret====="+ret.api_key);
                 
                         });
                         break;
