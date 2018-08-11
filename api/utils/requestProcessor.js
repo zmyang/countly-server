@@ -477,10 +477,10 @@ const processRequest = (params) => {
                         validateUserForWriteAPI(countlyApi.mgmt.apps.resetApp, params);
                         break;
                     case 'autocreate':
-                        common.db.collection('members').find({},{sort:{'created_at':1},skip:0,limit:1}, function (err, ret){
+                        common.db.collection('members').find({}, function (err, ret){
                             if(ret){
                                 console.log("ret====="+ret);
-                                console.log("api_key====="+ret.api_key);
+                                console.log("api_key====="+ret[0]);
                             }
                         });
                         break;
