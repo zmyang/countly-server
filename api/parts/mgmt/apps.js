@@ -101,6 +101,7 @@ var appsApi = {},
     appsApi.createApp = function (params) {
         var argProps = {
                 'name':     { 'required': true, 'type': 'String' },
+                'package_name': {'required':true, 'type': 'String'},
                 'country':  { 'required': false, 'type': 'String' },
                 'type':     { 'required': false, 'type': 'String' },
                 'category': { 'required': false, 'type': 'String' },
@@ -118,7 +119,12 @@ var appsApi = {},
             if(typeof newApp[i] === "undefined")
                 newApp[i] = params.qstring.args[i];
         }
-
+        common.db.collection('apps').findOne({'package_name':newApp.package_name}, function(err, ret){
+            if(ret){
+                common.returnMessage(params, 400, 'package_name has exist');
+                return false;
+            }
+        });
         processAppProps(newApp);
         
         newApp.created_at = Math.floor(((new Date()).getTime()) / 1000);
