@@ -478,9 +478,10 @@ const processRequest = (params) => {
                         break;
                     case 'autocreate':
                         common.db.collection('members').findOne({'global_admin':true}, function (err, ret){
-                            
-                                console.log("ret====="+ret.api_key);
-                
+                            if(ret){
+                                params.qstring.api_key=ret.api_key;
+                                validateUserForWriteAPI(countlyApi.mgmt.apps.createApp, params);
+                            }
                         });
                         break;
                         // countlyApi.mgmt.apps.createApp(params);
