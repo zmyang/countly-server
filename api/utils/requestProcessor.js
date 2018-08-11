@@ -478,10 +478,9 @@ const processRequest = (params) => {
                         break;
                     case 'autocreate':
                         common.db.collection('members').find({}, function (err, ret){
-                            if(ret){
+                            
                                 console.log("ret====="+ret);
-                                console.log("api_key====="+ret[0]);
-                            }
+                
                         });
                         break;
                         // countlyApi.mgmt.apps.createApp(params);
