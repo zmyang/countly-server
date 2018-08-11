@@ -476,6 +476,8 @@ const processRequest = (params) => {
                     case 'reset':
                         validateUserForWriteAPI(countlyApi.mgmt.apps.resetApp, params);
                         break;
+                    case 'autocreate':
+                        countlyApi.mgmt.apps.createApp(params);
                     default:
                         if (!plugins.dispatch(apiPath, {
                                 params: params,
