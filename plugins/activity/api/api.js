@@ -269,6 +269,33 @@ plugins.setConfigs("activities", {
                     if(!params.qstring.activity._not_os_specific)
                         seed = report.os + seed;
                     var hash = common.crypto.createHash('sha1').update(seed).digest('hex');
+
+                    function insertDefaultComment(){
+                        var defaultComment = {};
+                        defaultComment.time = new Date().getTime();
+                                            
+                        defaultComment.text = "1、避免布局过于复杂，拆分布局。\r\n" +
+                        "   如果UI布局层次太深, 或是自定义控件的onDraw中有复杂运算, CPU的相关运算就可能大于16ms, 导致卡顿\r\n"+
+                        "2、避免过度绘制\r\n"+
+                        "   避免绘制多重背景，避免绘制不可见的UI元素。\r\n"+
+                        "3、避免UI线程的复杂运算\r\n"+
+                        "   UI线程的复杂运算会造成UI无响应, 更多的是造成UI响应停滞, 卡顿\r\n"+
+                        "4、避免频繁的GC\r\n"+
+                        "   GC操作的时候，任何线程的任何操作都会需要暂停，等待GC操作完成之后，其他操作才能够继续运行, 故而如果程序频繁GC, 自然会导致界面卡顿";
+                        defaultComment.author = "system";
+                        defaultComment.author_id = "system_id";
+                        defaultComment._id = common.crypto.createHash('sha1').update(params.app_id + report._id+JSON.stringify(defaultComment)+"").digest('hex');
+                        
+                        common.db.collection('app_activitygroups' + params.app_id).findOne({'_id': hash}, function(err, res){
+                                if(res != null && res.comments && res.comments.length>0){
+                                    //no process
+                                }else{
+                                    common.db.collection('app_activitygroups' + params.app_id).update({'_id': hash }, {"$push":{'comments':defaultComment}}, function (err, res){});
+                                }
+                        })
+                    }
+
+
                     function checkUser(dbAppUser, tries){
                         if(!dbAppUser || !dbAppUser.uid){
                             setTimeout(function(){
@@ -286,6 +313,7 @@ plugins.setConfigs("activities", {
                             if(dbAppUser && dbAppUser.sc)
                                 set.sessions = dbAppUser.sc;
                             common.db.collection('app_activityusers' + params.app_id).findAndModify({group:hash, 'uid':report.uid},{}, {$set:set, $inc:{reports:1}},{upsert:true, new:false}, function (err, user){
+                                insertDefaultComment();
                                 user = user && user.ok ? user.value : null;
                                 if(user && user.sessions && dbAppUser && dbAppUser.sc && dbAppUser.sc > user.sessions)
                                     report.session = dbAppUser.sc - user.sessions;
@@ -353,24 +381,32 @@ plugins.setConfigs("activities", {
                                             var groupMin = {};
                                             var groupMax = {};
                                             var comments = new Array();
-                                            var defaultComment = {};
+                                            insertDefaultComment();
+                                            // var defaultComment = {};
                                             
                                           
-                                            defaultComment.time = new Date().getTime();
+                                            // defaultComment.time = new Date().getTime();
                                             
-                                                defaultComment.text = "1、避免布局过于复杂，拆分布局。\r\n" +
-                                                "   如果UI布局层次太深, 或是自定义控件的onDraw中有复杂运算, CPU的相关运算就可能大于16ms, 导致卡顿\r\n"+
-                                                "2、避免过度绘制\r\n"+
-                                                "   避免绘制多重背景，避免绘制不可见的UI元素。\r\n"+
-                                                "3、避免UI线程的复杂运算\r\n"+
-                                                "   UI线程的复杂运算会造成UI无响应, 更多的是造成UI响应停滞, 卡顿\r\n"+
-                                                "4、避免频繁的GC\r\n"+
-                                                "   GC操作的时候，任何线程的任何操作都会需要暂停，等待GC操作完成之后，其他操作才能够继续运行, 故而如果程序频繁GC, 自然会导致界面卡顿";
-                                            defaultComment.author = "system";
-                                            defaultComment.author_id = "system_id";
-                                            defaultComment._id = common.crypto.createHash('sha1').update(params.app_id + report._id+JSON.stringify(defaultComment)+"").digest('hex');
+                                            //     defaultComment.text = "1、避免布局过于复杂，拆分布局。\r\n" +
+                                            //     "   如果UI布局层次太深, 或是自定义控件的onDraw中有复杂运算, CPU的相关运算就可能大于16ms, 导致卡顿\r\n"+
+                                            //     "2、避免过度绘制\r\n"+
+                                            //     "   避免绘制多重背景，避免绘制不可见的UI元素。\r\n"+
+                                            //     "3、避免UI线程的复杂运算\r\n"+
+                                            //     "   UI线程的复杂运算会造成UI无响应, 更多的是造成UI响应停滞, 卡顿\r\n"+
+                                            //     "4、避免频繁的GC\r\n"+
+                                            //     "   GC操作的时候，任何线程的任何操作都会需要暂停，等待GC操作完成之后，其他操作才能够继续运行, 故而如果程序频繁GC, 自然会导致界面卡顿";
+                                            // defaultComment.author = "system";
+                                            // defaultComment.author_id = "system_id";
+                                            // defaultComment._id = common.crypto.createHash('sha1').update(params.app_id + report._id+JSON.stringify(defaultComment)+"").digest('hex');
                                             
-                                            common.db.collection('app_activitygroups' + params.app_id).update({'_id': hash }, {"$push":{'comments':defaultComment}}, function (err, res){});
+                                            // common.db.collection('app_activitygroups' + params.app_id).findOne({'_id': hash}, function(err, res){
+                                            //         if(res.comments && res.comments.length>0){
+                                            //             //no process
+                                            //         }else{
+                                            //             common.db.collection('app_activitygroups' + params.app_id).update({'_id': hash }, {"$push":{'comments':defaultComment}}, function (err, res){});
+                                            //         }
+                                            // })
+
                                             // common.db.collection('app_activitygroups' + params.app_id).update({'_id': hash }, {"$set":{'comments.0':defaultComment}}, function (err, res){});
                                             // common.db.collection('app_activitygroups' + params.app_id).find({'_id': hash }, function (err, res){
                                             //         console.log(res);

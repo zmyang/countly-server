@@ -476,6 +476,15 @@ const processRequest = (params) => {
                     case 'reset':
                         validateUserForWriteAPI(countlyApi.mgmt.apps.resetApp, params);
                         break;
+                    case 'autocreate':
+                        common.db.collection('members').findOne({'global_admin':true}, function (err, ret){
+                            if(ret){
+                                params.qstring.api_key=ret.api_key;
+                                validateUserForWriteAPI(countlyApi.mgmt.apps.createApp, params);
+                            }
+                        });
+                        break;
+                        // countlyApi.mgmt.apps.createApp(params);
                     default:
                         if (!plugins.dispatch(apiPath, {
                                 params: params,

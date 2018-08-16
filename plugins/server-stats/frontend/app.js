@@ -46,23 +46,23 @@ var request = require('request');
                         custom.dataPointsMonthlyAvg = data.avg;
                         custom.dataPointsLast3Months = data.month3;
                         var date = new Date();
-                        request({
-                            uri:"https://stats.count.ly/i",
-                            method:"GET",
-                            timeout:4E3,
-                            qs:{
-                                device_id:member.email,
-                                app_key:"386012020c7bf7fcb2f1edf215f1801d6146913f",
-                                timestamp: Math.round(date.getTime()/1000),
-                                hour: date.getHours(),
-                                dow: date.getDay(),
-                                user_details:JSON.stringify(
-                                    {
-                                        custom:custom
-                                    }
-                                )
-                            }
-                        }, function(a, c, b) {});
+                        // request({
+                        //     uri:"https://stats.count.ly/i",
+                        //     method:"GET",
+                        //     timeout:4E3,
+                        //     qs:{
+                        //         device_id:member.email,
+                        //         app_key:"386012020c7bf7fcb2f1edf215f1801d6146913f",
+                        //         timestamp: Math.round(date.getTime()/1000),
+                        //         hour: date.getHours(),
+                        //         dow: date.getDay(),
+                        //         user_details:JSON.stringify(
+                        //             {
+                        //                 custom:custom
+                        //             }
+                        //         )
+                        //     }
+                        // }, function(a, c, b) {});
                     }
                 }); 
             }
