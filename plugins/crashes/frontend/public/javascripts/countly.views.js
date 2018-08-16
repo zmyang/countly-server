@@ -961,7 +961,7 @@ window.CrashgroupView = countlyView.extend({
                         "help":"crashes.help-reports"
                     },
                     {
-                        "title":jQuery.i18n.map["crashes.affected-users"],
+                        "title":"影响的设备数",
                         "total":crashData.users + " ("+((crashData.users/crashData.total)*100).toFixed(2)+"%)",
                         "help":"crashes.help-affected"
                     },
