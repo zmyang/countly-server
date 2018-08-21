@@ -731,8 +731,8 @@ var plugin = {},
                 
                 common.recordCustomMetric(params, "networkmetricdata", params.app_id, metrics, 1, null, null, currEvent.timestamp);
                 if(currEvent.segmentation.code && currEvent.segmentation.code==200){
-                    common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crnf"], currEvent.dur, null, ["cr"], currEvent.timestamp);
-                    common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crf"], currEvent.segmentation.resbytes, null, ["cr"], currEvent.timestamp);
+                    common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crnf"], Number(currEvent.dur), null, ["cr"], currEvent.timestamp);
+                    common.recordCustomMetric(params, "networkmetricdata", params.app_id, ["crf"], Number(currEvent.segmentation.resbytes), null, ["cr"], currEvent.timestamp);
                 }
                 // if(currEvent.segmentation.bounce){
                 //     monthObjUpdate.push(escapedMetricVal + '.b');
