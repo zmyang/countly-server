@@ -121,7 +121,7 @@ var appsApi = {},
         }
         common.db.collection('apps').findOne({'package_name':newApp.package_name}, function(err, ret){
             if(ret){
-                common.returnMessage(params, 400, 'package_name has exist');
+                common.returnOutput(params, ret);
                 return false;
             }
         });
