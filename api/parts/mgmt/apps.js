@@ -131,7 +131,7 @@ var appsApi = {},
                 newApp.seq = 0;
         
                 common.db.collection('apps').insert(newApp, function(err, app) {
-                    var appKey = common.sha1Hash(app.ops[0]._id, true);
+                    var appKey = common.sha1Hash(app.ops[0].package_name, true);
         
                     common.db.collection('apps').update({'_id': app.ops[0]._id}, {$set: {key: appKey}}, function(err, app) {});
         
