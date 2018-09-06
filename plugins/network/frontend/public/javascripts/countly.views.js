@@ -916,7 +916,7 @@ window.NetworkMetricView = countlyView.extend({
         if(isNaN(avarage_time)){
             avarage_time = 0;
         }
-        dashboard.usage['crnf'].total = avarage_time;
+        dashboard.usage['crnf'].total = 0;
         var avarage_bytes = (dashboard.usage['crf'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total))).toFixed(1);
         if(isNaN(avarage_bytes)){
             avarage_bytes = 0;
