@@ -891,7 +891,8 @@ window.NetworkMetricView = countlyView.extend({
 			cr:jQuery.i18n.map["network.total-visits"],
 			cru:jQuery.i18n.map["network.http.error-cnts"],
 			crnf:jQuery.i18n.map["network.http.restime"],
-			crf:jQuery.i18n.map["network.http.bytes"],
+            crf:jQuery.i18n.map["network.http.bytes"],
+            cnts:jQuery.i18n.map["network.http.reportcnts"],
 			crru:jQuery.i18n.map["crashes.resolved-users"]
 		};
     },
@@ -960,7 +961,7 @@ window.NetworkMetricView = countlyView.extend({
                 {
 					"title":jQuery.i18n.map["network.http.reportcnts"],
 					"data":throughput,
-					"id":"crash-crf-cnts",
+					"id":"crash-cnts",
                     "help":"crashes.help-resolved-users"
                 }
                 /*,
