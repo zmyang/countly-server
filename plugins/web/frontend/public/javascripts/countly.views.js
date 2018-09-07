@@ -424,11 +424,11 @@ $( document ).ready(function() {
 	'</a>';
 	$('#web-type #analytics-submenu').prepend(menu);
     
-    menu = '<a href="#/analytics/countries" class="item">'+
-		'<div class="logo country"></div>'+
-		'<div class="text" data-localize="sidebar.analytics.countries"></div>'+
-	'</a>';
-	$('#web-type #analytics-submenu').prepend(menu);
+    // menu = '<a href="#/analytics/countries" class="item">'+
+	// 	'<div class="logo country"></div>'+
+	// 	'<div class="text" data-localize="sidebar.analytics.countries"></div>'+
+	// '</a>';
+	// $('#web-type #analytics-submenu').prepend(menu);
     
     menu = '<a href="#/analytics/sessions" class="item">'+
 		'<div class="logo sessions"></div>'+
