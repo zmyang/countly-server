@@ -322,11 +322,11 @@ $( document ).ready(function() {
 	'</a>';
 	$('#mobile-type #analytics-submenu').prepend(menu);
     
-    menu = '<a href="#/analytics/carriers" class="item">'+
-		'<div class="logo carrier"></div>'+
-		'<div class="text" data-localize="sidebar.analytics.carriers"></div>'+
-	'</a>';
-	$('#mobile-type #analytics-submenu').prepend(menu);
+    // menu = '<a href="#/analytics/carriers" class="item">'+
+	// 	'<div class="logo carrier"></div>'+
+	// 	'<div class="text" data-localize="sidebar.analytics.carriers"></div>'+
+	// '</a>';
+	// $('#mobile-type #analytics-submenu').prepend(menu);
     
     menu = '<a href="#/analytics/versions" class="item">'+
 		'<div class="logo app-versions"></div>'+
@@ -346,11 +346,11 @@ $( document ).ready(function() {
 	'</a>';
 	$('#mobile-type #analytics-submenu').prepend(menu);
     
-    menu = '<a href="#/analytics/countries" class="item">'+
-		'<div class="logo country"></div>'+
-		'<div class="text" data-localize="sidebar.analytics.countries"></div>'+
-	'</a>';
-	$('#mobile-type #analytics-submenu').prepend(menu);
+    // menu = '<a href="#/analytics/countries" class="item">'+
+	// 	'<div class="logo country"></div>'+
+	// 	'<div class="text" data-localize="sidebar.analytics.countries"></div>'+
+	// '</a>';
+	// $('#mobile-type #analytics-submenu').prepend(menu);
     
     menu = '<a href="#/analytics/sessions" class="item">'+
 		'<div class="logo sessions"></div>'+
