@@ -924,7 +924,7 @@ window.NetworkMetricView = countlyView.extend({
         }
         dashboard.usage['crf'].total = avarage_bytes; 
         
-        console.log("period="+countlyCommon.getPeriodForAjax());
+        // console.log("period="+countlyCommon.getPeriodForAjax());
         var throughput_v = 0;
         if('hour'==countlyCommon.getPeriodForAjax() || 'yesterday'==dashboard.usage['cr'].total){
             throughput_v = dashboard.usage['cr'].total;
