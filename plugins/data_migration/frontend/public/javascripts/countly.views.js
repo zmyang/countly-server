@@ -832,14 +832,14 @@ if(countlyGlobal["member"].global_admin){
     
     $( document ).ready(function() {
         //Adding as menu item : Managment>Data migration. Before help toggle button.
-         if(countlyGlobal["member"]["global_admin"]){
-            var menu = '<a href="#/manage/data-migration" class="item">'+
-                '<div class="logo-icon ion-bowtie"></div>'+
-                '<div class="text" data-localize="data-migration.page-title"></div>'+
-            '</a>';
-            if($('#management-submenu .help-toggle').length)
-                $('#management-submenu .help-toggle').before(menu);
-        }
+        //  if(countlyGlobal["member"]["global_admin"]){
+        //     var menu = '<a href="#/manage/data-migration" class="item">'+
+        //         '<div class="logo-icon ion-bowtie"></div>'+
+        //         '<div class="text" data-localize="data-migration.page-title"></div>'+
+        //     '</a>';
+        //     if($('#management-submenu .help-toggle').length)
+        //         $('#management-submenu .help-toggle').before(menu);
+        // }
         var curapp = countlyCommon.ACTIVE_APP_ID;
         if(curapp && countlyGlobal['apps'][curapp]  && countlyGlobal['apps'][curapp]['redirect_url'] &&  countlyGlobal['apps'][curapp]['redirect_url']!="")
         {
