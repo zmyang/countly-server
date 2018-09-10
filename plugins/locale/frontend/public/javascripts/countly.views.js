@@ -69,9 +69,9 @@ app.route("/analytics/languages", "languages", function () {
 });
 
 $( document ).ready(function() {
-	Handlebars.registerHelper('languageTitle', function (context, options) {
-        return countlyGlobalLang.languages[context];
-    });
+	// Handlebars.registerHelper('languageTitle', function (context, options) {
+    //     return countlyGlobalLang.languages[context];
+    // });
 
 	// var menu = '<a href="#/analytics/languages" class="item">'+
 	// 	'<div class="logo languages"></div>'+

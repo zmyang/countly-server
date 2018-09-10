@@ -332,7 +332,7 @@ window.WebDashboardView = countlyView.extend({
             $("#countries-alternative_wrapper .dataTable-top .dataTables_paginate").hide();
             $("#countries-alternative_wrapper .dataTable-top .DTTT_container").hide();
             $("#countries-alternative_wrapper .dataTable-top").append("<div style='font:13px Ubuntu,Helvetica,sans-serif; color:#636363; margin-right:10px; padding: 10px; float: right;'><a href='#/analytics/countries'>"+jQuery.i18n.map["common.go-to-countries"]+"&nbsp;&nbsp;&nbsp;<i class='fa fa-chevron-right' aria-hidden='true'></i></a></div>");
-            // $("#countries-alternative_wrapper .dataTable-top").append("<div style='font:15px Ubuntu,Helvetica,sans-serif; color:#636363; margin-left:10px; margin-top: 8px; text-transform: uppercase;'>"+jQuery.i18n.map["sidebar.analytics.countries"]+"</div>");
+           
         }
         else{
             CountlyHelpers.refreshTable(self.country_dtable, countlyLocation.getLocationData({maxCountries:10}));
@@ -424,11 +424,7 @@ $( document ).ready(function() {
 	'</a>';
 	$('#web-type #analytics-submenu').prepend(menu);
     
-    // menu = '<a href="#/analytics/countries" class="item">'+
-	// 	'<div class="logo country"></div>'+
-	// 	'<div class="text" data-localize="sidebar.analytics.countries"></div>'+
-	// '</a>';
-	// $('#web-type #analytics-submenu').prepend(menu);
+   
     
     menu = '<a href="#/analytics/sessions" class="item">'+
 		'<div class="logo sessions"></div>'+
