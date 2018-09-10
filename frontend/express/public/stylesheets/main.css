@@ -97,7 +97,7 @@
 
 html { height: 100%; }
 body { margin:0; padding:0; overflow:auto; background-color:#F9F9F9; user-select:text; font-family: Ubuntu,Helvetica,sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-#content-container { margin-left:224px; min-width:768px; min-height: 400px; padding:78px 16px 35px 16px; transition: margin-left 0.55s; will-change: margin-left; }
+#content-container { margin-left:185px; min-width:768px; min-height: 400px; padding:78px 16px 35px 16px; transition: margin-left 0.55s; will-change: margin-left; }
 #content-container #app-management-bar,
 #content-container #configs-title-bar { transition: left 0.55s; will-change: left; }
 #content-container.cover-left { margin-left:0; transition: margin-left 0.55s; will-change: margin-left; }
@@ -134,7 +134,7 @@ table { border-collapse: collapse; }
 #content-footer ul li a:hover { color:#2FA732; transition:color 1s; }
 
 /* SIDEBAR */
-#sidebar { position:fixed; left:0; width:224px; background-color:#292929; height:100%; z-index:998; user-select:none; }
+#sidebar { position:fixed; left:0; width:185px; background-color:#ececec; height:100%; z-index:998; user-select:none; }
 #sidebar-top { display: none; height:112px; padding-top:11px; border-right:1px solid #ABABAB;
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e6e6e6+0,adacac+100 */
     background: #e6e6e6; /* Old browsers */
@@ -145,14 +145,14 @@ table { border-collapse: collapse; }
     border-bottom: 1px solid #888;
 }
 
-#sidebar-menu { position: relative; margin-top:78px; border-top: 1px solid #232323; }
+#sidebar-menu { position: relative; margin-top:78px; border-top: 1px solid #a2a2a2; }
     .scroll-active .sidebar-menu { height:auto; position:relative; }
-	#sidebar-menu .sidebar-menu>.item { width:225px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; height:33px; padding-top:3px; display:block; cursor:pointer; border-top: 1px solid #2D2D2D; border-bottom: 1px solid #232323; }
+	#sidebar-menu .sidebar-menu>.item { width:225px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; height:33px; padding-top:3px; display:block; cursor:pointer; border-bottom: 1px solid #e6e6e6; }
         #sidebar-menu .sidebar-menu>.item:last-child { box-shadow: 0 1px 0 0 #2D2D2D; }
         #sidebar-menu .sidebar-menu>.item.hide { display: none; }
         #sidebar-menu .sidebar-menu .item:hover { background-position:446px; }
 		#sidebar-menu .sidebar-menu>.item.active { background-color: #2FA732; border-color: #2FA732; }
-        #sidebar-menu .sidebar-menu .item.menu-active { background-color: #212121; border-color: #212121; }
+        #sidebar-menu .sidebar-menu .item.menu-active { background-color: #2FA732; border-color: #2FA732; }
 		#sidebar-menu .sidebar-menu .item .logo { color:#888; width:25px; height:22px; float:left; margin-left:16px; margin-top:4px; font-size: 19px; text-align: center; }
         #sidebar-menu .sidebar-menu .item .logo .material-icons { font-size:20px; margin-top:1px; }
             /* Fix for old .fa icons, this can be removed once all enterprise plugins have updated icons */
@@ -170,17 +170,17 @@ table { border-collapse: collapse; }
             #sidebar-menu .sidebar-menu .item.menu-active:hover .logo,
             #sidebar-menu .sidebar-menu .item.menu-active .logo { color: #f6f6f6; }
             #sidebar-menu .sidebar-menu .item:hover .logo { color: #FFF; }
-            #sidebar-menu .sidebar-menu .item:hover .text { color: #FFF; }
+            #sidebar-menu .sidebar-menu .item:hover .text { color: #888; }
             #sidebar-menu .sidebar-menu .item.active .text { color:#FFF; }
         #sidebar-menu .sidebar-menu .item .ion-chevron-right { position: absolute; right: 15px; font-size: 10px; color: #505050; padding-top: 11px; }
             #sidebar-menu .sidebar-menu .item.active .ion-chevron-right { color:#f6f6f6; }
 
-	#sidebar-menu .sidebar-menu .sidebar-submenu { display:none; position:absolute; top:0; background-color: #212121; right:0; width:170px; height:100%; z-index:1; }
-        #sidebar-menu .sidebar-menu .sidebar-submenu .menu-title { min-height:16px; padding: 14px 0 15px 25px; color: #ececec; font-family: Ubuntu; font-size: 14px; }
+	#sidebar-menu .sidebar-menu .sidebar-submenu { display:none; position:absolute; top:0; background-color: #f3f3f3; right:0; width:170px; height:100%; z-index:1; }
+        #sidebar-menu .sidebar-menu .sidebar-submenu .menu-title { min-height:16px; padding: 14px 0 15px 25px; color: #888; font-family: Ubuntu; font-size: 14px; }
         #sidebar-menu .sidebar-menu .sidebar-submenu .submenu-close { right: 18px; position: absolute; top: 14px; font-size: 14px; cursor: pointer; opacity: 0.7; }
             #sidebar-menu .sidebar-menu .sidebar-submenu .submenu-close:hover { opacity: 1; }
         #sidebar-menu .sidebar-menu .sidebar-submenu .item,
-		#sidebar-menu .sidebar-menu .sidebar-submenu .disabled-item { text-transform:capitalize; background-color: #212121; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; height:30px; display:block; padding-left:8px; cursor:pointer; }
+		#sidebar-menu .sidebar-menu .sidebar-submenu .disabled-item { text-transform:capitalize; background-color: #f3f3f3; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; height:30px; display:block; padding-left:8px; cursor:pointer; }
 		#sidebar-menu .sidebar-menu .sidebar-submenu .disabled-item { cursor:default; }
 			#sidebar-menu .sidebar-menu .sidebar-submenu .item .logo-icon { display:none; color:#888; width:30px; height:30px; float:left; margin-left:8px; margin-top:8px; text-align:center;}
 			#sidebar-menu .sidebar-menu .sidebar-submenu .item .logo { display:none; color:#888; width:30px; height:30px; float:left; margin-left:8px; margin-top:1px; }
@@ -428,7 +428,7 @@ table { border-collapse: collapse; }
 #sort-app-button i { font-size: 20px; margin: 0; line-height: 16px; }
 /* APP NAVIGATION END */
 
-#app-management-bar { overflow:hidden; width:180px; position:fixed; left:242px; top:79px; text-align:right; background-color:#efefef; max-height:580px; box-sizing: border-box; box-shadow: 0 0 0 1px #d0d0d0; }
+#app-management-bar { overflow:hidden; width:180px; position:fixed; left:202px; top:79px; text-align:right; background-color:#efefef; max-height:580px; box-sizing: border-box; box-shadow: 0 0 0 1px #d0d0d0; }
 #app-management-bar .app-container { padding-left:10px; position: relative; }
 #app-management-bar .app-container.active { }
 #app-management-bar .app-container.active:hover { opacity:1; }
@@ -1530,7 +1530,7 @@ input.custom-styled-green-check:checked {border-color: #C2C2C2;}
 .cly-grid-8 { width: 12.5%; }
 
 #top-bar { height: 48px; min-width:1024px; background-color: #FFF; user-select: none; position: fixed; width:100%; z-index: 9999; box-shadow: inset 0 -1px 0 0 #E7E7E7; }
-#top-bar .logo-container { padding: 14px 39px 13px 40px; float:left; }
+#top-bar .logo-container { padding: 14px 0px 13px 40px; float:left; }
 #top-bar .logo { background-image: url("/images/dashboard/logo.png"); width: 144px; height: 32px; background-position: center; background-repeat: no-repeat; background-size: contain; }
 
 #top-bar .right-menu { float:left; font-size: 18px; margin-right: 15px; }
