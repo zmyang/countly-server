@@ -962,7 +962,7 @@ window.NetworkMetricView = countlyView.extend({
                 ,
                 {
 					"title":jQuery.i18n.map["network.http.reportcnts"],
-					"data":throughput,
+					"data":dashboard.usage['cnts'],
 					"id":"crash-cnts",
                     "help":"crashes.help-resolved-users"
                 }
