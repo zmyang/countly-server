@@ -73,9 +73,9 @@ $( document ).ready(function() {
         return countlyGlobalLang.languages[context];
     });
 
-	var menu = '<a href="#/analytics/languages" class="item">'+
-		'<div class="logo languages"></div>'+
-		'<div class="text" data-localize="sidebar.analytics.languages"></div>'+
-	'</a>';
-	$('.sidebar-menu:not(#iot-type) #analytics-submenu').append(menu);
+	// var menu = '<a href="#/analytics/languages" class="item">'+
+	// 	'<div class="logo languages"></div>'+
+	// 	'<div class="text" data-localize="sidebar.analytics.languages"></div>'+
+	// '</a>';
+	// $('.sidebar-menu:not(#iot-type) #analytics-submenu').append(menu);
 });
