@@ -946,7 +946,7 @@ window.NetworkMetricView = countlyView.extend({
                 ,
                 {
 					"title":jQuery.i18n.map["network.http.reportcnts"],
-					"data":{"total":(dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(1)},
+					"data":{"total":(60*dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(2)},
 					"id":"crash-crf-cnts",
                     "help":"crashes.help-resolved-users"
                 }
