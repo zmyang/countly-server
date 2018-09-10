@@ -81,8 +81,8 @@ plugins.setConfigs("security", {
     password_symbol: true,
     password_expiration: 0,
     password_rotation: 3,
-    dashboard_additional_headers: "X-Frame-Options:deny\nX-XSS-Protection:1; mode=block\nStrict-Transport-Security:max-age=31536000 ; includeSubDomains\nX-Content-Type-Options: nosniff",
-    api_additional_headers: "X-Frame-Options:deny\nX-XSS-Protection:1; mode=block"
+    dashboard_additional_headers: "X-XSS-Protection:1; mode=block\nStrict-Transport-Security:max-age=31536000 ; includeSubDomains\nX-Content-Type-Options: nosniff",
+    api_additional_headers: "X-XSS-Protection:1; mode=block"
 });
 
 process.on('uncaughtException', (err) => {
