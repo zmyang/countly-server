@@ -383,18 +383,18 @@ window.ConfigurationsView = countlyView.extend({
             }
         }
         if (!isRefresh) {
-            // $(this.el).html(this.template(this.templateData));
+            $(this.el).html(this.template(this.templateData));
 
 
-            // if(this.isUserSettingsPage){
-            //     $('#configs-title-bar').hide();
-            //     $('#config-title').html(jQuery.i18n.map['plugins.user-configs']);
-            //     $('#config-table-container').addClass('user-settings-table');
-            // }
-            // else{
-            //     $('#configs-table-widget').css('marginLeft', '200px');
-            //     $('#nav-item-' + this.selectedNav.key).addClass('selected');
-            // }
+            if(this.isUserSettingsPage){
+                $('#configs-title-bar').hide();
+                $('#config-title').html(jQuery.i18n.map['plugins.user-configs']);
+                $('#config-table-container').addClass('user-settings-table');
+            }
+            else{
+                $('#configs-table-widget').css('marginLeft', '200px');
+                $('#nav-item-' + this.selectedNav.key).addClass('selected');
+            }
                 
 
             this.changes = {};
