@@ -892,8 +892,8 @@ window.NetworkMetricView = countlyView.extend({
 			cru:jQuery.i18n.map["network.http.error-cnts"],
 			crnf:jQuery.i18n.map["network.http.restime"],
             crf:jQuery.i18n.map["network.http.bytes"],
-            cnts:jQuery.i18n.map["network.http.reportcnts"],
-			crru:jQuery.i18n.map["crashes.resolved-users"]
+            crru:jQuery.i18n.map["network.http.reportcnts"]
+			// crru:jQuery.i18n.map["crashes.resolved-users"]
 		};
     },
     beforeRender: function() {
@@ -929,7 +929,7 @@ window.NetworkMetricView = countlyView.extend({
         if(isNaN(throughput_v)){
             throughput_v=0;
         }
-        dashboard.usage['cnts'].total = throughput_v; 
+        dashboard.usage['crru'].total = throughput_v; 
         // dashboard.usage['crruf'].total = (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(2);
         this.templateData = {
             "page-title":jQuery.i18n.map["network.overview-title"],
@@ -959,20 +959,20 @@ window.NetworkMetricView = countlyView.extend({
 					"id":"crash-crf",
                     "help":"crashes.help-fatal"
                 }
+                // ,
+                // {
+				// 	"title":jQuery.i18n.map["network.http.reportcnts"],
+				// 	"data":dashboard.usage['cnts'],
+				// 	"id":"crash-cnts",
+                //     "help":"crashes.help-resolved-users"
+                // }
                 ,
-                {
-					"title":jQuery.i18n.map["network.http.reportcnts"],
-					"data":dashboard.usage['cnts'],
-					"id":"crash-cnts",
-                    "help":"crashes.help-resolved-users"
-                }
-                /*,
 				{
-					"title":jQuery.i18n.map["crashes.resolved-users"],
+					"title":jQuery.i18n.map["network.http.reportcnts"],
 					"data":dashboard.usage['crru'],
 					"id":"crash-crru",
                     "help":"crashes.help-resolved-users"
-				}*/
+				}
 			]
 			
         };
