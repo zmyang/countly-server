@@ -923,9 +923,23 @@ window.NetworkMetricView = countlyView.extend({
             avarage_bytes = 0;
         }
         dashboard.usage['crf'].total = avarage_bytes; 
-        console.log("period="+dashboard.period);
+        
         console.log("period="+countlyCommon.getPeriodForAjax());
-        var throughput_v = (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total))).toFixed(1);
+        var throughput_v = 0;
+        if('hour'==countlyCommon.getPeriodForAjax() || 'yesterday'==dashboard.usage['cr'].total){
+            throughput_v = dashboard.usage['cr'].total;
+        }else if('month'==countlyCommon.getPeriodForAjax()){
+            throughput_v = (dashboard.usage['cr'].total/(365*24)).toFixed(1);
+        }else if('day'==countlyCommon.getPeriodForAjax()){
+            throughput_v = (dashboard.usage['cr'].total/(30*24)).toFixed(1);
+        }else if('7days'==countlyCommon.getPeriodForAjax()){
+            throughput_v = (dashboard.usage['cr'].total/(7*24)).toFixed(1);
+        }else if('30days'==countlyCommon.getPeriodForAjax()){
+            throughput_v = (dashboard.usage['cr'].total/(30*24)).toFixed(1);
+        }else if('60days'==countlyCommon.getPeriodForAjax()){
+            throughput_v = (dashboard.usage['cr'].total/(60*24)).toFixed(1);
+        }
+        // (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total))).toFixed(1);
         if(isNaN(throughput_v)){
             throughput_v=0;
         }
