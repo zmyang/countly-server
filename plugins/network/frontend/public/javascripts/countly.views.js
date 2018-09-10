@@ -923,11 +923,13 @@ window.NetworkMetricView = countlyView.extend({
             avarage_bytes = 0;
         }
         dashboard.usage['crf'].total = avarage_bytes; 
-        var throughput = {"total":0};
+        
+        
         var throughput_v = (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total))).toFixed(1);
         if(isNaN(throughput_v)){
-            throughput.total=throughput_v;
+            throughput_v=0;
         }
+        dashboard.usage['cnts'].total = throughput_v; 
         // dashboard.usage['crruf'].total = (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(2);
         this.templateData = {
             "page-title":jQuery.i18n.map["network.overview-title"],
