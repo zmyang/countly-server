@@ -2,17 +2,17 @@ window.NetworkView = countlyView.extend({
     selectedMetric:"t",
     selectedView:null,
     selectedViews:[],
-	selectedApps: {all:true},
-	selectedCount: 0,
+    selectedApps: {all:true},
+    selectedCount: 0,
     ids:{},
     lastId:0,
     token: false,
     useView: null,
     beforeRender: function() {
-			var self = this;
-			return $.when($.get(countlyGlobal["path"]+'/network/templates/network.html', function(src){
-				self.template = Handlebars.compile(src);
-			}), countlyNetwork.initialize()).then(function () {});
+            var self = this;
+            return $.when($.get(countlyGlobal["path"]+'/network/templates/network.html', function(src){
+                self.template = Handlebars.compile(src);
+            }), countlyNetwork.initialize()).then(function () {});
     },
     getProperties: function(metric){
         return {
@@ -239,9 +239,9 @@ window.NetworkView = countlyView.extend({
             
             $(".segmentation-option").on("click", function () {
                 countlyNetwork.reset();
-				countlyNetwork.setSegment($(this).data("value"));
+                countlyNetwork.setSegment($(this).data("value"));
                 self.refresh();
-			});
+            });
     
             $(".big-numbers .inner").click(function () {
                 var elID = $(this).find('.select').attr("id").replace("view-metric-", "");
@@ -378,8 +378,8 @@ window.ActionMapView = countlyView.extend({
     beforeRender: function() {
         var self = this;
         return $.when($.get(countlyGlobal["path"]+'/network/templates/actionmap.html', function(src){
-			self.template = Handlebars.compile(src);
-		}), countlyNetwork.loadActionsData(this.view)).then(function () {});
+            self.template = Handlebars.compile(src);
+        }), countlyNetwork.loadActionsData(this.view)).then(function () {});
     },
     getData: function(data){
         var heat = [];
@@ -479,8 +479,8 @@ window.ActionMapView = countlyView.extend({
             app.localize();
 
             $("#view_reload_url").on("click", function () {
-				$("#view-map iframe").attr("src", "/o/urlload?url="+encodeURIComponent($("#view_loaded_url").val()));
-			});
+                $("#view-map iframe").attr("src", "/o/urlload?url="+encodeURIComponent($("#view_loaded_url").val()));
+            });
             
             $("#view_loaded_url").keyup(function(event){
                 if(event.keyCode == 13){
@@ -499,9 +499,9 @@ window.ActionMapView = countlyView.extend({
             });
             
             $("#action-map-type .segmentation-option").on("click", function () {
-				self.actionType = $(this).data("value");
+                self.actionType = $(this).data("value");
                 self.refresh();
-			});
+            });
             
             $("#action-map-resolution .segmentation-option").on("click", function () {
                 switch ($(this).data("value")) {
@@ -518,15 +518,15 @@ window.ActionMapView = countlyView.extend({
                         $("#view-map").width(parts[0]+"px");
                         $("#view-map").prependTo("#view-map-container");
                 }
-				self.resize();
+                self.resize();
                 self.refresh();
-			});
+            });
             
             $("#view-segments .segmentation-option").on("click", function () {
                 countlyNetwork.reset();
-				countlyNetwork.setSegment($(this).data("value"));
+                countlyNetwork.setSegment($(this).data("value"));
                 self.refresh();
-			});
+            });
         }
     },
     drawMap:function(){
@@ -554,19 +554,19 @@ window.ActionMapView = countlyView.extend({
 
 
 window.NetworkErrorView = countlyView.extend({
-	initialize:function () {
+    initialize:function () {
         this.loaded = true;
     },
     beforeRender: function() {
         countlyNetwork.reset();
-		// if(this.template)
-		// 	return $.when(countlyNetwork.initialize(this.id)).then(function () {});
-		// else{
-			var self = this;
-			return $.when($.get(countlyGlobal["path"]+'/network/templates/networkerror.html', function(src){
-				self.template = Handlebars.compile(src);
-			}), countlyNetwork.initialize(this.id)).then(function () {});
-		// }
+        // if(this.template)
+        //  return $.when(countlyNetwork.initialize(this.id)).then(function () {});
+        // else{
+            var self = this;
+            return $.when($.get(countlyGlobal["path"]+'/network/templates/networkerror.html', function(src){
+                self.template = Handlebars.compile(src);
+            }), countlyNetwork.initialize(this.id)).then(function () {});
+        // }
     },
     renderCommon:function (isRefresh) {
         var crashData = countlyNetwork.getGroupData();
@@ -575,7 +575,7 @@ window.NetworkErrorView = countlyView.extend({
         if(crashData.url)
                url += crashData.url;
         crashData.latest_version="12:03";
-		crashData.latest_version = crashData.latest_version.replace(/:/g, '.');
+        crashData.latest_version = crashData.latest_version.replace(/:/g, '.');
         
         this.comments = {};
         
@@ -590,45 +590,45 @@ window.NetworkErrorView = countlyView.extend({
             "note-placeholder": jQuery.i18n.map["crashes.editnote"],
             "hasPermission": (countlyGlobal["member"].global_admin || countlyGlobal["admin_apps"][countlyCommon.ACTIVE_APP_ID]) ? true : false,
             "url":url,
-			"data":crashData,
-			// "error":crashData[0].name.substr(0, 80),
+            "data":crashData,
+            // "error":crashData[0].name.substr(0, 80),
             // "fatal": (crashData[0].nonfatal) ? jQuery.i18n.map["crashes.nonfatal"] : jQuery.i18n.map["crashes.fatal"],
-			"active-segmentation": this.curTitle,
-			"segmentations": this.metrics,
+            "active-segmentation": this.curTitle,
+            "segmentations": this.metrics,
         };
 
-		var self = this;
+        var self = this;
         if (!isRefresh) {
             $(this.el).html(this.template(this.templateData));
-			this.dtable = $('.d-table').dataTable($.extend({}, $.fn.dataTable.defaults, {
+            this.dtable = $('.d-table').dataTable($.extend({}, $.fn.dataTable.defaults, {
                 "aaSorting": [[0,'desc']],
                 "aaData": crashData || [],
-				"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-					$(nRow).attr("id", aData._id);
-				},
+                "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                    $(nRow).attr("id", aData._id);
+                },
                 "aoColumns": [
                     { "mData": function(row, type){if(type == "display") return countlyCommon.formatTimeAgo(row.ts); else return row.ts;}, "sType":"format-ago", "sTitle": jQuery.i18n.map["error.time"]},
                     // { "mData": function(row, type){return row.url;}, "sType":"string", "sTitle": jQuery.i18n.map["network.table.url"] },
                     // { "mData": function(row, type){return row.name;}, "sType":"string", "sTitle": jQuery.i18n.map["error.name"] },
                     { "mData": function(row, type){return row.code;}, "sType":"numeric", "sTitle": jQuery.i18n.map["error.code"] },
-					{ "mData": function(row, type){var str = row.os; if(row.os_version) str += " "+row.os_version.replace(/:/g, '.'); return str;}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.os_version"] },
-					{ "mData": function(row, type){var str = ""; if(row.manufacture) str += row.manufacture+" "; if(row.device) str += countlyDeviceList[row.device] || row.device; return str;}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.device"]},
-					{ "mData": function(row, type){return row.app_version.replace(/:/g, '.');}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.app_version"] }
+                    { "mData": function(row, type){var str = row.os; if(row.os_version) str += " "+row.os_version.replace(/:/g, '.'); return str;}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.os_version"] },
+                    { "mData": function(row, type){var str = ""; if(row.manufacture) str += row.manufacture+" "; if(row.device) str += countlyDeviceList[row.device] || row.device; return str;}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.device"]},
+                    { "mData": function(row, type){return row.app_version.replace(/:/g, '.');}, "sType":"string", "sTitle": jQuery.i18n.map["crashes.app_version"] }
                 ]
             }));
-			this.dtable.stickyTableHeaders();
-			
-			/*$('.crash-reports tbody').on("click", "tr", function (){
-				var id = $(this).attr("id");
-				if(id)
-					window.location.hash = window.location.hash.toString()+"/"+id;
-			});*/
-			CountlyHelpers.expandRows(this.dtable, this.formatData);
-			// countlyCommon.drawGraph(crashData.dp[this.curMetric], "#dashboard-graph", "bar");
+            this.dtable.stickyTableHeaders();
+            
+            /*$('.crash-reports tbody').on("click", "tr", function (){
+                var id = $(this).attr("id");
+                if(id)
+                    window.location.hash = window.location.hash.toString()+"/"+id;
+            });*/
+            CountlyHelpers.expandRows(this.dtable, this.formatData);
+            // countlyCommon.drawGraph(crashData.dp[this.curMetric], "#dashboard-graph", "bar");
  
          
             $(".btn-share-crash").click(function(e){
-				if ($(this).hasClass("active")) {
+                if ($(this).hasClass("active")) {
                     $(this).removeClass("active");
                     $("#crash-share-list").hide();
                 }
@@ -636,7 +636,7 @@ window.NetworkErrorView = countlyView.extend({
                     $(this).addClass("active");
                     $("#crash-share-list").show();
                 }
-			});
+            });
 
             $("#share-crash-done").click(function() {
                 $(".btn-share-crash").removeClass("active");
@@ -766,22 +766,22 @@ window.NetworkErrorView = countlyView.extend({
             });
         }
     },
-	formatData: function( data ) {
-		// `d` is the original data object for the row
-		var str = '';
-		if(data){
-			str += '<div class="datatablesubrow">'+
-				'<table style="width: 100%;">'+
-						'<tr>'+
-							'<td class="text-left">'+jQuery.i18n.map["crashes.app_version"]+'</td>'+
-							'<td class="text-left">'+jQuery.i18n.map["crashes.device"]+'</td>'+
-							'<td class="text-left">'+jQuery.i18n.map["crashes.state"]+'</td>';
+    formatData: function( data ) {
+        // `d` is the original data object for the row
+        var str = '';
+        if(data){
+            str += '<div class="datatablesubrow">'+
+                '<table style="width: 100%;">'+
+                        '<tr>'+
+                            '<td class="text-left">'+jQuery.i18n.map["crashes.app_version"]+'</td>'+
+                            '<td class="text-left">'+jQuery.i18n.map["crashes.device"]+'</td>'+
+                            '<td class="text-left">'+jQuery.i18n.map["crashes.state"]+'</td>';
                             if(data.custom)
                                 str += '<td class="text-left">'+jQuery.i18n.map["crashes.custom"]+'</td>';
-						str += '</tr>'+
-						'<tr>'+
-							'<td class="text-left">'+data.app_version.replace(/:/g, '.')+'</td>'+
-							'<td class="text-left">'+data.os+' ';
+                        str += '</tr>'+
+                        '<tr>'+
+                            '<td class="text-left">'+data.app_version.replace(/:/g, '.')+'</td>'+
+                            '<td class="text-left">'+data.os+' ';
                                 if(data.os_version)
                                     str += data.os_version.replace(/:/g, '.')+'<br/>';
                                 if(data.manufacture)
@@ -790,7 +790,7 @@ window.NetworkErrorView = countlyView.extend({
                                     str += data.device;
                                 if(data.cpu)
                                     str += ' ('+data.cpu+')';
-				str += '<br/>';
+                str += '<br/>';
                                 if(data.opengl)
                                     str += jQuery.i18n.map["crashes.opengl"]+': '+data.opengl+'<br/>';
                                 if(data.resolution)
@@ -821,11 +821,11 @@ window.NetworkErrorView = countlyView.extend({
                                 }
                                 str += '</td>';
                             }
-						str += '</tr>'+
+                        str += '</tr>'+
                         '<tr>'+
                         '<td colspan="4" class="stack-trace">';
                         str += '<pre>' + data.error + '</pre></td>'+
-						'</tr>';
+                        '</tr>';
                         if(data.logs){
                             str += '<tr>'+
                                 '<td class="text-left">'+jQuery.i18n.map["crashes.logs"]+'</td>'+
@@ -835,16 +835,16 @@ window.NetworkErrorView = countlyView.extend({
                                 '<pre>' + data.logs + '</pre></td>'+
                             '</tr>';
                         }
-						str += '</table>'+
-			'</div>';
-		}
-		return str;
-	},
-	switchMetric:function(metric){
-		this.curMetric = metric;
-		var crashData = countlyNetwork.getGroupData();
-		countlyCommon.drawGraph(crashData.dp[this.curMetric], "#dashboard-graph", "bar");
-	}
+                        str += '</table>'+
+            '</div>';
+        }
+        return str;
+    },
+    switchMetric:function(metric){
+        this.curMetric = metric;
+        var crashData = countlyNetwork.getGroupData();
+        countlyCommon.drawGraph(crashData.dp[this.curMetric], "#dashboard-graph", "bar");
+    }
 });
 
 
@@ -883,30 +883,30 @@ window.NetworkMetricView = countlyView.extend({
         "run_min":{prop:"run.min", type:"number"},
         "run_max":{prop:"run.max", type:"number"}
     },
-	initialize:function () {
+    initialize:function () {
         this.loaded = true;
-		this.filter = (store.get("countly_crashfilter")) ? store.get("countly_crashfilter") : "crash-all";
+        this.filter = (store.get("countly_crashfilter")) ? store.get("countly_crashfilter") : "crash-all";
         this.curMetric = "cr";
         this.metrics = {
-			cr:jQuery.i18n.map["network.total-visits"],
-			cru:jQuery.i18n.map["network.http.error-cnts"],
-			crnf:jQuery.i18n.map["network.http.restime"],
+            cr:jQuery.i18n.map["network.total-visits"],
+            cru:jQuery.i18n.map["network.http.error-cnts"],
+            crnf:jQuery.i18n.map["network.http.restime"],
             crf:jQuery.i18n.map["network.http.bytes"],
-            cnts:jQuery.i18n.map["network.http.reportcnts"],
-			crru:jQuery.i18n.map["crashes.resolved-users"]
-		};
+            crru:jQuery.i18n.map["network.http.reportcnts"]
+            // crru:jQuery.i18n.map["crashes.resolved-users"]
+        };
     },
     beforeRender: function() {
         this.selectedCrashes = {};
         this.selectedCrashesIds = [];
-		if(this.template)
-			return $.when(countlyNetwork.initialize(this.id)).then(function () {});
-		else{
-			var self = this;
-			return $.when($.get(countlyGlobal["path"]+'/network/templates/metrics.html', function(src){
-				self.template = Handlebars.compile(src);
-			}), countlyNetwork.initialize(this.id)).then(function () {});
-		}
+        if(this.template)
+            return $.when(countlyNetwork.initialize(this.id)).then(function () {});
+        else{
+            var self = this;
+            return $.when($.get(countlyGlobal["path"]+'/network/templates/metrics.html', function(src){
+                self.template = Handlebars.compile(src);
+            }), countlyNetwork.initialize(this.id)).then(function () {});
+        }
     },
     
     renderCommon:function (isRefresh) {
@@ -923,56 +923,72 @@ window.NetworkMetricView = countlyView.extend({
             avarage_bytes = 0;
         }
         dashboard.usage['crf'].total = avarage_bytes; 
-        var throughput = {"total":0};
-        var throughput_v = (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total))).toFixed(1);
-        if(isNaN(throughput_v)){
-            throughput.total=throughput_v;
+        
+        console.log("period="+countlyCommon.getPeriodForAjax());
+        var throughput_v = 0;
+        if('hour'==countlyCommon.getPeriodForAjax() || 'yesterday'==dashboard.usage['cr'].total){
+            throughput_v = dashboard.usage['cr'].total;
+        }else if('month'==countlyCommon.getPeriodForAjax()){
+            throughput_v = (dashboard.usage['cr'].total/(365*24)).toFixed(1);
+        }else if('day'==countlyCommon.getPeriodForAjax()){
+            throughput_v = (dashboard.usage['cr'].total/(30*24)).toFixed(1);
+        }else if('7days'==countlyCommon.getPeriodForAjax()){
+            throughput_v = (dashboard.usage['cr'].total/(7*24)).toFixed(1);
+        }else if('30days'==countlyCommon.getPeriodForAjax()){
+            throughput_v = (dashboard.usage['cr'].total/(30*24)).toFixed(1);
+        }else if('60days'==countlyCommon.getPeriodForAjax()){
+            throughput_v = (dashboard.usage['cr'].total/(60*24)).toFixed(1);
         }
+        // (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total))).toFixed(1);
+        if(isNaN(throughput_v)){
+            throughput_v=0;
+        }
+        dashboard.usage['crru'].total = throughput_v; 
         // dashboard.usage['crruf'].total = (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(2);
         this.templateData = {
             "page-title":jQuery.i18n.map["network.overview-title"],
             "no-data":jQuery.i18n.map["common.bar.no-data"],
             "usage":[
-				{
-					"title":jQuery.i18n.map["network.http.request-cnts"],
-					"data":dashboard.usage['cr'],
-					"id":"crash-cr",
+                {
+                    "title":jQuery.i18n.map["network.http.request-cnts"],
+                    "data":dashboard.usage['cr'],
+                    "id":"crash-cr",
                     "help":"crashes.help-total"
-				},
-				{
-					"title":jQuery.i18n.map["network.http.error-cnts"],
-					"data":dashboard.usage['cru'],
-					"id":"crash-cru",
+                },
+                {
+                    "title":jQuery.i18n.map["network.http.error-cnts"],
+                    "data":dashboard.usage['cru'],
+                    "id":"crash-cru",
                     "help":"crashes.help-unique"
-				},
-				{
-					"title":jQuery.i18n.map["network.http.response-time"],
-					"data":dashboard.usage['crnf'],
-					"id":"crash-crnf",
+                },
+                {
+                    "title":jQuery.i18n.map["network.http.response-time"],
+                    "data":dashboard.usage['crnf'],
+                    "id":"crash-crnf",
                     "help":"crashes.help-nonfatal"
-				},
-				{
-					"title":jQuery.i18n.map["network.http.reportbytes"],
-					"data":dashboard.usage['crf'],
-					"id":"crash-crf",
+                },
+                {
+                    "title":jQuery.i18n.map["network.http.reportbytes"],
+                    "data":dashboard.usage['crf'],
+                    "id":"crash-crf",
                     "help":"crashes.help-fatal"
                 }
+                // ,
+                // {
+                //  "title":jQuery.i18n.map["network.http.reportcnts"],
+                //  "data":dashboard.usage['cnts'],
+                //  "id":"crash-cnts",
+                //     "help":"crashes.help-resolved-users"
+                // }
                 ,
                 {
-					"title":jQuery.i18n.map["network.http.reportcnts"],
-					"data":{"total":(60*dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(2)},
-					"id":"crash-cnts",
+                    "title":jQuery.i18n.map["network.http.reportcnts"],
+                    "data":dashboard.usage['crru'],
+                    "id":"crash-crru",
                     "help":"crashes.help-resolved-users"
                 }
-                /*,
-				{
-					"title":jQuery.i18n.map["crashes.resolved-users"],
-					"data":dashboard.usage['crru'],
-					"id":"crash-crru",
-                    "help":"crashes.help-resolved-users"
-				}*/
-			]
-			
+            ]
+            
         };
         if(crashData.loss){
             this.templateData["loss"] = true;
@@ -982,7 +998,7 @@ window.NetworkMetricView = countlyView.extend({
                 "help":"crashes.help-loss"
             });
         }
-		var self = this;
+        var self = this;
 
         if (!isRefresh) {
             $(this.el).html(this.template(this.templateData));
@@ -991,19 +1007,19 @@ window.NetworkMetricView = countlyView.extend({
             });
 
             $(".filter-segmentation").clySelectSetSelection(this.filter, jQuery.i18n.map["crashes."+this.filter.split("-").pop()]);
-			countlyCommon.drawTimeGraph(chartData.chartDP, "#dashboard-graph");
+            countlyCommon.drawTimeGraph(chartData.chartDP, "#dashboard-graph");
 
             $("#crash-"+this.curMetric).parents(".big-numbers").addClass("active");
 
             $(".widget-content .inner").click(function () {
-				$(".big-numbers").removeClass("active");
-				$(".big-numbers .select").removeClass("selected");
-				$(this).parent(".big-numbers").addClass("active");
-				$(this).find('.select').addClass("selected");
-			});
+                $(".big-numbers").removeClass("active");
+                $(".big-numbers .select").removeClass("selected");
+                $(this).parent(".big-numbers").addClass("active");
+                $(this).find('.select').addClass("selected");
+            });
 
             $(".big-numbers .inner").click(function () {
-				var elID = $(this).find('.select').attr("id");
+                var elID = $(this).find('.select').attr("id");
                 if(elID){
                     if (self.curMetric == elID.replace("crash-", "")) {
                         return true;
@@ -1011,7 +1027,7 @@ window.NetworkMetricView = countlyView.extend({
                     self.curMetric = elID.replace("crash-", "");
                     self.switchMetric();
                 }
-			});
+            });
            
 
             $('.action-segmentation').attr('data-tooltip-content', "#action-segmentation-tooltip");
@@ -1071,11 +1087,11 @@ window.NetworkMetricView = countlyView.extend({
             });
         }
     },
-	
+    
     switchMetric:function(){
-		var chartData = countlyNetwork.getMetricsChartData(this.curMetric, this.metrics[this.curMetric]);
-		countlyCommon.drawTimeGraph(chartData.chartDP, "#dashboard-graph");
-	}
+        var chartData = countlyNetwork.getMetricsChartData(this.curMetric, this.metrics[this.curMetric]);
+        countlyCommon.drawTimeGraph(chartData.chartDP, "#dashboard-graph");
+    }
 });
 
 
@@ -1089,25 +1105,25 @@ app.networkMetricView = new NetworkMetricView();
 
 app.route("/analytics/metrics", 'network', function () {
     this.networkMetricView.id="metrics";
-	this.renderWhenReady(this.networkMetricView);
+    this.renderWhenReady(this.networkMetricView);
 });
 
 app.route("/analytics/network", 'network', function () {
-	this.renderWhenReady(this.networkView);
+    this.renderWhenReady(this.networkView);
 });
 
 app.route("/analytics/networkerror/:id", 'network', function (id) {
     this.networkErrorView.id=id;
-	this.renderWhenReady(this.networkErrorView);
+    this.renderWhenReady(this.networkErrorView);
 });
 
 app.route("/analytics/view-frequency", 'network', function () {
-	this.renderWhenReady(this.networkFrequencyView);
+    this.renderWhenReady(this.networkFrequencyView);
 });
 
 app.route("/analytics/network/action-map/*view", 'network', function (view) {
     this.actionMapView.view = view;
-	this.renderWhenReady(this.actionMapView);
+    this.renderWhenReady(this.actionMapView);
 });
 
 app.addPageScript("/drill#", function(){
@@ -1173,19 +1189,19 @@ $( document ).ready(function() {
 
     //     return ((x < y) ?  1 : ((x > y) ? -1 : 0));
     // };
-	// var menu = '<a href="#/analytics/network" class="item">'+
-	// 	'<div class="logo-icon fa fa-eye"></div>'+
-	// 	'<div class="text" data-localize="network.title"></div>'+
-	// '</a>';
-	// $('#web-type #analytics-submenu').append(menu);
-	// $('#mobile-type #analytics-submenu').append(menu);
+    // var menu = '<a href="#/analytics/network" class="item">'+
+    //  '<div class="logo-icon fa fa-eye"></div>'+
+    //  '<div class="text" data-localize="network.title"></div>'+
+    // '</a>';
+    // $('#web-type #analytics-submenu').append(menu);
+    // $('#mobile-type #analytics-submenu').append(menu);
     
     // var menu = '<a href="#/analytics/view-frequency" class="item">'+
-	// 	'<div class="logo-icon fa fa-eye"></div>'+
-	// 	'<div class="text" data-localize="views.view-frequency"></div>'+
-	// '</a>';
-	// $('#web-type #engagement-submenu').append(menu);
-	// $('#mobile-type #engagement-submenu').append(menu);
+    //  '<div class="logo-icon fa fa-eye"></div>'+
+    //  '<div class="text" data-localize="views.view-frequency"></div>'+
+    // '</a>';
+    // $('#web-type #engagement-submenu').append(menu);
+    // $('#mobile-type #engagement-submenu').append(menu);
     
     // //check if configuration view exists
     // if(app.configurationsView){
