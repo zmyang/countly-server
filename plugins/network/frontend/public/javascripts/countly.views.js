@@ -923,8 +923,8 @@ window.NetworkMetricView = countlyView.extend({
             avarage_bytes = 0;
         }
         dashboard.usage['crf'].total = avarage_bytes; 
-        
-        
+        console.log("period="+dashboard.period);
+        console.log("period="+countlyCommon.getPeriodForAjax());
         var throughput_v = (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total))).toFixed(1);
         if(isNaN(throughput_v)){
             throughput_v=0;

@@ -41,6 +41,7 @@
                     success:function (json) {
                         _crashData = json;
                         _crashTimeline = json.data;
+                       
                         setMeta();
                         if(_crashData.crashes.latest_version == "")
                             _crashData.crashes.latest_version = "None";
@@ -447,7 +448,7 @@
     }
     countlyNetwork.getDashboardData = function () {
         var data = countlyCommon.getDashboardData(_crashTimeline, ["cr", "crnf", "crf", "cru", "crru"], ["cru"], null, countlyNetwork.clearMetricsObject);
-        return {usage:data};
+        return {usage:data,period:_period};
     };
     countlyNetwork.getMetricsChartData = function(metric, name){
 		var chartData = [
