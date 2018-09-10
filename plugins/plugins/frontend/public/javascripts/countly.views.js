@@ -1112,5 +1112,19 @@ app.addPageScript("/manage/plugins", function () {
 });
 
 $(document).ready(function () {
+    if (countlyGlobal["member"] && countlyGlobal["member"]["global_admin"]) {
+        var menu = '<a href="#/manage/plugins" class="item">' +
+            '<div class="logo-icon fa fa-puzzle-piece"></div>' +
+            '<div class="text" data-localize="plugins.title"></div>' +
+            '</a>';
+        if ($('#management-submenu .help-toggle').length)
+            $('#management-submenu .help-toggle').before(menu);
 
+        var menu = '<a href="#/manage/configurations" class="item">' +
+            '<div class="logo-icon fa fa-wrench"></div>' +
+            '<div class="text" data-localize="plugins.configs"></div>' +
+            '</a>';
+        if ($('#management-submenu .help-toggle').length)
+            $('#management-submenu .help-toggle').before(menu);
+    }
 });
