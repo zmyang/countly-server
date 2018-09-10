@@ -891,7 +891,8 @@ window.NetworkMetricView = countlyView.extend({
 			cr:jQuery.i18n.map["network.total-visits"],
 			cru:jQuery.i18n.map["network.http.error-cnts"],
 			crnf:jQuery.i18n.map["network.http.restime"],
-			crf:jQuery.i18n.map["network.http.bytes"],
+            crf:jQuery.i18n.map["network.http.bytes"],
+            cnts:jQuery.i18n.map["network.http.reportcnts"],
 			crru:jQuery.i18n.map["crashes.resolved-users"]
 		};
     },
@@ -912,8 +913,21 @@ window.NetworkMetricView = countlyView.extend({
         var crashData = countlyNetwork.getMetricsData();
         var chartData = countlyNetwork.getMetricsChartData(this.curMetric, this.metrics[this.curMetric]);
         var dashboard = countlyNetwork.getDashboardData();
-        dashboard.usage['crnf'].total = (dashboard.usage['crnf'].total/(dashboard.usage['cr'].total-dashboard.usage['cru'].total)).toFixed(1);
-        dashboard.usage['crf'].total = (dashboard.usage['crf'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(1);
+        var avarage_time = (dashboard.usage['crnf'].total/(dashboard.usage['cr'].total-dashboard.usage['cru'].total)).toFixed(1);
+        if(isNaN(avarage_time)){
+            avarage_time = 0;
+        }
+        dashboard.usage['crnf'].total = 0;
+        var avarage_bytes = (dashboard.usage['crf'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total))).toFixed(1);
+        if(isNaN(avarage_bytes)){
+            avarage_bytes = 0;
+        }
+        dashboard.usage['crf'].total = avarage_bytes; 
+        var throughput = {"total":0};
+        var throughput_v = (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total))).toFixed(1);
+        if(isNaN(throughput_v)){
+            throughput.total=throughput_v;
+        }
         // dashboard.usage['crruf'].total = (dashboard.usage['cr'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total)*1000)).toFixed(2);
         this.templateData = {
             "page-title":jQuery.i18n.map["network.overview-title"],

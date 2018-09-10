@@ -176,13 +176,5 @@ app.route('/manage/db/:dbs/:collection/page/:page', 'dbs', function (db, collect
 });
 
 $( document ).ready(function() {
-    if(!production){
-        CountlyHelpers.loadJS("dbviewer/javascripts/json.human.js");
-    }
-    var menu = '<a href="#/manage/db" class="item">'+
-        '<div class="logo-icon fa fa-database"></div>'+
-        '<div class="text" data-localize="dbviewer.title"></div>'+
-    '</a>';
-    if($('#management-submenu .help-toggle').length)
-        $('#management-submenu .help-toggle').before(menu);
+    
 });

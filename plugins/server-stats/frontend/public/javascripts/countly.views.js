@@ -21,9 +21,9 @@ window.DataPointsView = countlyView.extend({
                 "aaData": countlyDataPoints.getTableData(),
                 "aoColumns": [
                     { "mData": "app-name", "sType":"string", "sTitle": jQuery.i18n.map["compare.apps.app-name"] || "App Name", "sClass": "break" },
-                    { "mData": "sessions", "sType":"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["sidebar.analytics.sessions"] },
-                    { "mData": "events", "sType":"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["sidebar.events"] },
-                    { "mData": "data-points", "sType":"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["server-stats.data-points"] }
+                    { "mData": "sessions", "sType":"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["sidebar.analytics.sessions"] }
+                    // { "mData": "events", "sType":"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["sidebar.events"] },
+                    // { "mData": "data-points", "sType":"formatted-num", "mRender":function(d) { return countlyCommon.formatNumber(d); }, "sTitle": jQuery.i18n.map["server-stats.data-points"] }
                 ]
             }));
 
@@ -52,15 +52,5 @@ app.route("/manage/data-points", '', function () {
 });
 
 $(document).ready(function() {
-    if(countlyGlobal["member"].global_admin){
-        var menu = '<a href="#/manage/data-points" class="item">'+
-            '<div class="text" data-localize="server-stats.data-points"></div>'+
-            '</a>';
 
-        if($('#management-submenu .help-toggle').length) {
-            $('#management-submenu .help-toggle').before(menu);
-        } else {
-            $('#management-submenu').append(menu);
-        }
-    }
 });

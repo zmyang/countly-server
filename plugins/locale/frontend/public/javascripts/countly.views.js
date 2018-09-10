@@ -69,13 +69,13 @@ app.route("/analytics/languages", "languages", function () {
 });
 
 $( document ).ready(function() {
-	Handlebars.registerHelper('languageTitle', function (context, options) {
-        return countlyGlobalLang.languages[context];
-    });
+	// Handlebars.registerHelper('languageTitle', function (context, options) {
+    //     return countlyGlobalLang.languages[context];
+    // });
 
-	var menu = '<a href="#/analytics/languages" class="item">'+
-		'<div class="logo languages"></div>'+
-		'<div class="text" data-localize="sidebar.analytics.languages"></div>'+
-	'</a>';
-	$('.sidebar-menu:not(#iot-type) #analytics-submenu').append(menu);
+	// var menu = '<a href="#/analytics/languages" class="item">'+
+	// 	'<div class="logo languages"></div>'+
+	// 	'<div class="text" data-localize="sidebar.analytics.languages"></div>'+
+	// '</a>';
+	// $('.sidebar-menu:not(#iot-type) #analytics-submenu').append(menu);
 });

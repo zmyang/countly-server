@@ -1666,11 +1666,21 @@ $( document ).ready(function() {
     if(!production){
         CountlyHelpers.loadJS("crashes/javascripts/marked.min.js");
     }
-    
+    // <a class="item analytics" id="events-menu">
+	// 					<div class="logo events">
+	// 						<i class="material-icons">bubble_chart</i>
+	// 					</div>
+	// 					<div class="text" data-localize="sidebar.events"></div>
+	// 				</a>
+    //                 <div class="sidebar-submenu" id="events-submenu">
+                         
+    //                 </div>
     var menu = '<a class="item" id="sidebar-crashes">'+
-        '<div class="logo ion-alert-circled"></div>'+
-        '<div class="text" data-localize="crashes.title"></div>'+
-    '</a>'+
+                    '<div class="logo events">'+
+                    '<i class="material-icons">bubble_chart</i>'+
+                    '</div>'+
+                    '<div class="text" data-localize="crashes.title"></div>'+
+                '</a>'+
     '<div class="sidebar-submenu" id="crash-submenu">'+
         '<a href="#/crashes" class="item">'+
             '<div class="logo-icon fa fa-line-chart"></div>'+

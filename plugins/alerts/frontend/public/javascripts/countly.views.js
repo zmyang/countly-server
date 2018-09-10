@@ -534,14 +534,6 @@ if (countlyGlobal["member"].global_admin || countlyGlobal["member"]["admin_of"].
 }
 
 $(document).ready(function () {
-	if (countlyGlobal["member"].global_admin || countlyGlobal["member"]["admin_of"].length) {
-		var menu = '<a href="#/manage/alerts" class="item">' +
-			'<div class="logo-icon fa fa-envelope"></div>' +
-			'<div class="text" data-localize="alert.plugin-title"></div>' +
-			'</a>';
-		if ($('#management-submenu .help-toggle').length)
-			$('#management-submenu .help-toggle').before(menu);
-
-	}
+	
 
 });

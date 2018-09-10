@@ -232,26 +232,7 @@
 					</a>
 					<div class="sidebar-submenu" id="engagement-submenu">
 					</div>
-					<a class="item analytics" id="events-menu">
-						<div class="logo events">
-							<i class="material-icons">bubble_chart</i>
-						</div>
-						<div class="text" data-localize="sidebar.events"></div>
-					</a>
-                    <div class="sidebar-submenu" id="events-submenu">
-                         <a href="#/analytics/events/overview" class="item">
-							<div class="logo applications"></div>
-							<div class="text" data-localize="sidebar.events.overview"></div>
-						</a>
-                        <a href="#/analytics/events" class="item">
-							<div class="logo applications"></div>
-							<div class="text" data-localize="sidebar.events.all-events"></div>
-						</a>
-                        <a href="#/analytics/events/blueprint" class="item events-blueprint-side-menu" style="<% if(!member['global_admin']) { %> display:none; <% } %>" >
-                            <div class="logo applications"></div>
-                            <div class="text" data-localize="sidebar.events.blueprint"></div>
-                        </a>
-                    </div>
+				  
 					<a class="item" id="management-menu">
 						<div class="logo management ion-gear-a"></div>
 						<div class="text" data-localize="sidebar.management"></div>
@@ -263,16 +244,7 @@
 							<div class="text" data-localize="sidebar.management.applications"></div>
 						</a>
                         <% } %>
-						<% if(member['global_admin']) { %>
-						<a href="#/manage/users" class="item">
-							<div class="logo mgmt-users"></div>
-							<div class="text" data-localize="sidebar.management.users"></div>
-						</a>
-						<% } %>
-						<a href="#/manage/tasks" class="item">
-							<div class="logo applications"></div>
-							<div class="text" data-localize="sidebar.management.longtasks"></div>
-						</a>
+						
 						<a class="item help-toggle" style="display:none">
 							<div class="logo help"></div>
 							<div class="text" data-localize="sidebar.management.help"></div>
