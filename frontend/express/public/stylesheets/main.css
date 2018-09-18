@@ -1627,6 +1627,6 @@ input.custom-styled-green-check:checked {border-color: #C2C2C2;}
 
 #countries-alternative_wrapper { height: 0; overflow: hidden;}
 #crash-table .sorting:nth-child(2){ width: 100px }
-#sidebar-menu #analytics-submenu .item:nth-child(4){height:0}
+/* #sidebar-menu #analytics-submenu .item:nth-child(4){height:0} */
 #crash-table td {overflow:hidden}
 
