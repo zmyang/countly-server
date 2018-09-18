@@ -282,6 +282,7 @@ window.NetworkView = countlyView.extend({
     drawGraph: function(){
         var props = this.getProperties();
         var dp = [];
+        // console.log("selectedViews="+this.selectedViews.length);
         for(var i = 0;  i < this.selectedViews.length; i++){
             var color = countlyCommon.GRAPH_COLORS[i];
             var data = countlyNetwork.getChartData(this.selectedViews[i], this.selectedMetric, props[this.selectedMetric]).chartDP;
