@@ -112,6 +112,7 @@ var plugin = {},
 		} else if(params.qstring.method == 'networkerror'){
             validateUserForDataReadAPI(params, function(params){
 				if (params.qstring.group) {
+                    console.log("networkerror period ="+params.qstring.period);
                     var cursor = common.db.collection('app_networkerror' + params.app_id).find({group:params.qstring.group}).sort( { $natural: -1 } );
                     cursor.limit(plugins.getConfig("crashes").report_limit);
                     cursor.toArray(function(err, res){
