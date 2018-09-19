@@ -303,7 +303,6 @@ window.NetworkView = countlyView.extend({
             if (app.activeView != self) {
                 return false;
             }
-            if(app.timeString)
             console.log("come into select time with"+self.selectedMetric);
             self.renderCommon(true);
 
