@@ -138,7 +138,7 @@ var plugin = {},
                         start_ts = end_ts - 60*86400;
                     }
 
-                    var cursor = common.db.collection('app_networkerror' + params.app_id).find({group:params.qstring.group}, {'ts':{$gte:1537356781056, $lte:1537357385856}}).sort( { $natural: -1 } );
+                    var cursor = common.db.collection('app_networkerror' + params.app_id).find({group:params.qstring.group, ts:{$gte:start_ts, $lte:end_ts}}).sort( { $natural: -1 } );
                     cursor.limit(plugins.getConfig("crashes").report_limit);
                     cursor.toArray(function(err, res){
                             common.returnOutput(params, res);
