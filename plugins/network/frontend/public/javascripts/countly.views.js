@@ -304,7 +304,7 @@ window.NetworkView = countlyView.extend({
                 return false;
             }
             if(app.timeString)
-            console.log("come into select time with"+JSON.stringify(self));
+            console.log("come into select time with"+self.selectedMetric);
             self.renderCommon(true);
 
             newPage = $("<div>" + self.template(self.templateData) + "</div>");
