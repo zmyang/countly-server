@@ -118,7 +118,7 @@ var plugin = {},
                     var end_ts = now.getTime();
                     if('hour'==params.qstring.period){
                         //不作处理
-                    }else if('yesterday'==dashboard.usage['cr'].total){
+                    }else if('yesterday'==params.qstring.period){
                         end_ts = start_ts;
                         start_ts -= 86400;
                     }else if('month'==params.qstring.period){
