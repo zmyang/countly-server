@@ -303,7 +303,7 @@ window.NetworkView = countlyView.extend({
             if (app.activeView != self) {
                 return false;
             }
-            console.log("come into select time with period="+countlyCommon.getPeriodForAjax);
+            console.log("come into select time with period="+countlyCommon.getPeriodForAjax());
             self.renderCommon(true);
 
             newPage = $("<div>" + self.template(self.templateData) + "</div>");
