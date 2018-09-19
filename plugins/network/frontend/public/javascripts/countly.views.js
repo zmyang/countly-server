@@ -928,7 +928,7 @@ window.NetworkMetricView = countlyView.extend({
         
         // console.log("period="+countlyCommon.getPeriodForAjax());
         var throughput_v = 0;
-        if('hour'==countlyCommon.getPeriodForAjax() || 'yesterday'==dashboard.usage['cr'].total){
+        if('hour'==countlyCommon.getPeriodForAjax() || 'yesterday'==countlyCommon.getPeriodForAjax()){
             throughput_v = dashboard.usage['cr'].total;
         }else if('month'==countlyCommon.getPeriodForAjax()){
             throughput_v = (dashboard.usage['cr'].total/(365*24)).toFixed(1);
