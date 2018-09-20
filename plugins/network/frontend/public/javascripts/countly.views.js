@@ -915,13 +915,8 @@ window.NetworkMetricView = countlyView.extend({
             crnf:jQuery.i18n.map["network.http.restime"],
             crf:jQuery.i18n.map["network.http.bytes"],
             crru:jQuery.i18n.map["network.http.reportcnts"]
-<<<<<<< HEAD
             // crru:jQuery.i18n.map["crashes.resolved-users"]
         };
-=======
-			// crru:jQuery.i18n.map["crashes.resolved-users"]
-		};
->>>>>>> upstream/master
     },
     beforeRender: function() {
         this.selectedCrashes = {};
@@ -944,18 +939,13 @@ window.NetworkMetricView = countlyView.extend({
         if(isNaN(avarage_time)){
             avarage_time = 0;
         }
-        dashboard.usage['crnf'].total = 0;
+        //dashboard.usage['crnf'].total = 0;
         var avarage_bytes = (dashboard.usage['crf'].total/((dashboard.usage['cr'].total-dashboard.usage['cru'].total))).toFixed(1);
         if(isNaN(avarage_bytes)){
             avarage_bytes = 0;
         }
         dashboard.usage['crf'].total = avarage_bytes; 
-        
-<<<<<<< HEAD
         console.log("period="+countlyCommon.getPeriodForAjax());
-=======
-        // console.log("period="+countlyCommon.getPeriodForAjax());
->>>>>>> upstream/master
         var throughput_v = 0;
         if('hour'==countlyCommon.getPeriodForAjax() || 'yesterday'==dashboard.usage['cr'].total){
             throughput_v = dashboard.usage['cr'].total;

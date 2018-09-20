@@ -979,24 +979,24 @@ window.ActivitygroupView = countlyView.extend({
                     "title":jQuery.i18n.map["crashes.ram"],
                     "icon":"memory",
                     "help":"crashes.help-ram",
-                    "min":crashData.ram.min+" %",
-                    "max":crashData.ram.max+" %",
+                    "min":crashData.ram.min.toFixed(2)+" %",
+                    "max":crashData.ram.max.toFixed(2)+" %",
                     "avg":(crashData.ram.total/crashData.ram.count).toFixed(2)+" %"
                 },
                 {
                     "title":jQuery.i18n.map["crashes.disk"],
                     "icon":"sd_storage",
                     "help":"crashes.help-disk",
-                    "min":crashData.disk.min+" %",
-                    "max":crashData.disk.max+" %",
+                    "min":crashData.disk.min.toFixed(2)+" %",
+                    "max":crashData.disk.max.toFixed(2)+" %",
                     "avg":(crashData.disk.total/crashData.disk.count).toFixed(2)+" %"
                 },
                 {
                     "title":jQuery.i18n.map["crashes.battery"],
                     "icon":"battery_full",
                     "help":"crashes.help-battery",
-                    "min":crashData.bat.min+" %",
-                    "max":crashData.bat.max+" %",
+                    "min":crashData.bat.min.toFixed(2)+" %",
+                    "max":crashData.bat.max.toFixed(2)+" %",
                     "avg":(crashData.bat.total/crashData.bat.count).toFixed(2)+" %"
                 },
                 {
@@ -1072,7 +1072,8 @@ window.ActivitygroupView = countlyView.extend({
                     + '<div class="item" data-value="crash-unresolve" data-localize="crashes.action-unresolved"></div>'
                     
             }else if(crashData.is_resolved){
-                $("#resolve-state").text(jQuery.i18n.map["crashes.resolved"] + "(" + crashData.resolved_version + ")");
+                $("#resolve-state").text(jQuery.i18n.map["crashes.resolved"]);
+                //$("#resolve-state").text(jQuery.i18n.map["crashes.resolved"] + "(" + crashData.resolved_version + ")");
                 $("#resolve-state").attr('class', 'resolved-text');
 
                 selectOptions += '<div class="item" data-value="crash-unresolve" data-localize="crashes.action-unresolved"></div>'
@@ -1085,13 +1086,14 @@ window.ActivitygroupView = countlyView.extend({
                 selectOptions += '<div class="item" data-value="crash-resolve" data-localize="crashes.action-resolved"></div>'
                 + '<div class="item" data-value="crash-resolving" data-localize="crashes.action-resolving"></div>'
             }
-
+            /**
             if(crashData.is_hidden){
                 selectOptions += '<div class="item" data-value="crash-show" data-localize="crashes.action-show"></div>'
             }else{
                 selectOptions += '<div class="item" data-value="crash-hide" data-localize="crashes.action-hide"></div>' 
             }
             selectOptions += '<div class="item" data-value="crash-delete" data-localize="crashes.action-delete"></div>'
+            */
             $(".performan-action-slection").html(selectOptions)
             app.localize();
         }
