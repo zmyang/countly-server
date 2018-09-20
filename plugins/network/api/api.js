@@ -112,7 +112,33 @@ var plugin = {},
 		} else if(params.qstring.method == 'networkerror'){
             validateUserForDataReadAPI(params, function(params){
 				if (params.qstring.group) {
-                    var cursor = common.db.collection('app_networkerror' + params.app_id).find({group:params.qstring.group}).sort( { $natural: -1 } );
+                    console.log("networkerror period ="+params.qstring.period);
+                    var now  = new Date();
+                    var start_ts = new Date(now.toLocaleDateString()).getTime();
+                    var end_ts = now.getTime();
+                    if('hour'==params.qstring.period){
+                        //不作处理
+                    }else if('yesterday'==params.qstring.period){
+                        end_ts = start_ts;
+                        start_ts -= 86400000;
+                    }else if('month'==params.qstring.period){
+                        now.setDate(1);
+                        now.setMonth(0);
+                        now.setHours(0);
+                        now.setMinutes(0);
+                        start_ts = now.getTime();
+                    }else if('day'==params.qstring.period){
+                        now.setMonth(0);
+                        start_ts = now.getTime();
+                    }else if('7days'==params.qstring.period){
+                        start_ts = end_ts - 7*86400000;
+                    }else if('30days'==params.qstring.period){
+                        start_ts = end_ts - 30*86400000;
+                    }else if('60days'==params.qstring.period){
+                        start_ts = end_ts - 60*86400000;
+                    }
+                    console.log("start_ts="+start_ts+" and end_ts="+end_ts+" and group="+params.qstring.group);
+                    var cursor = common.db.collection('app_networkerror' + params.app_id).find({group:params.qstring.group, ts:{$gte:start_ts, $lte:end_ts}}).sort( { $natural: -1 } );
                     cursor.limit(plugins.getConfig("crashes").report_limit);
                     cursor.toArray(function(err, res){
                             common.returnOutput(params, res);

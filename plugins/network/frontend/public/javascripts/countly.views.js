@@ -303,6 +303,7 @@ window.NetworkView = countlyView.extend({
             if (app.activeView != self) {
                 return false;
             }
+            console.log("come into select time with period="+countlyCommon.getPeriodForAjax());
             self.renderCommon(true);
 
             newPage = $("<div>" + self.template(self.templateData) + "</div>");
@@ -322,28 +323,7 @@ window.NetworkView = countlyView.extend({
             });
             self.drawGraph();
         });
-    },
-    switchMetric:function(metric){
-		// this.curMetric = metric;
-		// var crashData = countlyNetwork.getGroupData();
-        // countlyCommon.drawGraph(crashData.dp[this.curMetric], "#dashboard-graph", "bar");
-        var props = this.getProperties();
-        var dp = [];
-        // console.log("selectedViews="+this.selectedViews.length);
-        for(var i = 0;  i < this.selectedViews.length; i++){
-            var color = countlyCommon.GRAPH_COLORS[i];
-            var data = countlyNetwork.getChartData(this.selectedViews[i], this.selectedMetric, props[this.selectedMetric]).chartDP;
-            data[1].color = color;
-            $("#"+this.ids[this.selectedViews[i]]+" .color").css("background-color", color);
-            if(this.selectedViews.length == 1){
-                var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
-                data[0].color = "rgba("+parseInt(result[1], 16)+","+parseInt(result[2], 16)+","+parseInt(result[3], 16)+",0.5"+")";
-                dp.push(data[0])
-            }
-            dp.push(data[1]);
-        }
-        countlyCommon.drawTimeGraph(dp, "#dashboard-graph");
-	}
+    }
 });
 
 window.NetworkFrequencyView = countlyView.extend({
@@ -947,7 +927,7 @@ window.NetworkMetricView = countlyView.extend({
         dashboard.usage['crf'].total = avarage_bytes; 
         console.log("period="+countlyCommon.getPeriodForAjax());
         var throughput_v = 0;
-        if('hour'==countlyCommon.getPeriodForAjax() || 'yesterday'==dashboard.usage['cr'].total){
+        if('hour'==countlyCommon.getPeriodForAjax() || 'yesterday'==countlyCommon.getPeriodForAjax()){
             throughput_v = dashboard.usage['cr'].total;
         }else if('month'==countlyCommon.getPeriodForAjax()){
             throughput_v = (dashboard.usage['cr'].total/(365*24)).toFixed(1);
