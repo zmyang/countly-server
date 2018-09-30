@@ -125,6 +125,7 @@ var appsApi = {},
                 return false;
             }else{
                 processAppProps(newApp);
+                console.log("create App with timezone="+newApp.timezone);
                 newApp.created_at = Math.floor(((new Date()).getTime()) / 1000);
                 newApp.edited_at = newApp.created_at;
                 newApp.owner = params.member._id+"";
