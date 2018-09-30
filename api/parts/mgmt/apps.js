@@ -458,13 +458,14 @@ var appsApi = {},
 
     function processAppProps(app) {
         if (!app.country || !isValidCountry(app.country)) {
-            app.country = plugins.getConfig("apps").country;
+            // app.country = plugins.getConfig("apps").country;
+            app.country = "CN";
         }
 
-        // if (!app.timezone || !isValidTimezone(app.timezone)) {
-        //     app.timezone = plugins.getConfig("apps").timezone;
-        // }
-        console.log("default timezone ="+plugins.getConfig("apps").timezone);
+        if (!app.timezone || !isValidTimezone(app.timezone)) {
+            // app.timezone = plugins.getConfig("apps").timezone;
+            app.timezone = "Asia/Shanghai";
+        }
         app.timezone = plugins.getConfig("apps").timezone;
         if (!app.category || !isValidCategory(app.category)) {
             app.category = plugins.getConfig("apps").category;
