@@ -467,7 +467,6 @@ var appsApi = {},
             app.timezone = "Asia/Shanghai";
         }
         app.timezone = "Asia/Shanghai";
-        app.timezone = plugins.getConfig("apps").timezone;
         if (!app.category || !isValidCategory(app.category)) {
             app.category = plugins.getConfig("apps").category;
         }
