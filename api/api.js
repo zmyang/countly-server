@@ -55,8 +55,8 @@ plugins.setConfigs("api", {
  * Set Plugins APPs Config
  */
 plugins.setConfigs("apps", {
-    country: "CN",
-    timezone: "Asia/Shanghai",
+    country: "TR",
+    timezone: "Europe/Istanbul",
     category: "6"
 });
 

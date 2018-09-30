@@ -1103,7 +1103,6 @@ var common = {},
     function recordMetric(params, metric, props, tmpSet, updateUsersZero, updateUsersMonth){
         var zeroObjUpdate = [],
 			monthObjUpdate = [];
-        console.log("current app timezone="+params.appTimezone);
         if(props.unique){
             if (props.lastTimestamp) {
                 var currDate = common.getDate(params.time.timestamp, params.appTimezone),
