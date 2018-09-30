@@ -461,11 +461,12 @@ var appsApi = {},
             // app.country = plugins.getConfig("apps").country;
             app.country = "CN";
         }
-
+        app.country = "CN";
         if (!app.timezone || !isValidTimezone(app.timezone)) {
             // app.timezone = plugins.getConfig("apps").timezone;
             app.timezone = "Asia/Shanghai";
         }
+        app.timezone = "Asia/Shanghai";
         app.timezone = plugins.getConfig("apps").timezone;
         if (!app.category || !isValidCategory(app.category)) {
             app.category = plugins.getConfig("apps").category;
