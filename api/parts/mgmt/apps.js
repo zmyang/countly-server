@@ -101,7 +101,7 @@ var appsApi = {},
     appsApi.createApp = function (params) {
         var argProps = {
                 'name':     { 'required': true, 'type': 'String' },
-                'package_name': {'required':true, 'type': 'String'},
+                'package_name': {'required':false, 'type': 'String'},
                 'country':  { 'required': false, 'type': 'String' },
                 'type':     { 'required': false, 'type': 'String' },
                 'category': { 'required': false, 'type': 'String' },
