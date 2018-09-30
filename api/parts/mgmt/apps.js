@@ -125,7 +125,6 @@ var appsApi = {},
                 return false;
             }else{
                 processAppProps(newApp);
-                console.log("create App with timezone="+newApp.timezone);
                 newApp.created_at = Math.floor(((new Date()).getTime()) / 1000);
                 newApp.edited_at = newApp.created_at;
                 newApp.owner = params.member._id+"";
@@ -462,10 +461,10 @@ var appsApi = {},
             app.country = plugins.getConfig("apps").country;
         }
 
-        if (!app.timezone || !isValidTimezone(app.timezone)) {
-            app.timezone = plugins.getConfig("apps").timezone;
-        }
-
+        // if (!app.timezone || !isValidTimezone(app.timezone)) {
+        //     app.timezone = plugins.getConfig("apps").timezone;
+        // }
+        app.timezone = plugins.getConfig("apps").timezone;
         if (!app.category || !isValidCategory(app.category)) {
             app.category = plugins.getConfig("apps").category;
         }
