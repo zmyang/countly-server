@@ -101,7 +101,7 @@ var appsApi = {},
     appsApi.createApp = function (params) {
         var argProps = {
                 'name':     { 'required': true, 'type': 'String' },
-                'package_name': {'required':true, 'type': 'String'},
+                'package_name': {'required':false, 'type': 'String'},
                 'country':  { 'required': false, 'type': 'String' },
                 'type':     { 'required': false, 'type': 'String' },
                 'category': { 'required': false, 'type': 'String' },
@@ -458,13 +458,15 @@ var appsApi = {},
 
     function processAppProps(app) {
         if (!app.country || !isValidCountry(app.country)) {
-            app.country = plugins.getConfig("apps").country;
+            // app.country = plugins.getConfig("apps").country;
+            app.country = "CN";
         }
-
+        app.country = "CN";
         if (!app.timezone || !isValidTimezone(app.timezone)) {
-            app.timezone = plugins.getConfig("apps").timezone;
+            // app.timezone = plugins.getConfig("apps").timezone;
+            app.timezone = "Asia/Shanghai";
         }
-
+        app.timezone = "Asia/Shanghai";
         if (!app.category || !isValidCategory(app.category)) {
             app.category = plugins.getConfig("apps").category;
         }
